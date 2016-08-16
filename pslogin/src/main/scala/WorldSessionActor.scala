@@ -25,6 +25,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
   override def postStop() = {
     if(clientKeepAlive != null)
       clientKeepAlive.cancel()
+    val name : Int = PlayerMasterList.userDissociatesCharacter(sessionId)
+    // dev hack: normally, the actual player avatar persists a minute or so after the user disconnects
+    PlayerMasterList.removePlayer(name)
   }
 
   def receive = Initializing
@@ -140,6 +143,17 @@ class WorldSessionActor extends Actor with MDCContextAware {
               sendResponse(PacketCoding.CreateGamePacket(0, LoadMapMessage("map13","home3",40100,25,true,3770441820L))) //VS Sanctuary
               sendRawResponse(objectHex)
 
+              //hardcoded avatar and some pertinent equipment setup
+              val avatar : PlayerAvatar = PlayerAvatar(guid, "IlllIIIlllIlIllIlllIllI", PlanetSideEmpire.VS, false, 0, 0)
+              avatar.setExoSuitType(0); // Standard Exo-Suit
+              //init holsters
+              avatar.setEquipmentInHolster(0, Equipment(0, EquipmentSize.PISTOL) ) // Beamer in pistol slot 1
+              avatar.setEquipmentInHolster(2, Equipment(1, EquipmentSize.RIFLE) ) // Suppressor in rifle slot 1
+              avatar.setEquipmentInHolster(4, Equipment(2, EquipmentSize.MELEE) ) // Force Blade in melee slot
+              avatar.setUsedHolster(0) // Start with Beamer drawn
+              //add avatar
+              PlayerMasterList.addPlayer(avatar, sessionId) // If created/added when sessionId is unavailable ...
+
               // These object_guids are specfic to VS Sanc
               sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(2), PlanetSideEmpire.VS))) //HART building C
               sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(29), PlanetSideEmpire.NC))) //South Villa Gun Tower
@@ -147,6 +161,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
               sendResponse(PacketCoding.CreateGamePacket(0, ContinentalLockUpdateMessage(PlanetSideGUID(13), PlanetSideEmpire.VS))) // "The VS have captured the VS Sanctuary."
               sendResponse(PacketCoding.CreateGamePacket(0, BroadcastWarpgateUpdateMessage(PlanetSideGUID(13), PlanetSideGUID(1), 32))) // VS Sanctuary: Inactive Warpgate -> Broadcast Warpgate
 
+              PlayerMasterList.userClaimsCharacter(sessionId, guid) // ... we do this when sending a SetCurrentAvatarMessa
               sendResponse(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(PlanetSideGUID(guid),0,0)))
 
               import scala.concurrent.duration._
@@ -168,6 +183,14 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ PlayerStateMessageUpstream(avatar_guid, pos, vel, unk1, aim_pitch, unk2, seq_time, unk3, is_crouching, unk4, unk5, unk6, unk7, unk8) =>
       //log.info("PlayerState: " + msg)
+      //hard coded for dev
+      val playerOpt : Option[PlayerAvatar] = PlayerMasterList.getPlayer(avatar_guid)
+      if(playerOpt.isDefined) {
+        val player: PlayerAvatar = playerOpt.get
+        player.setPosition(pos)
+        player.setPitch(aim_pitch)
+        player.crouched = is_crouching
+      }
 
     case msg @ ChatMsg(messagetype, has_wide_contents, recipient, contents, note_contents) =>
       // TODO: Prevents log spam, but should be handled correctly
@@ -207,6 +230,11 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ ObjectHeldMessage(avatar_guid, held_holsters, unk1) =>
       log.info("ObjectHeld: " + msg)
+      val playerOpt : Option[PlayerAvatar] = PlayerMasterList.getPlayer(avatar_guid)
+      if(playerOpt.isDefined) {
+        val player: PlayerAvatar = playerOpt.get
+        player.setUsedHolster(held_holsters)
+      }
 
     case msg @ AvatarJumpMessage(state) =>
       //log.info("AvatarJump: " + msg)
