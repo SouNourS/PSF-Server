@@ -220,9 +220,9 @@ class PlayerAvatar(val guid : Int) extends PSGameObject {
     * @throws IllegalArgumentException if the holster index does not exist
     * @return a tuple containing (1) if a holster was drawn or put away, and (2) what equipment is currently drawn
     */
-  def setUsedHolster(holster : Int) : (Boolean, Option[Equipment]) = {
+  def setUsedHolster(holster : Int) : (Boolean, Option[Tool]) = {
     var swapped = false
-    var equipmentOpt : Option[Equipment] = None
+    var equipmentOpt : Option[Tool] = None
 
     if(holster != drawnHolster) { // Swapping
       if(holster >= 0 && holster < 5) {
@@ -256,9 +256,9 @@ class PlayerAvatar(val guid : Int) extends PSGameObject {
     * @param holster the number indicating which holster slot to draw
     * @return the equipment in the holster, if any
     */
-  def getEquipmentInHolster(holster : Int) : Option[Equipment] = {
+  def getEquipmentInHolster(holster : Int) : Option[Tool] = {
     val slot = getHolster(holster)
-    val equipmentOpt : Option[Equipment] = slot.getEquipment
+    val equipmentOpt : Option[Tool] = slot.getEquipment
     if(equipmentOpt.isEmpty && holster == drawnHolster) // Holster is drawn, but empty
       setUsedHolster(255) // Put away hand
     equipmentOpt
@@ -270,7 +270,7 @@ class PlayerAvatar(val guid : Int) extends PSGameObject {
     * @param equipment a piece of Equipment that exists
     * @return the equipment in the holster, if any
     */
-  def setEquipmentInHolster(holster : Int, equipment : Equipment) : (Boolean, Option[Equipment]) = {
+  def setEquipmentInHolster(holster : Int, equipment : Tool) : (Boolean, Option[Tool]) = {
     val slot = getHolster(holster)
     val (success, equip) = slot.setEquipment(equipment)
     if((success || slot.getEquipment.isEmpty) && holster == drawnHolster) // Holster is drawn, but empty

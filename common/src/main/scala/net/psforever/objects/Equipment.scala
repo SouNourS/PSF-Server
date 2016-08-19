@@ -9,8 +9,6 @@ package net.psforever.objects
 class Equipment(val guid : Int, val size : EquipmentSize.Value = EquipmentSize.BLOCKED) extends PSGameObject {
   /** Temporary cosmetic field. */
   var name : String = "equipment"
-  /** Whether or not the weapon considers itself held. */
-  var isHeld : Boolean = false
   var inventoryTileWidth : Int = 1
   var inventoryTileHeight : Int = 1
 
