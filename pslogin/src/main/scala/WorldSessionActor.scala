@@ -2,6 +2,7 @@
 import java.net.{InetAddress, InetSocketAddress}
 
 import akka.actor.{Actor, ActorRef, Cancellable, MDCContextAware}
+import net.psforever.objects._
 import net.psforever.packet.{PlanetSideGamePacket, _}
 import net.psforever.packet.control._
 import net.psforever.packet.game._
@@ -147,9 +148,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
               val avatar : PlayerAvatar = PlayerAvatar(guid, "IlllIIIlllIlIllIlllIllI", PlanetSideEmpire.VS, false, 0, 0)
               avatar.setExoSuitType(0); // Standard Exo-Suit
               //init holsters
-              avatar.setEquipmentInHolster(0, Equipment(0, EquipmentSize.PISTOL) ) // Beamer in pistol slot 1
-              avatar.setEquipmentInHolster(2, Equipment(1, EquipmentSize.RIFLE) ) // Suppressor in rifle slot 1
-              avatar.setEquipmentInHolster(4, Equipment(2, EquipmentSize.MELEE) ) // Force Blade in melee slot
+              avatar.setEquipmentInHolster(0, Tool(0, EquipmentSize.PISTOL, 0) ) // Beamer in pistol slot 1
+              avatar.setEquipmentInHolster(2, Tool(1, EquipmentSize.RIFLE, 1) ) // Suppressor in rifle slot 1
+              avatar.setEquipmentInHolster(4, Tool(2, EquipmentSize.MELEE, 2) ) // Force Blade in melee slot
               avatar.setUsedHolster(0) // Start with Beamer drawn
               //add avatar
               PlayerMasterList.addPlayer(avatar, sessionId) // If created/added when sessionId is unavailable ...

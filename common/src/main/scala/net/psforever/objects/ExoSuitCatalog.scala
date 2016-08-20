@@ -5,7 +5,6 @@ import scala.collection.mutable
 
 /**
   * A listing of all available exo-suit types by their GUID.
-  * No values in this catalog should be changed, at least not for the first few hard defined suit types.
   * All references to the static values associated with the suit types should be made to their entries here.
   */
 object ExoSuitCatalog {
@@ -20,7 +19,7 @@ object ExoSuitCatalog {
   armor.maxArmor = 0
   armor.inventoryWidth = 0
   armor.inventoryHeight = 0
-  catalog.put(armor.guid, armor)
+  catalog += armor.guid -> armor
 
   armor = ExoSuit(0)
   armor.name = "standard exo-suit"
@@ -30,7 +29,7 @@ object ExoSuitCatalog {
   armor.holsterTypes(0) = EquipmentSize.PISTOL
   armor.holsterTypes(2) = EquipmentSize.RIFLE
   armor.holsterTypes(4) = EquipmentSize.MELEE
-  catalog.put(armor.guid, armor)
+  catalog += armor.guid -> armor
 
   armor = ExoSuit(1)
   armor.name = "agile exo-suit"
@@ -41,7 +40,7 @@ object ExoSuitCatalog {
   armor.holsterTypes(1) = EquipmentSize.PISTOL
   armor.holsterTypes(2) = EquipmentSize.RIFLE
   armor.holsterTypes(4) = EquipmentSize.MELEE
-  catalog.put(armor.guid, armor)
+  catalog += armor.guid -> armor
 
   armor = ExoSuit(2)
   armor.name = "reinforced exo-suit"
@@ -54,7 +53,7 @@ object ExoSuitCatalog {
   armor.holsterTypes(2) = EquipmentSize.RIFLE
   armor.holsterTypes(3) = EquipmentSize.RIFLE
   armor.holsterTypes(4) = EquipmentSize.MELEE
-  catalog.put(armor.guid, armor)
+  catalog += armor.guid -> armor
 
   armor = ExoSuit(3)
   armor.name = "infiltration suit"
@@ -64,7 +63,7 @@ object ExoSuitCatalog {
   armor.inventoryHeight = 6
   armor.holsterTypes(0) = EquipmentSize.PISTOL // TODO check that it is not pistol slot 1
   armor.holsterTypes(4) = EquipmentSize.MELEE
-  catalog.put(armor.guid, armor)
+  catalog += armor.guid -> armor
 
   armor = ExoSuit(4)
   armor.name = "mechanized assault exo-suit"
@@ -73,7 +72,7 @@ object ExoSuitCatalog {
   armor.inventoryWidth = 16
   armor.inventoryHeight = 16
   armor.holsterTypes(0) = EquipmentSize.MAX // TODO how to handle this?
-  catalog.put(armor.guid, armor)
+  catalog += armor.guid -> armor
 
   /**
     * Reference an existing exo-suit from the catalog.
@@ -81,6 +80,6 @@ object ExoSuitCatalog {
     * @return the exo-suit
     */
   def get(guid : Int) : Option[ExoSuit] = {
-    catalog.get(guid)
+    Option(catalog(guid))
   }
 }

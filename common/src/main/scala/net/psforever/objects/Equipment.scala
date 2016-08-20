@@ -9,8 +9,6 @@ package net.psforever.objects
 class Equipment(val guid : Int, val size : EquipmentSize.Value = EquipmentSize.BLOCKED) extends PSGameObject {
   /** Temporary cosmetic field. */
   var name : String = "equipment"
-  var inventoryTileWidth : Int = 1
-  var inventoryTileHeight : Int = 1
 
   /**
     * A constructor for equipment that indicates where the entity is spawned in the world.
@@ -24,6 +22,14 @@ class Equipment(val guid : Int, val size : EquipmentSize.Value = EquipmentSize.B
   def this(guid : Int, size : EquipmentSize.Value, x : Float, y : Float, z : Float) = {
     this(guid, size)
     setPosition(x, y, z)
+  }
+
+  /**
+    * Return the dimensions of the inventory representation for this piece of equipment.
+    * @return A Tuple containing (1) the width of the tile and (2) the height of the tile
+    */
+  def getInventorySize : (Int, Int) = {
+    (1, 1)
   }
 
   /**
