@@ -7,4 +7,8 @@ object InventoryItem {
   def apply(obj : Equipment, x : Int, y : Int) = {
     new InventoryItem(obj, x, y)
   }
+
+  def size : (Int, Int) {
+    obj.getSize
+  }
 }
