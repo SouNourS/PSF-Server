@@ -148,9 +148,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
               val avatar : PlayerAvatar = PlayerAvatar(guid, "IlllIIIlllIlIllIlllIllI", PlanetSideEmpire.VS, false, 0, 0)
               avatar.setExoSuitType(0); // Standard Exo-Suit
               //init holsters
-              avatar.setEquipmentInHolster(0, Tool(0, EquipmentSize.PISTOL, 0) ) // Beamer in pistol slot 1
-              avatar.setEquipmentInHolster(2, Tool(1, EquipmentSize.RIFLE, 1) ) // Suppressor in rifle slot 1
-              avatar.setEquipmentInHolster(4, Tool(2, EquipmentSize.MELEE, 2) ) // Force Blade in melee slot
+              avatar.setEquipmentInHolster(0, Tool(0, 0) ) // Beamer in pistol slot 1
+              avatar.setEquipmentInHolster(2, Tool(1, 1) ) // Suppressor in rifle slot 1
+              avatar.setEquipmentInHolster(4, Tool(2, 2) ) // Force Blade in melee slot
               avatar.setUsedHolster(0) // Start with Beamer drawn
               //add avatar
               PlayerMasterList.addPlayer(avatar, sessionId) // If created/added when sessionId is unavailable ...

@@ -193,7 +193,7 @@ class PlayerAvatarTest extends Specification {
 
     "getEquipmentInHolster / setEquipmentInHolster" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(0)
       player.getEquipmentInHolster(0).isDefined mustEqual false
 
@@ -205,13 +205,13 @@ class PlayerAvatarTest extends Specification {
 
     "setEquipmentInHolster (swapped equipment)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(0)
       player.setEquipmentInHolster(0, beamer)
       player.getHolster(0).getEquipment.isDefined mustEqual true
       (player.getHolster(0).getEquipment.get eq beamer) mustEqual true
 
-      val amp : Tool = Tool(2, EquipmentSize.PISTOL, 3)
+      val amp : Tool = Tool(2, 3)
       val (success, discard) = player.setEquipmentInHolster(0, amp)
       success mustEqual true
       player.getEquipmentInHolster(0).isDefined mustEqual true
@@ -222,7 +222,7 @@ class PlayerAvatarTest extends Specification {
 
     "setEquipmentInHolster (dropped equipment)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(0)
       player.setEquipmentInHolster(0, beamer)
       player.getEquipmentInHolster(0).isDefined mustEqual true
@@ -237,7 +237,7 @@ class PlayerAvatarTest extends Specification {
 
     "setExoSuitType (dropped wrong-sized equipment)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(1) //agile exo-suit, which has holster 1 for pistols
       val (equipped, _) = player.setEquipmentInHolster(1, beamer)
       equipped mustEqual true
@@ -268,7 +268,7 @@ class PlayerAvatarTest extends Specification {
 
     "setUsedHolster (draw equipped holster)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(0)
       val (carry, _) = player.setEquipmentInHolster(0, beamer)
       carry mustEqual true
@@ -282,7 +282,7 @@ class PlayerAvatarTest extends Specification {
 
     "setUsedHolster (put away equipped holster)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(0)
       player.setEquipmentInHolster(0, beamer)
 
@@ -293,7 +293,7 @@ class PlayerAvatarTest extends Specification {
 
     "setUsedHolster (dropped equipment, put away empty holster)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(0)
       player.setEquipmentInHolster(0, beamer)
       player.setUsedHolster(0)
@@ -309,8 +309,8 @@ class PlayerAvatarTest extends Specification {
 
     "setUsedHolster (swapped equipment, put away equipped holster)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
-      val beamer2 : Tool = Tool(2, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
+      val beamer2 : Tool = Tool(2, 0)
       player.setExoSuitType(0)
       player.setEquipmentInHolster(0, beamer)
       player.setUsedHolster(0)
@@ -326,7 +326,7 @@ class PlayerAvatarTest extends Specification {
 
     "getUsedHolster (exo-suit changes; put away holster)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(0)
       player.setEquipmentInHolster(0, beamer)
       player.setUsedHolster(0)
@@ -340,7 +340,7 @@ class PlayerAvatarTest extends Specification {
 
     "getUsedHolster (exo-suit changes; put away holster; dropped equipment)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(1)
       player.setEquipmentInHolster(1, beamer)
       player.setUsedHolster(1)
@@ -355,7 +355,7 @@ class PlayerAvatarTest extends Specification {
 
     "getUsedHolster (holster is already drawn)" in {
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(0)
       player.setEquipmentInHolster(0, beamer)
 
@@ -372,7 +372,7 @@ class PlayerAvatarTest extends Specification {
     "getUsedHolster (unequipped but drawn holster; put away holster)" in {
       //this is an error-catching situation that should never come up if programmed correctly
       val player : PlayerAvatar = PlayerAvatar(0)
-      val beamer : Tool = Tool(1, EquipmentSize.PISTOL, 0)
+      val beamer : Tool = Tool(1, 0)
       player.setExoSuitType(1)
       player.setEquipmentInHolster(1, beamer)
       player.setUsedHolster(1)
@@ -752,6 +752,46 @@ class PlayerAvatarTest extends Specification {
       // Check when this instance was created
       val masterList = new PlayerMasterList
       masterList.started > 0L // Unix time
+    }
+  }
+
+  "PlayerMasterList (object)" should {
+    // Due to the way the testing suite handles concurrency and singletons, every test must be executed in one long block.
+    // The good news is that, since the object calls a singular instance of the instance, one merely has to run through all of the functions once.
+    "everything" in {
+      val id1 : Int = 0
+      val guid1 : PlanetSideGUID = PlanetSideGUID(id1)
+      val id2 : Int = 1
+      val id3 : Int = 2
+      val guid3 : PlanetSideGUID = PlanetSideGUID(id3)
+      val id4 : Int = 3
+      val player1 : PlayerAvatar = PlayerAvatar(id1, "s1", PlanetSideEmpire.VS, false, 2, 3)
+      val player2 : PlayerAvatar = PlayerAvatar(id2, "s2", PlanetSideEmpire.TR, false, 2, 3)
+      val player3 : PlayerAvatar = PlayerAvatar(id3, "s3", PlanetSideEmpire.NC, false, 2, 3)
+      val player4 : PlayerAvatar = PlayerAvatar(id4, "s4", PlanetSideEmpire.TR, false, 2, 3)
+      val externId2 : Long = 20L
+      val externId4 : Long = 40L
+
+      PlayerMasterList.addPlayer(player1) mustEqual true // addPlayer(PlayerAvatar)
+      PlayerMasterList.getPlayer(id1).isDefined mustEqual true // getPlayer(Int)
+      PlayerMasterList.getPlayer(guid1).isDefined mustEqual true // getPlayer(PlanetSideGUID)
+      PlayerMasterList.addPlayer(player2, externId2) mustEqual true // addPlayer(PlayerAvatar, Long)
+      PlayerMasterList.getPlayer(externId2).isDefined mustEqual true // getPlayer(Long)
+      PlayerMasterList.getPlayer(id2, externId2).isDefined mustEqual true // getPlayer(Int, Long)
+      PlayerMasterList.addPlayer(player3) mustEqual true
+      PlayerMasterList.getWorldPopulation //getWorldPopulation
+      PlayerMasterList.getUnclaimedCharacters //getUnclaimedCharacters
+      PlayerMasterList.removePlayer(id1) mustEqual true // removePlayer(Int)
+      PlayerMasterList.removePlayer(externId2) mustEqual true // removePlayer(Long)
+      PlayerMasterList.removePlayer(guid3) mustEqual true // removePlayer(PlanetSideGUID)
+      PlayerMasterList.addPlayer(player4) mustEqual true
+      PlayerMasterList.userClaimsCharacter(externId4, id4) mustEqual id4 // userClaimsCharacter(Long, Int)
+      PlayerMasterList.userDissociatesCharacter(externId4) mustEqual id4 // userDissociatesCharacter(Long)
+      PlayerMasterList.userClaimsCharacter(externId4, id4) mustEqual id4
+      PlayerMasterList.userDissociatesCharacter(externId4, id4) mustEqual id4 // userDissociatesCharacter(Long, Int)
+      PlayerMasterList.userClaimsCharacter(externId4, id4) mustEqual id4
+      PlayerMasterList.removePlayer(player4) mustEqual true // removePlayer(PlayerAvatar)
+      PlayerMasterList.shutdown.isEmpty mustEqual true // shutdown
     }
   }
 }

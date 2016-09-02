@@ -3,7 +3,7 @@ package net.psforever.objects
 
 import scala.collection.mutable.ListBuffer
 
-class ToolDefinition(val guid : Int, val name :String) {
+class ToolDefinition(val guid : Int, val name : String) {
   var fireModes : ListBuffer[FireModeDefinition] = new ListBuffer[FireModeDefinition]
   var size : EquipmentSize.Value = EquipmentSize.BLOCKED
   var inventoryTileWidth : Int = 1

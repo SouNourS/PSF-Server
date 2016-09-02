@@ -1,6 +1,5 @@
 // Copyright (c) 2016 PSForever.net to present
 import net.psforever.objects._
-import net.psforever.packet.game.{PlanetSideEmpire, PlanetSideGUID}
 import org.specs2.mutable._
 import net.psforever.types._
 
@@ -123,37 +122,39 @@ class GameObjectTest extends Specification {
 
     "Equipment" should {
       "constructor (default)" in {
-        val equipment: Equipment = new Equipment(0)
+        val equipment: Equipment = Equipment(0)
         equipment.guid mustEqual 0
-        equipment.size mustEqual EquipmentSize.BLOCKED
-      }
-
-      "constructor(GUID, EquipmentSize)" in {
-        val equipment: Equipment = new Equipment(0, EquipmentSize.PISTOL)
-        equipment.guid mustEqual 0
-        equipment.size mustEqual EquipmentSize.PISTOL
+        equipment.getSize mustEqual EquipmentSize.BLOCKED
       }
 
       "construct(GUID, EquipmentSize, Float, Float, Float)" in {
-        val equipment: Equipment = Equipment(0, EquipmentSize.PISTOL, 0.5f, 300.76f, -2f)
+        val equipment: Equipment = Equipment(0, 0.5f, 300.76f, -2f)
         val pos : Vector3 = equipment.getPosition
         equipment.guid mustEqual 0
-        equipment.size mustEqual EquipmentSize.PISTOL
         pos.x mustEqual 0.5f
         pos.y mustEqual 300.76f
         pos.z mustEqual -2f
       }
 
+      "getName" in {
+        val equipment: Equipment = Equipment(0)
+        equipment.getName mustEqual "Equipment"
+      }
+
+      "setName" in {
+        val equipment: Equipment = Equipment(0)
+        equipment.setName("beamer") //does nothing
+        equipment.getName mustEqual "Equipment"
+      }
+
       "{object}.toString" in {
-        val obj : Equipment = Equipment(3, EquipmentSize.PISTOL, 0.5f, 300.76f, -2f)
-        obj.name = "beamer"
-        obj.toString mustEqual "{beamer-pos:(0.50, 300.76, -2.00)}"
+        val obj : Equipment = Equipment(3, 0.5f, 300.76f, -2f)
+        obj.toString mustEqual "{Equipment}"
       }
 
       "Equipment.toString(object)" in {
-        val obj : Equipment = Equipment(3, EquipmentSize.PISTOL, 0.5f, 300.76f, -2f)
-        obj.name = "beamer"
-        Equipment.toString(obj) mustEqual "{beamer-pos:(0.50, 300.76, -2.00)}"
+        val obj : Equipment = Equipment(3, 0.5f, 300.76f, -2f)
+        Equipment.toString(obj) mustEqual "{Equipment}"
       }
     }
 
@@ -178,7 +179,7 @@ class GameObjectTest extends Specification {
       }
 
       "setEquipment / getEquipment (pass)" in {
-        val beamer : Tool = Tool(0, EquipmentSize.PISTOL, 0)
+        val beamer : Tool = Tool(0, 0)
         val slot : EquipmentSlot = EquipmentSlot(EquipmentSize.PISTOL)
         slot.getEquipment.isDefined mustEqual false
 
@@ -190,7 +191,7 @@ class GameObjectTest extends Specification {
       }
 
       "setEquipment / getEquipment (fail; equipment wrong size)" in {
-        val suppressor : Tool = Tool(0, EquipmentSize.RIFLE, 1)
+        val suppressor : Tool = Tool(0, 1)
         val slot : EquipmentSlot = EquipmentSlot(EquipmentSize.PISTOL)
         slot.getEquipment.isDefined mustEqual false
 
@@ -201,7 +202,7 @@ class GameObjectTest extends Specification {
       }
 
       "setSize, dropped wrong-sized equipment on size change" in {
-        val beamer : Tool = Tool(0, EquipmentSize.PISTOL, 0)
+        val beamer : Tool = Tool(0, 0)
         val slot : EquipmentSlot = EquipmentSlot(EquipmentSize.PISTOL)
         slot.setEquipment(beamer)
         slot.getEquipment.isDefined mustEqual true
@@ -216,13 +217,13 @@ class GameObjectTest extends Specification {
       }
 
       "setEquipment (swapped equipment)" in {
-        val beamer : Tool = Tool(0, EquipmentSize.PISTOL, 0)
+        val beamer : Tool = Tool(0, 0)
         val slot : EquipmentSlot = EquipmentSlot(EquipmentSize.PISTOL)
         slot.setEquipment(beamer)
         slot.getEquipment.isDefined mustEqual true
         (slot.getEquipment.get eq beamer) mustEqual true
 
-        val amp : Tool = Tool(1, EquipmentSize.PISTOL, 3)
+        val amp : Tool = Tool(1, 3)
         val (inserted, discard) = slot.setEquipment(amp)
         inserted mustEqual true
         slot.getEquipment.isDefined mustEqual true
@@ -232,7 +233,7 @@ class GameObjectTest extends Specification {
       }
 
       "setEquipment (dropped equipment)" in {
-        val beamer : Tool = Tool(0, EquipmentSize.PISTOL, 0)
+        val beamer : Tool = Tool(0, 0)
         val slot : EquipmentSlot = EquipmentSlot(EquipmentSize.PISTOL)
         slot.setEquipment(beamer)
         slot.getEquipment.isDefined mustEqual true
@@ -249,16 +250,9 @@ class GameObjectTest extends Specification {
         val slot : EquipmentSlot = new EquipmentSlot
         slot.getSize mustEqual EquipmentSize.BLOCKED
 
-        val beamer1 : Tool = Tool(0, EquipmentSize.PISTOL, 0)
+        val beamer1 : Tool = Tool(0, 0)
         val (inserted1, _) = slot.setEquipment(beamer1)
         inserted1 mustEqual false
-        slot.getEquipment.isDefined mustEqual false
-
-        val beamer2 : Tool = Tool(0, EquipmentSize.BLOCKED, 0)
-        beamer2.size mustEqual EquipmentSize.BLOCKED
-        beamer2.size mustEqual slot.getSize //both equipment and slot are same size
-        val (inserted2, _) = slot.setEquipment(beamer2)
-        inserted2 mustEqual false
         slot.getEquipment.isDefined mustEqual false
       }
 
@@ -268,11 +262,10 @@ class GameObjectTest extends Specification {
       }
 
       "{object}.toString, equipped" in {
-        val beamer : Tool = new Tool(3, EquipmentSize.PISTOL, 0, 0.5f, 300.76f, -2f)
-        beamer.name = "beamer"
+        val beamer : Tool = Tool(3, 0, 0.5f, 300.76f, -2f)
         val obj : EquipmentSlot = EquipmentSlot(EquipmentSize.PISTOL)
         obj.setEquipment(beamer)
-        obj.toString mustEqual "{EquipmentSlot-type:PISTOL-equipment:{beamer-pos:(0.50, 300.76, -2.00)}}"
+        obj.toString mustEqual "{EquipmentSlot-type:PISTOL-equipment:{beamer-CELL_ENERGY(0/16)-fire:0}}"
       }
 
       "EquipmentSlot.toString(object), empty" in {
@@ -281,11 +274,10 @@ class GameObjectTest extends Specification {
       }
 
       "EquipmentSlot.toString(object), equipped" in {
-        val beamer : Tool = new Tool(3, EquipmentSize.PISTOL, 0, 0.5f, 300.76f, -2f)
-        beamer.name = "beamer"
+        val beamer : Tool = new Tool(3, 0, 0.5f, 300.76f, -2f)
         val obj : EquipmentSlot = EquipmentSlot(EquipmentSize.PISTOL)
         obj.setEquipment(beamer)
-        EquipmentSlot.toString(obj) mustEqual "{EquipmentSlot-type:PISTOL-equipment:{beamer-pos:(0.50, 300.76, -2.00)}}"
+        EquipmentSlot.toString(obj) mustEqual "{EquipmentSlot-type:PISTOL-equipment:{beamer-CELL_ENERGY(0/16)-fire:0}}"
       }
     }
 
@@ -380,43 +372,38 @@ class GameObjectTest extends Specification {
       }
     }
 
-    "PlayerMasterList (object)" should {
-      // Due to the way the testing suite handles concurrency and singletons, every test must be executed in one long block.
-      // The good news is that, since the object calls a singular instance of the instance, one merely has to run through all of the functions once.
-      "everything" in {
-        val id1 : Int = 0
-        val guid1 : PlanetSideGUID = PlanetSideGUID(id1)
-        val id2 : Int = 1
-        val id3 : Int = 2
-        val guid3 : PlanetSideGUID = PlanetSideGUID(id3)
-        val id4 : Int = 3
-        val player1 : PlayerAvatar = PlayerAvatar(id1, "s1", PlanetSideEmpire.VS, false, 2, 3)
-        val player2 : PlayerAvatar = PlayerAvatar(id2, "s2", PlanetSideEmpire.TR, false, 2, 3)
-        val player3 : PlayerAvatar = PlayerAvatar(id3, "s3", PlanetSideEmpire.NC, false, 2, 3)
-        val player4 : PlayerAvatar = PlayerAvatar(id4, "s4", PlanetSideEmpire.TR, false, 2, 3)
-        val externId2 : Long = 20L
-        val externId4 : Long = 40L
+    "InventoryItem" should {
+      "constructor" in {
+        val beamer = Tool(0, 0)
+        val invItem : InventoryItem = InventoryItem(beamer, 2, 5)
+        (invItem.obj eq beamer) mustEqual true
+        invItem.y mustEqual 2
+        invItem.x mustEqual 5
+      }
 
-        PlayerMasterList.addPlayer(player1) mustEqual true // addPlayer(PlayerAvatar)
-        PlayerMasterList.getPlayer(id1).isDefined mustEqual true // getPlayer(Int)
-        PlayerMasterList.getPlayer(guid1).isDefined mustEqual true // getPlayer(PlanetSideGUID)
-        PlayerMasterList.addPlayer(player2, externId2) mustEqual true // addPlayer(PlayerAvatar, Long)
-        PlayerMasterList.getPlayer(externId2).isDefined mustEqual true // getPlayer(Long)
-        PlayerMasterList.getPlayer(id2, externId2).isDefined mustEqual true // getPlayer(Int, Long)
-        PlayerMasterList.addPlayer(player3) mustEqual true
-        PlayerMasterList.getWorldPopulation //getWorldPopulation
-        PlayerMasterList.getUnclaimedCharacters //getUnclaimedCharacters
-        PlayerMasterList.removePlayer(id1) mustEqual true // removePlayer(Int)
-        PlayerMasterList.removePlayer(externId2) mustEqual true // removePlayer(Long)
-        PlayerMasterList.removePlayer(guid3) mustEqual true // removePlayer(PlanetSideGUID)
-        PlayerMasterList.addPlayer(player4) mustEqual true
-        PlayerMasterList.userClaimsCharacter(externId4, id4) mustEqual id4 // userClaimsCharacter(Long, Int)
-        PlayerMasterList.userDissociatesCharacter(externId4) mustEqual id4 // userDissociatesCharacter(Long)
-        PlayerMasterList.userClaimsCharacter(externId4, id4) mustEqual id4
-        PlayerMasterList.userDissociatesCharacter(externId4, id4) mustEqual id4 // userDissociatesCharacter(Long, Int)
-        PlayerMasterList.userClaimsCharacter(externId4, id4) mustEqual id4
-        PlayerMasterList.removePlayer(player4) mustEqual true // removePlayer(PlayerAvatar)
-        PlayerMasterList.shutdown.isEmpty mustEqual true // shutdown
+      "constructor (failure)" in {
+        InventoryItem(null, 2, 5) must throwA[IllegalArgumentException]
+      }
+
+      "getInventorySize" in {
+        val beamer = Tool(0, 0)
+        val invItem : InventoryItem = InventoryItem(beamer, 2, 5)
+        val invSize : (Int, Int) = invItem.getInventorySize
+        val beamerSize : (Int, Int) = beamer.getInventorySize
+        beamerSize._1 mustEqual invSize._1
+        beamerSize._2 mustEqual invSize._2
+      }
+
+      "{object}.toString" in {
+        val beamer = Tool(0, 0)
+        val obj : InventoryItem = InventoryItem(beamer, 2, 5)
+        obj.toString mustEqual "<{beamer-CELL_ENERGY(0/16)-fire:0}>"
+      }
+
+      "InventoryItem.toString(object)" in {
+        val beamer = Tool(0, 0)
+        val obj : InventoryItem = InventoryItem(beamer, 2, 5)
+        InventoryItem.toString(obj) mustEqual "<{beamer-CELL_ENERGY(0/16)-fire:0}>"
       }
     }
   }

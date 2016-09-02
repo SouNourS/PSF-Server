@@ -1,7 +1,7 @@
 // Copyright (c) 2016 PSForever.net to present
 package net.psforever.objects
 
-import net.psforever.packet.game.PlanetSideEmpire
+import net.psforever.packet.game.{PlanetSideEmpire, PlanetSideGUID}
 
 import scala.collection.mutable.ListBuffer
 
@@ -44,6 +44,8 @@ class PlayerAvatar(val guid : Int) extends PSGameObject {
   private val holsters : Array[EquipmentSlot] = Array.fill[EquipmentSlot](5)(new EquipmentSlot)
   /** Which holster is depicted as having its equipment drawn. Valid numbers are 0-4 and 255 (no holster drawn). */
   private var drawnHolster : Int = 255
+  /** The player's personal inventory. */
+  private val inventory : Backpack = Backpack(PlanetSideGUID(guid), 1,1)
 
   /** Whether the player is in a squatting position. */
   var crouched : Boolean = false

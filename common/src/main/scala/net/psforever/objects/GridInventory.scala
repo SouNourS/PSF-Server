@@ -5,7 +5,13 @@ import scala.annotation.switch
 import scala.util.control.Breaks._
 import scala.collection.mutable
 
-class GridInventory(var width : Int, var height : Int) extends Inventory {
+/**
+  * na
+  *
+  * @param width
+  * @param height
+  */
+class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
   protected var contents : mutable.HashMap[Int,InventoryItem] = new mutable.HashMap[Int,InventoryItem]
   protected var grid : Array[Int] = _
   resize(width, height) // Call to setup storage space, as need be
@@ -14,29 +20,48 @@ class GridInventory(var width : Int, var height : Int) extends Inventory {
     contents.size
   }
 
-  def addItem(item : Equipment, x : Int, y : Int) : (Boolean, Option[Equipment]) = {
-    if(x < 0 || y < 0 || x + item.getInventorySize._1 > width || y + item.getInventorySize._2 > height)
+  /**
+    * Insert an item into the grid inventory at a set location.<br>
+    * <br>
+    * Each insertion makes "inventory area" number of checks, and performs "inventory area" set operations if that passes.
+    * In this way, each insertion costs twice the "inventory area" of the item on insertion for each item.
+    * The meaning behind this is that there is no upkeep cost for performing the insertion of multiple objects.
+    * Insertion complexity is `O(2n)`.<br>
+    * <br>
+    * Assuming two inventories - the 6x6 of Infiltration and the 9x12 of Reinforced - we will fill these inventories up with items.
+    * First, we will fill them with 3x3 items; second, we will fill them with 2x2 items.
+    * In the first case, the 6x6 inventory fills with 4 items in 72 passes.
+    * The 9x12 inventory takes 12 items in 72 passes as well.
+    * In the second case, the 6x6 inventory fills with 9 items in 216 passes.
+    * The 9x12 inventory takes 24 items in 192 passes.
+    * @param item
+    * @param x
+    * @param y
+    * @return
+    */
+  def addItem(item : Equipment, y : Int, x : Int) : (Boolean, Option[Equipment]) = {
+    if(x < 0 || y < 0 || x + item.getInventorySize._2 > width || y + item.getInventorySize._1 > height)
       return (false, None)
 
-    val overlap : List[Int] = testForOverlap(item, x, y)
+    val overlap : List[Int] = testForOverlap(item, y, x)
     var success = true
     var swap : Option[Equipment] = None
     (overlap.size: @switch) match {
       case 0 =>
-        contents += (item.guid -> InventoryItem(item, x, y))
+        contents += (item.guid -> InventoryItem(item, y, x))
         val nsize = item.getInventorySize
-        setRange(x, y, nsize._1, nsize._2, item.guid)
+        setRange(x, y, nsize._2, nsize._1, item.guid)
 
       case 1 =>
         val swapopt = contents.remove(overlap.head).get
         swap = Option(swapopt.obj)
         if(swap.isDefined) {
           val isize = swap.get.getInventorySize
-          setRange(swapopt.x, swapopt.y, isize._1, isize._2)
+          setRange(swapopt.x, swapopt.y, isize._2, isize._1)
         }
-        contents += (item.guid -> InventoryItem(item, x, y))
+        contents += (item.guid -> InventoryItem(item, y, x))
         val nsize = item.getInventorySize
-        setRange(x, y, nsize._1, nsize._2, item.guid)
+        setRange(x, y, nsize._2, nsize._1, item.guid)
 
       case _ =>
         success = false
@@ -44,71 +69,107 @@ class GridInventory(var width : Int, var height : Int) extends Inventory {
     (success, swap)
   }
 
-  def testForOverlap(item : Equipment, x : Int, y : Int) : List[Int] = {
-    val xw = x + item.getInventorySize._1
-    val yh = y + item.getInventorySize._2
+  def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
+    val w : Int = item.getInventorySize._2
+    val h : Int = item.getInventorySize._1
+    if(w < 0 || h < 0 || w < x || h < y || x+w >= width || y+h >= height)
+      return Nil
+
     var list: mutable.HashMap[Int,Boolean] = new mutable.HashMap[Int,Boolean]
 
-    for(gy <- x to yh) {
-      for(gx <- y to xw) {
-        val index : Int = grid(gy * width + gx)
-        if(grid(index) > -1)
-          list += (index -> true)
+    for(dy <- 0 to h) {
+      val row0 : Int = (y + dy) * width + x
+      for(dx <- 0 to w) {
+        val index : Int = grid(row0 + dx)
+        if(index > -1)
+            list += (index -> true)
       }
     }
     list.keySet.toList
   }
 
   private def setRange(x : Int, y : Int, w : Int, h : Int, value : Int = -1) : Boolean = {
-    val xw : Int = x + w
-    val yh : Int = y + h
-    if(w < 0 || h < 0 || w < x || h < y || xw > width || yh > height)
+    if(w < 0 || h < 0 || w < x || h < y || x+w >= width || y+h >= height)
       return false
 
-    for(gy <- x to xw) {
-      for(gx <- y to yh) {
-        val index : Int = grid(gy * width + gx)
+    for(dy <- 0 to h) {
+      val row0 : Int = (y + dy) * width + x
+      for(dx <- 0 to w) {
+        val index : Int = grid(row0 + dx)
         grid(index) = value
       }
     }
     true
   }
 
+  def getItem(guid : Int) : Option[Equipment] = {
+    val itemopt = contents.get(guid)
+    if(itemopt.isDefined)
+      return Option(itemopt.get.obj)
+    None
+  }
+
+  def getItem(item : Equipment) : Option[Equipment] = {
+    contents.foreach({
+      case (key : Int, value : InventoryItem) =>
+        if(value.obj eq item)
+          return Option(value.obj)
+    })
+    None
+  }
+
+  def getItem(y : Int, x : Int) : Option[Equipment] = {
+    val index : Int = y * width + x
+    if(0 <= index && index < height * width) {
+      return getItem(grid(index))
+    }
+    None
+  }
+
+  def removeItem(guid : Int) : Option[Equipment] = {
+    var removed : Option[Equipment] = None
+    val removopt : Option[InventoryItem] = contents.remove(guid)
+    if(removopt.isDefined) {
+      val invItem : InventoryItem = removopt.get
+      val obj = invItem.obj
+      setRange(invItem.x, invItem.y, obj.getInventorySize._2, obj.getInventorySize._1)
+      removed = Option(obj)
+    }
+    removed
+  }
+
   def removeItem(item : Equipment) : Option[Equipment] = {
-    contents.foreach { case (_: Int, tile: InventoryItem) =>
-      if(tile.obj eq item) {
-        return removeItem(tile.x, tile.y)
+    var removed : Option[Equipment] = removeItem(item.guid)
+    if(removed.isDefined)
+      return removed
+
+    contents.foreach { case (key: Int, stowed: InventoryItem) =>
+      if(stowed.obj eq item) {
+        //TODO we found the correct equipment in the inventory under a different guid; what happened?
+        return removeItem(key)
       }
     }
     None
   }
 
-  def removeItem(x : Int, y : Int) : Option[Equipment] = {
-    var removed: Option[Equipment] = None
+  def removeItem(y : Int, x : Int) : Option[Equipment] = {
+    var removed : Option[Equipment] = None
 
-    val guid : Int = grid(y * width + x)
-    if(guid > -1 ) {
-      val invopt = contents.get(guid)
-      var rx : Int = x
-      var ry : Int = y
-      var rw : Int = 1
-      var rh : Int = 1
-      if(invopt.isDefined) {
-        val invitem = invopt.get
-        removed = Option(invitem.obj)
-        rx = invitem.x
-        ry = invitem.y
-        rw = invitem.obj.getInventorySize._1
-        rh = invitem.obj.getInventorySize._2
+    if(x >= 0 || x < width || y > 0 || y < height) {
+      val guid: Int = grid(y * width + x)
+      if(guid > -1) {
+        removed = removeItem(guid)
+        break
       }
-      setRange(rx, ry, rw, rh)
     }
     removed
   }
 
   def resize(w : Int, h : Int) : List[Equipment] = {
-    val oldWidth : Int = width
-    val oldHeight : Int = height
+    if(w < 0 || h < 0)
+      Nil
+    width = w
+    height = h
     grid = Array.fill[Int](w * h)(-1)
 
     if(contents.nonEmpty) {

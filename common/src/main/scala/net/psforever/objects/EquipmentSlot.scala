@@ -64,7 +64,7 @@ class EquipmentSlot {
     if(size != EquipmentSize.BLOCKED) {
       val held : Option[Tool] = Option(equip)
       val equipmentOpt : Option[Tool] = Option(equipment)
-      if((equipmentOpt.isDefined && equipment.size != EquipmentSize.BLOCKED && equipment.size == size) || (equipmentOpt.isEmpty && held.isDefined)) {
+      if((equipmentOpt.isDefined && equipment.getSize != EquipmentSize.BLOCKED && equipment.getSize == size) || (equipmentOpt.isEmpty && held.isDefined)) {
         if(equipmentOpt.isDefined) {
           equip = equipment
         }

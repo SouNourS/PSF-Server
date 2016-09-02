@@ -80,6 +80,6 @@ object ExoSuitCatalog {
     * @return the exo-suit
     */
   def get(guid : Int) : Option[ExoSuit] = {
-    Option(catalog(guid))
+    catalog.get(guid)
   }
 }
