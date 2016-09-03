@@ -2,7 +2,6 @@
 package net.psforever.objects
 
 import scala.annotation.switch
-import scala.util.control.Breaks._
 import scala.collection.mutable
 
 class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
@@ -14,7 +13,7 @@ class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
   }
 
   /**
-    * Insert an item into the inventory at a set location.<br>
+    * Stow an item in the inventory at a set location.<br>
     * <br>
     * Each insertion makes "size of contents" number of checks, and performs a set operation if that passes.
     * The first insertion is, therefore, free.
@@ -35,8 +34,15 @@ class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
     * @return
     */
   def addItem(item : Equipment, y : Int, x : Int) : (Boolean, Option[Equipment]) = {
-    if(x < 0 || y < 0 || x + item.getInventorySize._1 > width || y + item.getInventorySize._2 > height)
+    if(Option(item).isEmpty || x < 0 || y < 0 || x + item.getInventorySize._1 > width || y + item.getInventorySize._2 > height)
       return (false, None)
+    else if(contents.get(item.guid).isDefined) {
+      val obj = contents(item.guid).obj
+      if(obj ne item) {
+        //TODO actually a really concerning issue!
+      }
+      return (false, None)
+    }
 
     val overlap : List[Int] = testForOverlap(item, y, x)
     var success = true
@@ -53,20 +59,19 @@ class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
     (success, swap)
   }
 
-  def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
-    val itemx0 = x
-    val itemy0 = y
-    val itemx1 = x + item.getInventorySize._2
-    val itemy1 = y + item.getInventorySize._1
+  protected def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
+    val w = x + item.getInventorySize._2 //item
+    val h = y + item.getInventorySize._1
 
     var list : mutable.ListBuffer[Int] = new mutable.ListBuffer[Int]()
     contents.foreach({ case (key : Int, value : InventoryItem) =>
-      val stowx0 = value.x
-      val stowy0 = value.y
-      val stowx1 = stowx0 + value.obj.getInventorySize._2
-      val stowy1 = stowy0 + value.obj.getInventorySize._1
-      if((itemx0 >= stowx0 && itemx0 <= stowx1) || (itemx1 >= stowx0 && itemx1 <= stowx1) &&
-        (itemy0 >= stowy0 && itemy0 <= stowy1) || (itemy1 >= stowy0 && itemy1 <= stowy1)) {
+      val sx = value.x //test
+      val sy = value.y
+      val sw = sx + value.obj.getInventorySize._2
+      val sh = sy + value.obj.getInventorySize._1
+      if( ((sx <= x && x < sw) || (sx < w && w < sw) || (x <= sx && sx < w)) &&
+        ((sy <= y && y < sh) || (sy < h && h < sh) || (y <= sy && sy < h)) ) {
+        // third cases check if test is embedded in item
         list += key
       }
     })
@@ -81,64 +86,57 @@ class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
   }
 
   def getItem(item : Equipment) : Option[Equipment] = {
-    contents.foreach({
-      case (key : Int, value : InventoryItem) =>
-        if(value.obj eq item)
-          return Option(value.obj)
-    })
+    if(Option(item).isDefined) {
+      contents.foreach({
+        case (key : Int, value : InventoryItem) =>
+          if(value.obj eq item)
+            return Option(value.obj)
+      })
+    }
     None
   }
 
   def getItem(y : Int, x : Int) : Option[Equipment] = {
-    contents.foreach({
-      case (key : Int, value : InventoryItem) =>
-        val h : Int = value.y + value.obj.getInventorySize._1
-        val w : Int = value.x + value.obj.getInventorySize._2
-        if(0 <= x && x < w && 0 <= y && y < h)
-          return Option(value.obj)
-    })
+    if(x >= 0 && x < width && y >= 0 && y < height) {
+      contents.foreach({
+        case (key : Int, value : InventoryItem) =>
+          val sy : Int = value.y
+          val sx : Int = value.x
+          val sh : Int = sy + value.obj.getInventorySize._1
+          val sw : Int = sx + value.obj.getInventorySize._2
+          if(sx <= x && x < sw && sy <= y && y < sh)
+            return Option(value.obj)
+      })
+    }
     None
   }
 
   def removeItem(guid : Int) : Option[Equipment] = {
-    var removed : Option[Equipment] = None
     val removopt : Option[InventoryItem] = contents.remove(guid)
     if(removopt.isDefined)
-      removed = Option(removopt.get.obj)
-    removed
+      return Option(removopt.get.obj)
+    None
   }
 
   def removeItem(item : Equipment) : Option[Equipment] = {
-    var removed : Option[Equipment] = removeItem(item.guid)
-    if(removed.isDefined)
-      return removed
-
-    contents.foreach({ case (key: Int, stowed: InventoryItem) =>
-      if(stowed.obj eq item) {
-        //TODO we found the correct equipment in the inventory under a different guid; what happened?
-        removed = Option(contents.remove(key).get.obj)
-        break
-      }
-    })
-    removed
+    if(Option(item).isDefined)
+      return removeItem(item.guid)
+    None
   }
 
-  def removeItem(x : Int, y : Int) : Option[Equipment] = {
-    var removed : Option[Equipment] = None
-
-    if(x >= 0 || x < width || y > 0 || y < height) {
-      contents.foreach({ case (key: Int, stowed: InventoryItem) =>
-        val stowx0 = stowed.x
-        val stowy0 = stowed.y
-        val stowx1 = stowx0 + stowed.obj.getInventorySize._2
-        val stowy1 = stowy0 + stowed.obj.getInventorySize._1
-        if((x >= stowx0 && x <= stowx1) || (y >= stowy0 && y <= stowy1)) {
-          removed = Option(contents.remove(key).get.obj)
-          break
-        }
-      })
+  def removeItem(y : Int, x : Int) : Option[Equipment] = {
+    if(x >= 0 && x < width && y >= 0 && y < height) {
+      contents.foreach({
+        case (key : Int, value : InventoryItem) =>
+          val sy : Int = value.y
+          val sx : Int = value.x
+          val sh : Int = sy + value.obj.getInventorySize._1
+          val sw : Int = sx + value.obj.getInventorySize._2
+          if(sx <= x && x < sw && sy <= y && y < sh)
+            return Option(contents.remove(key).get.obj)
+       })
     }
-    removed
+    None
   }
 
   def resize(w : Int, h : Int) : List[Equipment] = {
@@ -158,17 +156,31 @@ class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
     Nil
   }
 
+  /**
+    * Override the string representation to provide additional information.
+    * @return the string output
+    */
   override def toString : String = {
     ListInventory.toString(this)
   }
 }
 
 object ListInventory {
+  /**
+    * A constructor that accepts the minimum parameters.
+    * @param w the width
+    * @param h the height
+    * @return the ListInventory
+    */
   def apply(w : Int, h : Int) : ListInventory = {
     new ListInventory(w, h)
   }
 
+  /**
+    * Provide a fixed string representation.
+    * @return the string output
+    */
   def toString(obj : ListInventory) : String = {
-    "[inventory: %dx%d, %d items]".format(obj.width, obj.height, obj.contents.size)
+    "[inventory(%dx%d): %d items]".format(obj.width, obj.height, obj.contents.size)
   }
 }

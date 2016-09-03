@@ -40,8 +40,15 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
     * @return
     */
   def addItem(item : Equipment, y : Int, x : Int) : (Boolean, Option[Equipment]) = {
-    if(x < 0 || y < 0 || x + item.getInventorySize._2 > width || y + item.getInventorySize._1 > height)
+    if(Option(item).isEmpty || x < 0 || y < 0 || x + item.getInventorySize._1 > width || y + item.getInventorySize._2 > height)
       return (false, None)
+    else if(contents.get(item.guid).isDefined) {
+      val obj = contents(item.guid).obj
+      if(obj ne item) {
+        //TODO actually a really concerning issue!
+      }
+      return (false, None)
+    }
 
     val overlap : List[Int] = testForOverlap(item, y, x)
     var success = true
@@ -69,7 +76,7 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
     (success, swap)
   }
 
-  def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
+  private def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
     val w : Int = item.getInventorySize._2
     val h : Int = item.getInventorySize._1
     if(w < 0 || h < 0 || w < x || h < y || x+w >= width || y+h >= height)

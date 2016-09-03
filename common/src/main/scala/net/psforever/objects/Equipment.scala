@@ -51,7 +51,7 @@ class Equipment(val guid : Int) extends PSGameObject {
 
   /**
     * Return the dimensions of the inventory representation for this piece of equipment.
-    * @return A Tuple containing (1) the height of the tile and (2) the width of the tile
+    * @return a Tuple containing (1) the height of the tile and (2) the width of the tile
     */
   def getInventorySize : (Int, Int) = {
     (1, 1)
