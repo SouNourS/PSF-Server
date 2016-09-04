@@ -2,25 +2,33 @@
 package net.psforever.objects
 
 /**
-  * The base class for all types of Inventories.
-  * Inventories are used to contain ("stow") Equipment.<br>
+  * The base class for all types of Inventories.<br>
   * <br>
-  * Inventories consist of an internalized grid region - a two-dimensional array - which causes objects to be stored in exclusive positions.
+  * Inventories are used to contain Equipment.
+  * The verb "stow" will hitherto be used interchangeably with all connotations of putting something into the inventory.
+  * Inventories are also used to "display" contents and will encompass boundaries and codified locations within that boundary.
+  * By default, this is considered as a two-dimensional "grid" of discrete cells.
+  * The data structure that maintains the elements of the inventory is implemented in specific subclasses.
   * @param width the width
   * @param height the height
   */
 abstract class Inventory(var width : Int, var height : Int) {
   /**
-    * The grid is treated as zero-indexed and its shape two-dimensional.
-    * Each cell in the grid, however, is countable from a singular index that is externally significant.
-    * Override this property when it needs to be modified for a different implementation of an inventory.
-    * Index 134, hex"86", represents the first cell of an Infantry backpack.
+    * Allows for an offset count for the first "cell" of the two-dimensional grid space.
+    * Following that, the grid is read as a continuous stream of elements, left-to-right, one row at a time, with the index ever incrementing.
+    * Normally, the inventory as best thought as a two-dimensional grid.
     */
-  val indexOffset : Int = 134
+  protected val indexOffset : Int = 0
+
+  /**
+    * Get the index offset for this inventory.
+    * You are not allowed to externally change the offset, but you may see it.
+    * @return the offset value
+    */
+  def offset : Int = indexOffset
 
   /**
     * Get the number of unique items stored in the inventory.
-    * Override to account for the datastructure that holds the equipment.
     * @return the count
     */
   def size : Int
@@ -72,7 +80,7 @@ abstract class Inventory(var width : Int, var height : Int) {
   def getItem(item : Equipment) : Option[Equipment]
 
   /**
-    * Retrieve whatever item can be found in the expected spatial grid location in the inventory.
+    * Retrieve whatever item can be found in the expected location in the inventory.
     * @param y the y-coordinate of the location
     * @param x the x-coordinate of the location
     * @return the equipment that was found, if any
@@ -103,12 +111,18 @@ abstract class Inventory(var width : Int, var height : Int) {
 
   /**
     * Resize the dimensions of this inventory.
-    * All contents of the inventory are dropped.
+    * All contents of the inventory are dropped and their previous locations in it are discarded.
     * @param w the new width of the inventory
     * @param h the new height of the inventory
     * @return a List of all Equipment that was previously contained in the Inventory
     */
-  def resize(w : Int, h : Int) : List[Equipment]
+  def resize(w : Int, h : Int) : List[Equipment] = {
+    if(w < 0 || h < 0)
+      return Nil
+    width = w
+    height = h
+    Nil
+  }
 }
 
 object Inventory {
@@ -126,7 +140,7 @@ object Inventory {
       return -1 // No negative coordinates
 
     val index : Int = y * width + x
-    if(index >= width * height) -1 else context.indexOffset + index // Our index was too high?
+    if(index >= width * height) -1 else context.offset + index // Our index was too high?
   }
 
   /**
@@ -136,7 +150,7 @@ object Inventory {
     * @return a Tuple containing (1) the y-coordinate and (2) the x-coordinate, or an invalid (-1, -1)
     */
   def fromHexIndex(context : Inventory, hex : Int) : (Int, Int) = {
-    val offset : Int = context.indexOffset
+    val offset : Int = context.offset
     if(hex < offset)
       return (-1, -1) // If we're less than the offset, we can not be in this inventory
 

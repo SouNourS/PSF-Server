@@ -2,19 +2,30 @@
 package net.psforever.objects
 
 import scala.annotation.switch
-import scala.util.control.Breaks._
 import scala.collection.mutable
 
 /**
-  * na
-  *
-  * @param width
-  * @param height
+  * An implementation of an Inventory that constructs a concrete grid to visualize the locations or equipment stowed in it.
+  * @param w the width
+  * @param h the height
   */
 class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
+  /**
+    * Even though it's a "Grid" inventory, the internal storage is handled by a mutable hashmap.
+    * (It __was__ a List at one point.)
+    * The keys are equipment GUIDs.
+    * The values are an intermediary structure designed to hold the cell coordinates of the top-left of the inventory item tile.
+    */
   protected var contents : mutable.HashMap[Int,InventoryItem] = new mutable.HashMap[Int,InventoryItem]
+  /**
+    * The data structure of the concrete grid is an Array for storing equipment GUIDs.
+    * The length of the Array is `width` times `height`.
+    * Each row is `width` cells long.
+    * The default value for the cells is `-1`.
+    * When an insertion occurs, the cells that would correspond to where the item is stowed are set to teh item's GUID.
+    */
   protected var grid : Array[Int] = _
-  resize(width, height) // Call to setup storage space, as need be
+  resize(width, height) // Call to set up grid Array
 
   def size : Int = {
     contents.size
@@ -23,21 +34,13 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
   /**
     * Insert an item into the grid inventory at a set location.<br>
     * <br>
-    * Each insertion makes "inventory area" number of checks, and performs "inventory area" set operations if that passes.
-    * In this way, each insertion costs twice the "inventory area" of the item on insertion for each item.
-    * The meaning behind this is that there is no upkeep cost for performing the insertion of multiple objects.
-    * Insertion complexity is `O(2n)`.<br>
-    * <br>
-    * Assuming two inventories - the 6x6 of Infiltration and the 9x12 of Reinforced - we will fill these inventories up with items.
-    * First, we will fill them with 3x3 items; second, we will fill them with 2x2 items.
-    * In the first case, the 6x6 inventory fills with 4 items in 72 passes.
-    * The 9x12 inventory takes 12 items in 72 passes as well.
-    * In the second case, the 6x6 inventory fills with 9 items in 216 passes.
-    * The 9x12 inventory takes 24 items in 192 passes.
-    * @param item
-    * @param x
-    * @param y
-    * @return
+    * Each piece of equipment has an "inventory area."
+    * Each insertion causes a number of checks equal to the size of this "inventory area" and performs just as many set operations to record the GUID.
+    * The cost of any insertion is `O(2m)` for the area of the equipments' tiles.
+    * @param item the equipment being stowed
+    * @param x the y-coordinate of the location
+    * @param y the x-coordinate of the location
+    * @return a Tuple containing (1) whether the equipment was added and (2) what equipment was removed, if any
     */
   def addItem(item : Equipment, y : Int, x : Int) : (Boolean, Option[Equipment]) = {
     if(Option(item).isEmpty || x < 0 || y < 0 || x + item.getInventorySize._1 > width || y + item.getInventorySize._2 > height)
@@ -57,18 +60,18 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
       case 0 =>
         contents += (item.guid -> InventoryItem(item, y, x))
         val nsize = item.getInventorySize
-        setRange(x, y, nsize._2, nsize._1, item.guid)
+        setCellsToValue(x, y, nsize._2, nsize._1, item.guid)
 
       case 1 =>
         val swapopt = contents.remove(overlap.head).get
         swap = Option(swapopt.obj)
         if(swap.isDefined) {
           val isize = swap.get.getInventorySize
-          setRange(swapopt.x, swapopt.y, isize._2, isize._1)
+          setCellsToValue(swapopt.x, swapopt.y, isize._2, isize._1)
         }
         contents += (item.guid -> InventoryItem(item, y, x))
         val nsize = item.getInventorySize
-        setRange(x, y, nsize._2, nsize._1, item.guid)
+        setCellsToValue(x, y, nsize._2, nsize._1, item.guid)
 
       case _ =>
         success = false
@@ -76,39 +79,61 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
     (success, swap)
   }
 
-  private def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
+  /**
+    * Test for equipment overlap in the two-dimensional region of the inventory.
+    * Recover all items in the Inventory that we would be overlapping.<br>
+    * <br>
+    * The cost is `O(m)` for the area of the equipments' tiles.
+    * @param item the equipment being stowed
+    * @param x the y-coordinate of the location
+    * @param y the x-coordinate of the location
+    * @return a List of equipment GUIDs that the item would overlap
+    */
+  protected def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
     val w : Int = item.getInventorySize._2
     val h : Int = item.getInventorySize._1
-    if(w < 0 || h < 0 || w < x || h < y || x+w >= width || y+h >= height)
+    if(x < 0 || y < 0 || w < 0 || h < 0 || x+w >= width || y+h >= height)
       return Nil
 
-    var list: mutable.HashMap[Int,Boolean] = new mutable.HashMap[Int,Boolean]
-
-    for(dy <- 0 to h) {
+    var list: mutable.ListBuffer[Int] = new mutable.ListBuffer[Int]
+    for(dy <- 0 until h) {
       val row0 : Int = (y + dy) * width + x
-      for(dx <- 0 to w) {
+      for(dx <- 0 until w) {
         val index : Int = grid(row0 + dx)
         if(index > -1)
-            list += (index -> true)
+            list += index
       }
     }
-    list.keySet.toList
+    list.toList
   }
 
-  private def setRange(x : Int, y : Int, w : Int, h : Int, value : Int = -1) : Boolean = {
-    if(w < 0 || h < 0 || w < x || h < y || x+w >= width || y+h >= height)
-      return false
-
-    for(dy <- 0 to h) {
+  /**
+    * Change values in the grid data structure to a prescribed value.
+    * The value is typically a GUID.<br>
+    * <br>
+    * The cost is `O(m)` for the area of the equipments' tiles.
+    * @param x the x-coordinate that is "left"
+    * @param y the y-coordinate that is "top"
+    * @param w the width
+    * @param h the height
+    * @param value the GUID to change the affected cells, defaults to -1
+    */
+  protected def setCellsToValue(x : Int, y : Int, w : Int, h : Int, value : Int = -1) : Unit = {
+    for(dy <- 0 until h) {
       val row0 : Int = (y + dy) * width + x
-      for(dx <- 0 to w) {
-        val index : Int = grid(row0 + dx)
-        grid(index) = value
+      for(dx <- 0 until w) {
+        grid(row0 + dx) = value
       }
     }
-    true
   }
 
+  /**
+    * Retrieve an item from the inventory based on the item's unique identifier.<br>
+    * <br>
+    * The cost is `O(1)`.
+    * @param guid the globally unique identifier
+    * @return the equipment that was found, if any
+    */
   def getItem(guid : Int) : Option[Equipment] = {
     val itemopt = contents.get(guid)
     if(itemopt.isDefined)
@@ -116,6 +141,14 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
     None
   }
 
+  /**
+    * Retrieve an item from the inventory if it is in this inventory.<br>
+    * <br>
+    * Checks for object equivalence, so all of the elements that have been stowed are checked.
+    * Best case cost is `O(1)` and worst case is `O(n)` for the number of elements.
+    * @param item the equipment
+    * @return the equipment that was found, if any
+    */
   def getItem(item : Equipment) : Option[Equipment] = {
     contents.foreach({
       case (key : Int, value : InventoryItem) =>
@@ -125,6 +158,14 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
     None
   }
 
+  /**
+    * Retrieve whatever item can be found in the expected location in the inventory.<br>
+    * <br>
+    * The cost is `O(1)`.
+    * @param y the y-coordinate of the location
+    * @param x the x-coordinate of the location
+    * @return the equipment that was found, if any
+    */
   def getItem(y : Int, x : Int) : Option[Equipment] = {
     val index : Int = y * width + x
     if(0 <= index && index < height * width) {
@@ -133,74 +174,107 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
     None
   }
 
+  /**
+    * Remove an item from the inventory based on the item's unique identifier.<br>
+    * <br>
+    * The cost is `O(m)` for the area of the equipment's tile.
+    * @param guid the globally unique identifier
+    * @return the equipment that was found, if any
+    */
   def removeItem(guid : Int) : Option[Equipment] = {
-    var removed : Option[Equipment] = None
     val removopt : Option[InventoryItem] = contents.remove(guid)
     if(removopt.isDefined) {
       val invItem : InventoryItem = removopt.get
       val obj = invItem.obj
-      setRange(invItem.x, invItem.y, obj.getInventorySize._2, obj.getInventorySize._1)
-      removed = Option(obj)
+      setCellsToValue(invItem.x, invItem.y, obj.getInventorySize._2, obj.getInventorySize._1)
+      return Option(obj)
     }
-    removed
+    None
   }
 
+  /**
+    * Remove an item from the inventory if it is in this inventory.
+    * Checks for object equivalence, so all of the elements that have been stowed are checked.<br>
+    * <br>
+    * Best case cost is `O(m)` and worst case is `O(n x m)` for `n` the number of elements and `m` the area of the equipments' tiles.
+    * @param item the equipment
+    * @return the equipment that was removed, if any
+    */
   def removeItem(item : Equipment) : Option[Equipment] = {
-    var removed : Option[Equipment] = removeItem(item.guid)
-    if(removed.isDefined)
-      return removed
-
     contents.foreach { case (key: Int, stowed: InventoryItem) =>
       if(stowed.obj eq item) {
-        //TODO we found the correct equipment in the inventory under a different guid; what happened?
         return removeItem(key)
       }
     }
     None
   }
 
+  /**
+    * Remove whatever item can be found in the expected grid location in the inventory.<br>
+    * <br>
+    * The cost is `O(m)` for the area of the equipment's tile.
+    * @param y the y-coordinate of the location
+    * @param x the x-coordinate of the location
+    * @return the equipment that was removed, if any
+    */
   def removeItem(y : Int, x : Int) : Option[Equipment] = {
-    var removed : Option[Equipment] = None
-
     if(x >= 0 || x < width || y > 0 || y < height) {
-      val guid: Int = grid(y * width + x)
+      val guid : Int = grid(y * width + x)
       if(guid > -1) {
-        removed = removeItem(guid)
-        break
+        return removeItem(guid)
       }
     }
-    removed
+    None
   }
 
-  def resize(w : Int, h : Int) : List[Equipment] = {
-    if(w < 0 || h < 0)
-      Nil
-    width = w
-    height = h
+  /**
+    * Resize the dimensions of this inventory.
+    * All contents of the inventory are dropped and their previous locations in it are discarded.
+    * The grid data structure is completely reconstructed.<br>
+    * <br>
+    * The cost is always `O(n)` for the number of elements.
+    * @param w the new width of the inventory
+    * @param h the new height of the inventory
+    * @return a List of all Equipment that was previously contained in the Inventory
+    */
+  override def resize(w : Int, h : Int) : List[Equipment] = {
+    super.resize(w, h)
     grid = Array.fill[Int](w * h)(-1)
 
     if(contents.nonEmpty) {
-      var temp : List[InventoryItem] = contents.values.toList
       var dropped : mutable.ListBuffer[Equipment] = new mutable.ListBuffer[Equipment]
+      contents.values.foreach({ value : InventoryItem => dropped += value.obj })
       contents.clear
-      //TODO space-fitting algorithm to push equipment back into inventory within its new constraints
-      //TODO elements that don't fit will get dropped
       return dropped.toList
     }
     Nil
   }
 
+  /**
+    * Override the string representation to provide additional information.
+    * @return the string output
+    */
   override def toString : String = {
     GridInventory.toString(this)
   }
 }
 
 object GridInventory {
+  /**
+    * A constructor that accepts the minimum parameters.
+    * @param w the width
+    * @param h the height
+    * @return the GridInventory
+    */
   def apply(w : Int, h : Int) : GridInventory = {
     new GridInventory(w, h)
   }
 
+  /**
+    * Provide a fixed string representation.
+    * @return the string output
+    */
   def toString(obj : GridInventory) : String = {
-    "[inventory: %dx%d, %d items]".format(obj.width, obj.height, obj.contents.size)
+    "{inventory(%dx%d): %d items}".format(obj.width, obj.height, obj.size)
   }
 }

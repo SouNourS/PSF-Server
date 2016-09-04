@@ -45,7 +45,7 @@ class PlayerAvatar(val guid : Int) extends PSGameObject {
   /** Which holster is depicted as having its equipment drawn. Valid numbers are 0-4 and 255 (no holster drawn). */
   private var drawnHolster : Int = 255
   /** The player's personal inventory. */
-  private val inventory : Backpack = Backpack(PlanetSideGUID(guid), 1,1)
+  private val inventory : Backpack = Backpack(guid, 1,1)
 
   /** Whether the player is in a squatting position. */
   var crouched : Boolean = false
