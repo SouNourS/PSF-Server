@@ -73,15 +73,15 @@ class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
     * @return a List of equipment GUIDs that the item would overlap
     */
   protected def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
-    val w = x + item.getInventorySize._2 //item
-    val h = y + item.getInventorySize._1
+    val w = x + item.getInventorySize._1 //item
+    val h = y + item.getInventorySize._2
 
     var list : mutable.ListBuffer[Int] = new mutable.ListBuffer[Int]()
     contents.foreach({ case (key : Int, value : InventoryItem) =>
       val sx = value.x //test
       val sy = value.y
-      val sw = sx + value.obj.getInventorySize._2
-      val sh = sy + value.obj.getInventorySize._1
+      val sw = sx + value.obj.getInventorySize._1
+      val sh = sy + value.obj.getInventorySize._2
       if( ((sx <= x && x < sw) || (sx < w && w < sw) || (x <= sx && sx < w)) &&
         ((sy <= y && y < sh) || (sy < h && h < sh) || (y <= sy && sy < h)) ) {
         // The third cases check if the existing item is embedded in the new item within that coordinate dimension
@@ -136,10 +136,10 @@ class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
     if(x >= 0 && x < width && y >= 0 && y < height) {
       contents.foreach({
         case (key : Int, value : InventoryItem) =>
-          val sy : Int = value.y
           val sx : Int = value.x
-          val sh : Int = sy + value.obj.getInventorySize._1
-          val sw : Int = sx + value.obj.getInventorySize._2
+          val sy : Int = value.y
+          val sw : Int = sx + value.obj.getInventorySize._1
+          val sh : Int = sy + value.obj.getInventorySize._2
           if(sx <= x && x < sw && sy <= y && y < sh)
             return Option(value.obj)
       })
@@ -194,10 +194,10 @@ class ListInventory(w : Int, h : Int) extends Inventory(w, h) {
     if(x >= 0 && x < width && y >= 0 && y < height) {
       contents.foreach({
         case (key : Int, value : InventoryItem) =>
-          val sy : Int = value.y
           val sx : Int = value.x
-          val sh : Int = sy + value.obj.getInventorySize._1
-          val sw : Int = sx + value.obj.getInventorySize._2
+          val sy : Int = value.y
+          val sw : Int = sx + value.obj.getInventorySize._1
+          val sh : Int = sy + value.obj.getInventorySize._2
           if(sx <= x && x < sw && sy <= y && y < sh) {
             contents.remove(key)
             return Option(value.obj)

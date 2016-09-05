@@ -60,18 +60,18 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
       case 0 =>
         contents += (item.guid -> InventoryItem(item, y, x))
         val nsize = item.getInventorySize
-        setCellsToValue(x, y, nsize._2, nsize._1, item.guid)
+        setCellsToValue(x, y, nsize._1, nsize._2, item.guid)
 
       case 1 =>
         val swapopt = contents.remove(overlap.head).get
         swap = Option(swapopt.obj)
         if(swap.isDefined) {
           val isize = swap.get.getInventorySize
-          setCellsToValue(swapopt.x, swapopt.y, isize._2, isize._1)
+          setCellsToValue(swapopt.x, swapopt.y, isize._1, isize._2)
         }
         contents += (item.guid -> InventoryItem(item, y, x))
         val nsize = item.getInventorySize
-        setCellsToValue(x, y, nsize._2, nsize._1, item.guid)
+        setCellsToValue(x, y, nsize._1, nsize._2, item.guid)
 
       case _ =>
         success = false
@@ -90,8 +90,8 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
     * @return a List of equipment GUIDs that the item would overlap
     */
   protected def testForOverlap(item : Equipment, y : Int, x : Int) : List[Int] = {
-    val w : Int = item.getInventorySize._2
-    val h : Int = item.getInventorySize._1
+    val w : Int = item.getInventorySize._1
+    val h : Int = item.getInventorySize._2
     if(x < 0 || y < 0 || w < 0 || h < 0 || x+w >= width || y+h >= height)
       return Nil
 
@@ -186,7 +186,7 @@ class GridInventory(w : Int, h : Int) extends Inventory(w, h) {
     if(removopt.isDefined) {
       val invItem : InventoryItem = removopt.get
       val obj = invItem.obj
-      setCellsToValue(invItem.x, invItem.y, obj.getInventorySize._2, obj.getInventorySize._1)
+      setCellsToValue(invItem.x, invItem.y, obj.getInventorySize._1, obj.getInventorySize._2)
       return Option(obj)
     }
     None
