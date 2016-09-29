@@ -6,6 +6,30 @@ import scodec.{Attempt, Codec, Err}
 import scodec.codecs._
 import shapeless._
 
+case class Ammunition(bit_length : Long,
+                      unk1 : Boolean, //used in determining parentage
+                      target_guid : PlanetSideGUID,
+                      item_type : Int,
+                      item_guid : PlanetSideGUID,
+                      target_index : Int,
+                      unk2 : Int,
+                      capacity : Int,
+                      unk3 : Int)
+
+object Ammunition extends Marshallable[Ammunition] {
+  val codec : Codec[Ammunition] = (
+    ("bit_length" | uint32L) ::
+      ("unk1" | bool) ::
+      ("target_guid" | PlanetSideGUID.codec) ::
+      ("item_type" | uintL(11)) ::
+      ("item_guid" | PlanetSideGUID.codec) ::
+      ("target_index" | uint8L) ::
+      ("unk2" | uintL(23)) ::
+      ("capacity" | uint8L) ::
+      ("unk3" | uintL(13))
+    ).as[Ammunition]
+}
+
 case class ObjectCreateMessageParent(guid : Int, slot : Int)
 
 case class ObjectCreateMessage(streamLength : Long, // in bits
