@@ -206,20 +206,19 @@ class WorldSessionActor extends Actor with MDCContextAware {
         //see capture "last", starting @ line 688
         //note: adding a medkit creates the shortcut if it doesn't exist and dispatches an 0x28 packet to the server
         //sendRawResponse(hex"18 7C000000 2580 692 5C0F 9E C0000018000") //reaver fury rockets, 2,6
-        //sendRawResponse(hex"18 7C000000 2580 79A 0D06 86 C8000020000") //buckshot, 0,0
-        //sendRawResponse(hex"18 7C000000 2580 0E0 0005 A1 C8000064000") //9mm, 3,0
-        //sendRawResponse(hex"18 7C000000 2580 0E0 1506 BC C8000064000") //9mm, 6,0
-        //sendRawResponse(hex"18 7C000000 2580 0C2 F805 A6 C8000002000") //medkit, 3,5
-        //sendRawResponse(hex"18 7C000000 2580 0C2 F604 B8 C8000002000") //medkit, 5,5
+        sendRawResponse(hex"18 7C000000 2580 79A 0D06 86 C8000020000") //buckshot, 0,0
+        sendRawResponse(hex"18 7C000000 2580 0E0 0005 A1 C8000064000") //9mm, 3,0
+        sendRawResponse(hex"18 7C000000 2580 0E0 1506 BC C8000064000") //9mm, 6,0
+        sendRawResponse(hex"18 7C000000 2580 0C2 F805 A6 C8000002000") //medkit, 3,5
+        sendRawResponse(hex"18 7C000000 2580 0C2 F604 B8 C8000002000") //medkit, 5,5
         //sendRawResponse(hex"18 87000000 2580 100 690B 80 8800000200008") // ACE, Boomer, pistol slot 1
-        //sendRawResponse(hex"18 7C000000 2580 0C2 1A06 CA C8000002000") //medkit, 7,5
+        sendRawResponse(hex"18 7C000000 2580 0C2 1A06 CA C8000002000") //medkit, 7,5
         sendRawResponse(hex"18 DC000000 2580 542 4407 80 480000020000C04A941A0B019000000C000") // plasma grenades, pistol slot 1
-        sendRawResponse(hex"18 DC000000 2580 501 6A07 81 480000020000C04A137A0B019000000C000") // jammer grenades, 5,3
-        //sendRawResponse(hex"18 97000000 2580 6C2 9F05 81 48000002000080000") //rek, pistol slot 2
-        //sendRawResponse(hex"18 DC000000 2580 501 6A07 B6 480000020000C04A137A0B019000000C000") // jammer grenades, 5,3
-        //sendRawResponse(hex"18 DC000000 2580 501 4406 C8 480000020000C04A13C209019000000C000") // jammer grenades, 7,3
-        //sendRawResponse(hex"18 DC000000 2580 2C9 B905 82 480000020000C041C00C0B0190000078000") // gauss, rifle slot 1
-        //sendRawResponse(hex"18 DC000000 2580 181 F804 89 480000020000C04F35AE0D0190000030000") // sweeper, 0,3
+        sendRawResponse(hex"18 97000000 2580 6C2 9F05 81 48000002000080000") //rek, pistol slot 2
+        sendRawResponse(hex"18 DC000000 2580 501 6A07 B6 480000020000C04A137A0B019000000C000") // jammer grenades, 5,3
+        sendRawResponse(hex"18 DC000000 2580 501 4406 C8 480000020000C04A13C209019000000C000") // jammer grenades, 7,3
+        sendRawResponse(hex"18 DC000000 2580 2C9 B905 82 480000020000C041C00C0B0190000078000") // gauss, rifle slot 1
+        sendRawResponse(hex"18 DC000000 2580 181 F804 89 480000020000C04F35AE0D0190000030000") // sweeper, 0,3
       }
 
     case msg @ ChatMsg(messagetype, has_wide_contents, recipient, contents, note_contents) =>
@@ -303,6 +302,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ AvatarFirstTimeEventMessage(avatar_guid, object_guid, unk1, event_name) =>
       log.info("AvatarFirstTimeEvent: " + msg)
+
+    case msg @ AvatarGrenadeStateMessage(player_guid, state) =>
+      log.info("AvatarGrenadeStateMessage: " + msg)
 
     case default => log.debug(s"Unhandled GamePacket ${pkt}")
   }
