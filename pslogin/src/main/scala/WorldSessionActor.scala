@@ -306,6 +306,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
     case msg @ AvatarGrenadeStateMessage(player_guid, state) =>
       log.info("AvatarGrenadeStateMessage: " + msg)
 
+    case msg @ SplashHitMessage(bytes) =>
+      log.info("SplashHitMessage: " + bytes.toString)
+
     case default => log.debug(s"Unhandled GamePacket ${pkt}")
   }
 
