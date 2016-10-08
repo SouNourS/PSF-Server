@@ -1,0 +1,37 @@
+Drugaskan (28)
+10000 - Unknown
+10001 - Module Building South
+10002 - Module Building North
+10003 - Unknown
+10004 - Unknown
+10005 - Unknown
+10006 - Unknown
+10007 - Unknown
+10008 - Unknown
+10009 - Unknown
+10015 - Unknown
+10032 - Unknown
+10034 - Unknown
+10035 - Unknown
+10077 - Unknown
+10078 - Unknown
+10079 - Unknown
+10080 - Unknown
+10081 - Unknown
+10082 - Unknown
+10088 - Unknown
+10224 - North Geowarp
+10225 - West Geowarp
+10226 - South Geowarp
+10227 - East Geowarp
+10229 - Unknown
+10238 - Unknown
+10241 - Unknown
+10242 - Unknown
+10246 - AT Plant North
+10248 - AT Plant South
+10257 - Redoubt North
+10259 - Redoubt South
+10304 - Unknown
+10340 - Unknown
+10386 - Unknown

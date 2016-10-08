@@ -1,0 +1,128 @@
+Searhus (9)
+1 - Southwest Warpgate (Ceryshen)
+2 - Northwest Warpgate (Hossin)
+3 - East Warpgate (Amerish)
+4 - Akua
+5 - Drakulu
+6 - Hiro
+7 - Iva
+8 - Karihi
+9 - Laka
+10 - Matagi
+11 - Ngaru
+12 - Oro
+13 - Pele
+14 - Rehua
+15 - Sina
+16 - Tara
+17 - Wakea
+18 - G17 Gate Outpost Gun Tower
+19 - Northeast Iva Gun Tower
+20 - Southeast Wakea Gun Tower
+21 - Northeast Pele Air Tower
+22 - West Sina Watch Tower
+23 - Southeast Tara Air Tower
+24 - G4 Gate Outpost Watch Tower
+25 - Southeast Laka Air Tower
+26 - West Ngaru Gun Tower
+27 - South Iva Air Tower
+28 - F14 Gate Outpost Watch Tower
+29 - Northeast Matagi Air Tower
+30 - Drakulu Southeast Bunker
+31 - Sina West Bunker
+32 - Akua South Bunker
+33 - Ngaru South Bunker
+34 - Tara South Bunker
+35 - Laka Southeast Bunker
+36 - Karihi Northwest Bunker
+37 - Northeast Sina Air Tower
+38 - Sina West Bunker (both)
+39 - Iva Northwest Bunker (both)
+40 - Iva South Bunker
+41 - Laka Southwest Bunker (both)
+42 - Tara West Bunker (both)
+43 - Rehua Southwest Bunker (both)
+44 - South Laka Gun Tower
+45 - East Hiro Gun Tower
+46 - Northwest Karihi Gun Tower
+47 - North Tara Gun Tower
+48 - East Drakulu Gun Tower
+49 - West Rehua Watch Tower
+50 - E13 Gate Outpost Air Tower
+51 - North Ngaru Gun Tower
+52 - Northwest Oro Gun Tower
+53 - D5 Gate Outpost Watch Tower
+54 - D5-D6 Bridge Section 1 (South)
+55 - D5-D6 Bridge Section 2
+56 - D5-D6 Bridge Section 3
+57 - D5-D6 Bridge Section 4
+58 - D5-D6 Bridge Section 5
+59 - D5-D6 Bridge Section 6
+60 - D5-D6 Bridge Section 7
+61 - D5-D6 Bridge Section 8
+62 - D5-D6 Bridge Section 9
+63 - D5-D6 Bridge Section 10
+64 - D5-D6 Bridge Section 11
+65 - D5-D6 Bridge Section 12
+114 - D11-E12 Bridge Section 1 (West)
+115 - D11-E12 Bridge Section 2
+116 - D11-E12 Bridge Section 3
+117 - D11-E12 Bridge Section 4
+118 - D11-E12 Bridge Section 5
+119 - D11-E12 Bridge Section 6
+120 - D11-E12 Bridge Section 7
+121 - D11-E12 Bridge Section 8
+122 - D11-E12 Bridge Section 9
+123 - D11-E12 Bridge Section 10
+124 - D11-E12 Bridge Section 11
+125 - D11-E12 Bridge Section 12
+126 - D11-E12 Bridge Section 13
+127 - D11-E12 Bridge Section 14
+128 - D11-E12 Bridge Section 15
+191 - D8-D9 Bridge Section 1 (West)
+192 - D8-D9 Bridge Section 2
+193 - D8-D9 Bridge Section 3
+194 - D8-D9 Bridge Section 4
+195 - D8-D9 Bridge Section 5
+196 - D8-D9 Bridge Section 6
+197 - D8-D9 Bridge Section 7
+198 - D8-D9 Bridge Section 8
+199 - D8-D9 Bridge Section 9
+200 - D8-D9 Bridge Section 10
+201 - D8-D9 Bridge Section 11
+202 - D8-D9 Bridge Section 12
+203 - D8-D9 Bridge Section 13
+204 - D8-D9 Bridge Section 14
+205 - D8-D9 Bridge Section 15
+206 - D8-D9 Bridge Section 16
+207 - D8-D9 Bridge Section 17
+208 - D8-D9 Bridge Section 18
+209 - D8-D9 Bridge Section 19
+210 - D8-D9 Bridge Section 20
+211 - D8-D9 Bridge Section 21
+364 - L5-M5 Bridge Section 1 (Northwest)
+365 - L5-M5 Bridge Section 2
+366 - L5-M5 Bridge Section 3
+367 - L5-M5 Bridge Section 4
+368 - L5-M5 Bridge Section 5
+369 - L5-M5 Bridge Section 6
+370 - L5-M5 Bridge Section 7
+371 - L5-M5 Bridge Section 8
+372 - L5-M5 Bridge Section 9
+373 - L5-M5 Bridge Section 10
+374 - L5-M5 Bridge Section 11
+375 - L5-M5 Bridge Section 12
+404 - K5 Bridge Section 1 (North)
+405 - K5 Bridge Section 2
+406 - K5 Bridge Section 3
+407 - K5 Bridge Section 4
+408 - K5 Bridge Section 5
+409 - K5 Bridge Section 6
+410 - K5 Bridge Section 7
+411 - K5 Bridge Section 8
+412 - K5 Bridge Section 9
+413 - K5 Bridge Section 10
+414 - K5 Bridge Section 11
+415 - K5 Bridge Section 12
+23717 - Rehua Geowarp
+23718 - Iva Geowarp

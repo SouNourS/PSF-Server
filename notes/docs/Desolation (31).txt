@@ -1,0 +1,39 @@
+Desolation (31)
+1 - Dahaka
+2 - Jamshid
+3 - Izha
+4 - North Central Gun Tower
+5 - East Central Gun Tower
+6 - South Central Gun Tower
+7 - Northwest Warpgate Air Tower
+8 - Northeast Warpgate Air Tower
+9 - Oasis Watch Tower
+10 - Southeast Gate Air Tower
+11 - J11 Bunker
+12 - K10 Bunker
+13 - K11 Bunker
+14 - F7 Bridge Section 1 (South)
+15 - F7 Bridge Section 2
+16 - F7 Bridge Section 3
+17 - F7 Bridge Section 4
+18 - F7 Bridge Section 5
+19 - F7 Bridge Section 6
+20 - F7 Bridge Section 7
+21 - F7 Bridge Section 8
+32 - N14 Bridge Section 1 (North)
+33 - N14 Bridge Section 2
+34 - N14 Bridge Section 3
+35 - N14 Bridge Section 4
+36 - N14 Bridge Section 5
+37 - N14 Bridge Section 6
+38 - N14 Bridge Section 7
+39 - N14 Bridge Section 8
+58 - N7-O6 Bridge Section 1 (South)
+59 - N7-O6 Bridge Section 2
+60 - N7-O6 Bridge Section 3
+61 - N7-O6 Bridge Section 4
+62 - N7-O6 Bridge Section 5
+63 - N7-O6 Bridge Section 6
+10001 - Northwest Warpgate
+10002 - Northeast Warpgate
+10003 - Southeast Warpgate

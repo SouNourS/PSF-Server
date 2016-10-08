@@ -1,0 +1,51 @@
+Supai (23)
+10000 - Module Building North
+10001 - AT Plant North
+10015 - Unknown
+10016 - Unknown
+10017 - Unknown
+10018 - Unknown
+10019 - Unknown
+10020 - Unknown
+10021 - Unknown
+10022 - Unknown
+10023 - Unknown
+10024 - Unknown
+10025 - Unknown
+10026 - Unknown
+10027 - Unknown
+10028 - Unknown
+10029 - Unknown
+10030 - Unknown
+10031 - Unknown
+10066 - Unknown
+10067 - Unknown
+10074 - Unknown
+10077 - Unknown
+10078 - Unknown
+10092 - Unknown
+10093 - Unknown
+10094 - Unknown
+10095 - Unknown
+10096 - Unknown
+10138 - Unknown
+10139 - Unknown
+10140 - Unknown
+10141 - Unknown
+10142 - Unknown
+10143 - Unknown
+10144 - Unknown
+10145 - Unknown
+10146 - Unknown
+10175 - Module Building South
+10228 - East Geowarp
+10229 - South Geowarp
+10230 - West Geowarp
+10231 - North Geowarp
+10305 - Unknown
+10310 - Unknown
+10311 - Unknown
+10312 - Unknown
+10314 - AT Plant South
+10425 - Redoubt North
+10883 - Redoubt South

@@ -1,0 +1,34 @@
+Annwn (27)
+10000 - Unknown
+10001 - Unknown
+10002 - Unknown
+10003 - Module Building Southeast
+10004 - Unknown
+10005 - Unknown
+10006 - Unknown
+10007 - Unknown
+10009 - Unknown
+10012 - Module Building Northwest
+10013 - Unknown
+10014 - Unknown
+10020 - Unknown
+10022 - Unknown
+10024 - Unknown
+10031 - Unknown
+10036 - Unknown
+10037 - Unknown
+10038 - Unknown
+10039 - Unknown
+10044 - AT Plant Northwest
+10104 - West Geowarp
+10105 - South Geowarp
+10106 - East Geowarp
+10107 - North Geowarp
+10114 - Unknown
+10115 - Unknown
+10116 - Unknown
+10117 - Unknown
+10197 - AT Plant Southeast
+10209 - Redoubt Northwest
+10210 - Redoubt Southeast
+10213 - Unknown

@@ -1,0 +1,177 @@
+Amerish (10)
+1 - Southwest Warpgate (NC Sanctuary)
+2 - Midwest Warpgate (Searhus)
+3 - Interior Warpgate (Extinction)
+4 - Northeast Warpgate (Hossin)
+5 - Azeban
+6 - Cetan
+7 - Heyoka
+8 - Ikanam
+9 - Kyoi
+10 - Mekala
+11 - Onatha
+12 - Qumu
+13 - Sungrey
+14 - Tumas
+15 - Xelas
+16 - E16 Gate Outpost Watch Tower
+17 - Northwest Ikanam Air Tower
+18 - Midwest Warpgate Outpost Air Tower
+19 - East Ikanam Gun Tower
+20 - J13 Outpost Gun Tower
+21 - Northeast Heyoka Watch Tower
+22 - Northwest Kyoi Air Tower
+23 - Southwest Kyoi Gun Tower
+24 - Southwest Verica Watch Tower
+25 - M10 Gate Outpost Watch Tower
+26 - I12 Gate Outpost Watch Tower
+27 - Northwest Xelas Air Tower
+28 - West Azeban Gun Tower
+29 - N3 Gate Outpost Air Tower
+30 - P4 Gate Outpost Gun Tower
+31 - East Tumas Watch Tower
+32 - Southeast Gungrey Gun Tower
+33 - North Qumu Air Tower
+34 - South Onatha Gun Tower
+35 - North Onatha Air Tower
+36 - Cetan Northwest Bunker
+37 - Heyoka North Bunker
+38 - P12 Bunker
+39 - Xelas Southwest Bunker
+40 - Azeban Northwest Bunker
+41 - Qumu West Bunker
+42 - Sungrey Northwest Bunker
+43 - Tumas Southeast Bunker
+44 - Heyoka West Bunker (both)
+45 - Qumu East Bunker
+46 - Northeast Mekala Air Tower
+47 - Northeast Cetan Air Tower
+48 - North Azeban Gun Tower
+49 - Verica
+50 - P14 Bunker
+51 - H5-I6 Bridge Section 1 (Northwest)
+52 - H5-I6 Bridge Section 2
+53 - H5-I6 Bridge Section 3
+54 - H5-I6 Bridge Section 4
+55 - H5-I6 Bridge Section 5
+56 - H5-I6 Bridge Section 6
+57 - H5-I6 Bridge Section 7
+58 - H5-I6 Bridge Section 8
+59 - H5-I6 Bridge Section 9
+60 - H5-I6 Bridge Section 10
+61 - H5-I6 Bridge Section 11
+62 - H5-I6 Bridge Section 12
+63 - H5-I6 Bridge Section 13
+64 - H5-I6 Bridge Section 14
+65 - H5-I6 Bridge Section 15
+66 - H5-I6 Bridge Section 16
+67 - H5-I6 Bridge Section 17
+131 - I4-J4 Bridge Section 1 (East)
+132 - I4-J4 Bridge Section 2
+133 - I4-J4 Bridge Section 3
+134 - I4-J4 Bridge Section 4
+135 - I4-J4 Bridge Section 5
+136 - I4-J4 Bridge Section 6
+137 - I4-J4 Bridge Section 7
+138 - I4-J4 Bridge Section 8
+139 - I4-J4 Bridge Section 9
+140 - I4-J4 Bridge Section 10
+141 - I4-J4 Bridge Section 11
+142 - I4-J4 Bridge Section 12
+143 - I4-J4 Bridge Section 13
+144 - I4-J4 Bridge Section 14
+145 - I4-J4 Bridge Section 15
+146 - I4-J4 Bridge Section 16
+147 - I4-J4 Bridge Section 17
+148 - I4-J4 Bridge Section 18
+149 - I4-J4 Bridge Section 19
+150 - I4-J4 Bridge Section 20
+151 - I4-J4 Bridge Section 21
+234 - L5-M4 Bridge Section 1 (South)
+235 - L5-M4 Bridge Section 2
+236 - L5-M4 Bridge Section 3
+237 - L5-M4 Bridge Section 4
+238 - L5-M4 Bridge Section 5
+239 - L5-M4 Bridge Section 6
+240 - L5-M4 Bridge Section 7
+241 - L5-M4 Bridge Section 8
+242 - L5-M4 Bridge Section 9
+243 - L5-M4 Bridge Section 10
+244 - L5-M4 Bridge Section 11
+245 - L5-M4 Bridge Section 12
+246 - L5-M4 Bridge Section 13
+247 - L5-M4 Bridge Section 14
+248 - L5-M4 Bridge Section 15
+249 - L5-M4 Bridge Section 16
+250 - L5-M4 Bridge Section 17
+251 - L5-M4 Bridge Section 18
+343 - N3-O4 Bridge Section 1 (East)
+344 - N3-O4 Bridge Section 2
+345 - N3-O4 Bridge Section 3
+346 - N3-O4 Bridge Section 4
+347 - N3-O4 Bridge Section 5
+348 - N3-O4 Bridge Section 6
+349 - N3-O4 Bridge Section 7
+350 - N3-O4 Bridge Section 8
+351 - N3-O4 Bridge Section 9
+352 - N3-O4 Bridge Section 10
+353 - N3-O4 Bridge Section 11
+354 - N3-O4 Bridge Section 12
+375 - E15-F15 Bridge Section 1 (North)
+376 - E15-F15 Bridge Section 2
+377 - E15-F15 Bridge Section 3
+378 - E15-F15 Bridge Section 4
+379 - E15-F15 Bridge Section 5
+380 - E15-F15 Bridge Section 6
+381 - E15-F15 Bridge Section 7
+382 - E15-F15 Bridge Section 8
+383 - E15-F15 Bridge Section 9
+384 - E15-F15 Bridge Section 10
+385 - E15-F15 Bridge Section 11
+386 - E15-F15 Bridge Section 12
+387 - E15-F15 Bridge Section 13
+388 - E15-F15 Bridge Section 14
+389 - E15-F15 Bridge Section 15
+441 - F13-G13 Bridge Section 1 (East)
+442 - F13-G13 Bridge Section 2
+443 - F13-G13 Bridge Section 3
+444 - F13-G13 Bridge Section 4
+445 - F13-G13 Bridge Section 5
+446 - F13-G13 Bridge Section 6
+447 - F13-G13 Bridge Section 7
+448 - F13-G13 Bridge Section 8
+449 - F13-G13 Bridge Section 9
+450 - F13-G13 Bridge Section 10
+451 - F13-G13 Bridge Section 11
+452 - F13-G13 Bridge Section 12
+453 - F13-G13 Bridge Section 13
+494 - P14-P15 Bridge Section 1 (North)
+495 - P14-P15 Bridge Section 2
+496 - P14-P15 Bridge Section 3
+497 - P14-P15 Bridge Section 4
+498 - P14-P15 Bridge Section 5
+499 - P14-P15 Bridge Section 6
+500 - P14-P15 Bridge Section 7
+501 - P14-P15 Bridge Section 8
+502 - P14-P15 Bridge Section 9
+503 - P14-P15 Bridge Section 10
+504 - P14-P15 Bridge Section 11
+505 - P14-P15 Bridge Section 12
+506 - P14-P15 Bridge Section 13
+528 - P11-P12 Bridge Section 1 (North)
+529 - P11-P12 Bridge Section 2
+530 - P11-P12 Bridge Section 3
+531 - P11-P12 Bridge Section 4
+532 - P11-P12 Bridge Section 5
+533 - P11-P12 Bridge Section 6
+534 - P11-P12 Bridge Section 7
+535 - P11-P12 Bridge Section 8
+536 - P11-P12 Bridge Section 9
+537 - P11-P12 Bridge Section 10
+538 - P11-P12 Bridge Section 11
+539 - P11-P12 Bridge Section 12
+540 - P11-P12 Bridge Section 13
+541 - P11-P12 Bridge Section 14
+542 - P11-P12 Bridge Section 15
+20900 - Tumas Geowarp
+20902 - Ikanam Geowarp

@@ -1,0 +1,119 @@
+Esamir (7)
+1 - Northwest Warpgate (Forseral)
+2 - Southwest Warpgate (Ishundar)
+3 - Southeast Warpgate (NC Sanctuary)
+4 - Interior Warpgate (Cyssor)
+5 - Andvari
+6 - Dagur
+7 - Eisa
+8 - Freyr
+9 - Gjallar
+10 - Helheim
+11 - Kvasir
+12 - Mani
+13 - Nott
+14 - Vidar
+15 - Ymir
+16 - Jarl
+17 - Ran
+18 - Southeast Eisa Gun Tower
+19 - O11 Gate Outpost Gun Tower
+20 - Q16 Gate Outpost Gun Tower
+21 - F13 Gate Outpost Gun Tower
+22 - South Andvari Gun Tower
+23 - P8 Outpost Gun Tower
+24 - East Daqur Air Tower
+25 - Southeast Daqur Watch Tower
+26 - West Vidar Air Tower
+27 - L12 Gate Outpost Air Tower
+28 - Southwest Mani Watch Tower
+29 - H14 Gate Outpost Air Tower
+30 - O17 Gate Outpost Watch Tower
+31 - North Ymir Gun Tower
+32 - South Kvasir Gun Tower
+33 - Gjallar East Bunker
+34 - Gjallar North Bunker
+35 - Freyr East Bunker
+36 - Eisa North Bunker
+37 - Andvari North Bunker
+38 - Helheim East Bunker
+39 - Jarl South Bunker
+40 - Vidar Northwest Bunker
+41 - B4 Gate Outpost Watch Tower
+42 - Eisa Southeast Bunker
+43 - Daqur East Bunker (both)
+44 - Andvari South Bunker
+45 - Ran North Bunker (both)
+46 - North Mani Gun Tower
+47 - Southeast Nott Gun Tower
+48 - East Freyr Gun Tower
+49 - North Ran Gun Tower
+50 - East Helheim Gun Tower
+51 - Northeast Andvari Air Tower
+52 - Northeast Jarl Gun Tower
+53 - North Gjallar Gun Tower
+54 - D6 Gate Outpost Watch Tower
+55 - I12 Bridge Section 1 (South)
+56 - I12 Bridge Section 2
+57 - I12 Bridge Section 3
+58 - I12 Bridge Section 4
+59 - I12 Bridge Section 5
+60 - I12 Bridge Section 6
+61 - I12 Bridge Section 7
+62 - I12 Bridge Section 8
+63 - I12 Bridge Section 9
+64 - I12 Bridge Section 10
+65 - I12 Bridge Section 11
+66 - I12 Bridge Section 12
+137 - K10 bridge Section 1 (East)
+138 - K10 bridge Section 2
+139 - K10 bridge Section 3
+140 - K10 bridge Section 4
+141 - K10 bridge Section 5
+142 - K10 bridge Section 6
+143 - K10 bridge Section 7
+144 - K10 bridge Section 8
+145 - K10 bridge Section 9
+146 - K10 bridge Section 10
+175 - B4-C4 Bridge Section 1 (Northwest)
+176 - B4-C4 Bridge Section 2
+177 - B4-C4 Bridge Section 3
+178 - B4-C4 Bridge Section 4
+179 - B4-C4 Bridge Section 5
+180 - B4-C4 Bridge Section 6
+185 - H4 Bridge Section 1 (South)
+186 - H4 Bridge Section 2
+187 - H4 Bridge Section 3
+188 - H4 Bridge Section 4
+189 - H4 Bridge Section 5
+190 - H4 Bridge Section 6
+191 - H4 Bridge Section 7
+192 - H4 Bridge Section 8
+193 - H4 Bridge Section 9
+194 - H4 Bridge Section 10
+195 - H4 Bridge Section 11
+196 - H4 Bridge Section 12
+285 - I4 Bridge Section 1 (South)
+286 - I4 Bridge Section 2
+287 - I4 Bridge Section 3
+288 - I4 Bridge Section 4
+289 - I4 Bridge Section 5
+290 - I4 Bridge Section 6
+291 - I4 Bridge Section 7
+292 - I4 Bridge Section 8
+293 - I4 Bridge Section 9
+294 - I4 Bridge Section 10
+295 - I4 Bridge Section 11
+296 - I4 Bridge Section 12
+387 - G9-H9 Bridge Section 1 (West)
+388 - G9-H9 Bridge Section 2
+389 - G9-H9 Bridge Section 3
+390 - G9-H9 Bridge Section 4
+391 - G9-H9 Bridge Section 5
+392 - G9-H9 Bridge Section 6
+393 - G9-H9 Bridge Section 7
+394 - G9-H9 Bridge Section 8
+395 - G9-H9 Bridge Section 9
+396 - G9-H9 Bridge Section 10
+21321 - Vidar Geowarp
+21322 - Mani Geowarp

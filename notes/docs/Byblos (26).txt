@@ -1,0 +1,34 @@
+Byblos (26)
+10000 - Unknown
+10001 - Unknown
+10002 - AT Plant South
+10008 - Unknown
+10009 - Unknown
+10010 - Unknown
+10011 - AT Plant North
+10022 - Unknown
+10023 - Unknown
+10030 - Unknown
+10031 - Unknown
+10056 - Unknown
+10057 - Unknown
+10058 - Unknown
+10076 - Unknown
+10077 - Unknown
+10154 - Unknown
+10155 - Unknown
+10156 - Unknown
+10178 - North Geowarp
+10179 - East Geowarp
+10180 - South Geowarp
+10215 - Module Building North
+10222 - Unknown
+10273 - West Geowarp
+10279 - Unknown
+10283 - Unknown
+10285 - Module Building South
+10288 - Unknown
+10290 - Unknown
+10298 - Unknown
+10350 - Redoubt North
+10354 - Redoubt South

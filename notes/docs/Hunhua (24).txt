@@ -1,0 +1,60 @@
+Hunhau (24)
+10000 - Unknown
+10001 - Unknown
+10002 - Unknown
+10009 - Unknown
+10013 - Unknown
+10015 - AT Plant North
+10016 - Unknown
+10018 - Unknown
+10020 - Module Building North
+10021 - Unknown
+10022 - Unknown
+10023 - Unknown
+10030 - Unknown
+10031 - Unknown
+10032 - Unknown
+10078 - Unknown
+10079 - Unknown
+10080 - Unknown
+10081 - Unknown
+10082 - Unknown
+10083 - Unknown
+10084 - Unknown
+10085 - Unknown
+10086 - Unknown
+10087 - Unknown
+10088 - Unknown
+10089 - Unknown
+10090 - Unknown
+10091 - Unknown
+10092 - Unknown
+10093 - Unknown
+10094 - Unknown
+10095 - Unknown
+10096 - Unknown
+10097 - Unknown
+10098 - Unknown
+10099 - Unknown
+10100 - Unknown
+10101 - Unknown
+10102 - Unknown
+10103 - Unknown
+10104 - Unknown
+10105 - Unknown
+10106 - Unknown
+10107 - Unknown
+10108 - Unknown
+10109 - AT Plant South
+10111 - North Geowarp
+10112 - West Geowarp
+10354 - Module Building South
+10357 - Unknown
+10369 - Unknown
+10543 - Unknown
+10563 - East Geowarp
+10583 - South Geowarp
+10664 - Unknown
+10748 - Redoubt North
+10751 - Redoubt South
+10778 - Unknown

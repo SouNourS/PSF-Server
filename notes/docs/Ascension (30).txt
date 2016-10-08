@@ -1,0 +1,43 @@
+Ascension (30)
+1 - Sraosha Top Gun Tower
+2 - East Plateau Air Tower
+3 - North Plateau Air Tower
+4 - Zal Top Gun Tower
+5 - Southwest Plateua Air Tower
+6 - Rashnu Top Air Tower
+7 - Zal
+8 - Rashnu
+9 - N8 Gate Air Tower
+10 - Sraosha Gate Watch Tower
+11 - Rashnu Gate Watch Tower
+12 - K13 Gate Air Tower (East of Rashnu)
+13 - Zal Gate Watch Tower
+14 - G10 Gate Air Tower
+15 - Northeast Warpgate Bunker (both)
+16 - Southeast Warpgate Bunker (both)
+17 - Southwest Warpgate Bunker
+18 - K14 Bunker
+19 - G9 Bunker
+20 - N12 Bunker
+21 - O11 Bunker
+22 - H8 Bunker
+23 - H13 Bunker
+24 - North Plateau Air Tower West Bunker
+25 - North Plateau Air Tower North Bunker
+26 - Southwest Plateau Air Tower South Bunker
+27 - Southwest Plateau Air Tower North Bunker
+28 - East Plateau Air Tower South Bunker
+29 - East Plateau Air Tower North Bunker
+30 - Zal South Gate West Bunker
+31 - Zal South Gate East Bunker
+32 - Rashnu North Gate West Bunker
+33 - Rashnu North Gate East Bunker
+34 - Sraosha South Gate West Bunker
+35 - Sraosha South Gate East Bunker
+36 - F12 Bunker
+37 - H7 Bunker
+38 - M13 Bunker
+39 - Sraosha
+10000 - Southwest Warpgate
+10001 - Northeast Warpgate
+10002 - Southeast Warpgate

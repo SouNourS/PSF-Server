@@ -1,0 +1,50 @@
+Adlivun (25)
+10001 - Unknown
+10002 - Unknown
+10003 - Unknown
+10004 - Unknown
+10005 - Module Building Southwest
+10007 - AT Plant Southeast
+10011 - Unknown
+10012 - Unknown
+10013 - Unknown
+10014 - Unknown
+10015 - Unknown
+10016 - Unknown
+10017 - Unknown
+10019 - Unknown
+10020 - Unknown
+10021 - Unknown
+10023 - Unknown
+10024 - Unknown
+10025 - Unknown
+10026 - Unknown
+10027 - Unknown
+10028 - Unknown
+10029 - Unknown
+10030 - Unknown
+10061 - Unknown
+10074 - Unknown
+10075 - Unknown
+10085 - Unknown
+10135 - Unknown
+10147 - Unknown
+10154 - Unknown
+10156 - AT Plant Northwest
+10170 - Unknown
+10173 - Module Building Northeast
+10212 - West Geowarp
+10214 - North Geowarp
+10215 - East Geowarp
+10234 - Unknown
+10237 - Unknown
+10238 - Unknown
+10291 - Unknown
+10295 - Unknown
+10301 - Unknown
+10302 - Unknown
+10306 - Unknown
+10322 - Redoubt Northwest
+10357 - Unknown
+10359 - Redoubt Southeast
+10405 - South Geowarp
