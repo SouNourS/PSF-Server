@@ -316,7 +316,7 @@ object PacketCoding {
 
     packet match {
       case Failure(e) =>
-        Attempt.failure(Err(f"Failed to parse game packet 0x${opcode.require.value.id}%02x: " + e.messageWithContext))
+        Attempt.failure(Err(f"Failed to parse game packet 0x${opcode.require.value.id}%02x: " + e.messageWithContext + s"; remainder: "+opcode.require.remainder.toByteVector))
       case Successful(p) => Attempt.successful(p.value)
     }
   }
