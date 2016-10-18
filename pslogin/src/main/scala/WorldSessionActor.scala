@@ -217,7 +217,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ PlayerStateMessageUpstream(avatar_guid, pos, vel, unk1, aim_pitch, unk2, seq_time, unk3, is_crouching, unk4, unk5, unk6, unk7, unk8) =>
       //log.info("PlayerState: " + msg)
-      if(is_crouching && !ArmorChangedMessage.changeOnce) {
+      if(false && is_crouching && !ArmorChangedMessage.changeOnce) {
         ArmorChangedMessage.changeOnce = true
         //carefully delete inventory
         sendRawResponse(hex"19 4C00 00")
