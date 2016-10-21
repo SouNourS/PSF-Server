@@ -108,9 +108,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
   }
 
   // XXX: hard coded ObjectCreateMessage
-//val objectHex = hex"18 570C0000 BC 8 4B00 6 C2 D7 65 53 5C A1 60 00 01 34 40 00 0970 49006C006C006C004900490049006C006C006C0049006C0049006C006C0049006C006C006C0049006C006C004900 84 52 70 76 1E 80 80 00 00 00 00 00 3F FF C0 00 00 00 20 00 00 0F F6 A7 03 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFD 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00 00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46 86 C7 00 00 00 80 00 00 12 40 78 70 65 5F 73 61 6E 63 74 75 61 72 79 5F 68 65 6C 70 90 78 70 65 5F 74 68 5F 66 69 72 65 6D 6F 64 65 73 8B 75 73 65 64 5F 62 65 61 6D 65 72 85 6D 61 70 31 33 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02 60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80 00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41 C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00 00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05 48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32 00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90 00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8 05 26 40 00 03 20 06 C2 58 00 A7 88 00 00 02 00 00 80 00 00"
-//                                          0 6x xx B3 09 76 Fz zz 00 0B 02                                                                                                                                                                                                                        8A E8 34 03 7C B0
-  val objectHex = hex"18 570C0000 BC 8 4B00 0 63 F9 B3 09 76 F1 50 00 FE 03 40 00 0970 49006C006C006C004900490049006C006C006C0049006C0049006C006C0049006C006C006C0049006C006C004900 04 52 70 76 1E 80 80 00 00 00 00 00 3F FF C0 00 00 00 20 00 00 0F F6 A7 03 C8000003 08000003 FFFFFFFE 94040002 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00 00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46 86 C7 00 00 00 80 00 00 12 40 78 70 65 5F 73 61 6E 63 74 75 61 72 79 5F 68 65 6C 70 90 78 70 65 5F 74 68 5F 66 69 72 65 6D 6F 64 65 73 8B 75 73 65 64 5F 62 65 61 6D 65 72 85 6D 61 70 31 33 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02 60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80 00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41 C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00 00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05 48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32 00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90 00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8 05 26 40 00 03 20 06 C2 58 00 A7 88 00 00 02 00 00 80 00 00"
+//val objectHex = hex"18 570C0000 BC 8 4B00 6 C 2D7 65 535 C A 160 00 01 34 40 00 0970 49006C006C006C004900490049006C006C006C0049006C0049006C006C0049006C006C006C0049006C006C004900 84 52 70 76 1E 80 80 00 00 00 00 00 3F FF C0 00 00 00 20 00 00 0F F6 A7 03 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFD 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00 00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46 86 C7 00 00 00 80 00 00 12 40 78 70 65 5F 73 61 6E 63 74 75 61 72 79 5F 68 65 6C 70 90 78 70 65 5F 74 68 5F 66 69 72 65 6D 6F 64 65 73 8B 75 73 65 64 5F 62 65 61 6D 65 72 85 6D 61 70 31 33 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02 60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80 00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41 C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00 00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05 48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32 00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90 00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8 05 26 40 00 03 20 06 C2 58 00 A7 88 00 00 02 00 00 80 00 00"
+//                                          0 6 xxx B3 yyy 6 F zzz 00 0a a2                                                                                                                                                                                                                        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00 00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46 86 C7 00 00 00 00 00 00
+  val objectHex = hex"18 570C0000 BC 8 4B00 0 6 F00 B3 F01 6 F 350 40 02 03 40 00 0970 49006C006C006C004900490049006C006C006C0049006C0049006C006C0049006C006C006C0049006C006C004900 04 10 70 76 1E 80 80 00 00 00 00 00 3F FF C0 00 00 00 20 00 00 0F F6 A7 03 C8000003 08000003 FFFFFFFE 94040002 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00 00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46 86 C7 00 00 00 80 00 00 12 40 7870655F73616E6374756172795F68656C70 90 7870655F74685F666972656D6F646573 8B 757365645F6265616D6572 85 6D61703133 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02 60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80 00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41 C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00 00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05 48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32 00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90 00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8 05 26 40 00 03 20 06 C2 59 00 A7 88 00 00 02 00 00 80 00 00"
 
   def handleGamePkt(pkt : PlanetSideGamePacket) = pkt match {
     case ConnectToWorldRequestMessage(server, token, majorVersion, minorVersion, revision, buildDate, unk) =>
@@ -139,7 +139,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
               log.debug("Object: " + obj)
               // LoadMapMessage 13714 in mossy .gcap
               // XXX: hardcoded shit
-              sendResponse(PacketCoding.CreateGamePacket(0, LoadMapMessage("map11","home1",40100,25,true,3770441820L))) //VS Sanctuary
+              sendResponse(PacketCoding.CreateGamePacket(0, LoadMapMessage("ugd01","c1",40100,25,true,3770441820L))) //VS Sanctuary
               sendResponse(PacketCoding.CreateGamePacket(0, ZonePopulationUpdateMessage(PlanetSideGUID(13), 414, 138, 0, 138, 0, 138, 0, 138, 0)))
               sendRawResponse(objectHex)
 
@@ -171,8 +171,8 @@ class WorldSessionActor extends Actor with MDCContextAware {
 //                8,                   //!! Field != 8 will cause malformed packet. See class def.
 //                true,                //Boosted spawn room pain field
 //                true)))              //Boosted generator room pain field
-//              sendResponse(PacketCoding.CreateGamePacket(0, BuildingInfoUpdateMessage(PlanetSideGUID(1), PlanetSideGUID(9),
-//                10,false,PlanetSideEmpire.VS,0,PlanetSideEmpire.VS,0,PlanetSideGeneratorState.Normal,true,true,0,0,0,0,false,8,true,true)))
+//             sendResponse(PacketCoding.CreateGamePacket(0, BuildingInfoUpdateMessage(PlanetSideGUID(23), PlanetSideGUID(10175),
+//                10,false,PlanetSideEmpire.NC,0,PlanetSideEmpire.NC,0,PlanetSideGeneratorState.Normal,true,true,0,0,0,0,false,8,true,true)))
 //              sendResponse(PacketCoding.CreateGamePacket(0, BuildingInfoUpdateMessage(PlanetSideGUID(1), PlanetSideGUID(8),
 //                9,false,PlanetSideEmpire.NC,0,PlanetSideEmpire.NC,0,PlanetSideGeneratorState.Normal,true,true,0,0,0,0,false,8,true,true)))
 //              sendResponse(PacketCoding.CreateGamePacket(0, BuildingInfoUpdateMessage(PlanetSideGUID(1), PlanetSideGUID(7),
@@ -217,34 +217,34 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ PlayerStateMessageUpstream(avatar_guid, pos, vel, unk1, aim_pitch, unk2, seq_time, unk3, is_crouching, unk4, unk5, unk6, unk7, unk8) =>
       //log.info("PlayerState: " + msg)
-      if(false && is_crouching && !ArmorChangedMessage.changeOnce) {
+      if(is_crouching && !ArmorChangedMessage.changeOnce) {
         ArmorChangedMessage.changeOnce = true
         //carefully delete inventory
-        sendRawResponse(hex"19 4C00 00")
-        sendRawResponse(hex"19 4E00 00")
-        sendRawResponse(hex"19 5300 00")
-        sendRawResponse(hex"19 5400 00")
-        sendRawResponse(hex"19 5500 00")
-        sendRawResponse(hex"19 5600 00")
-        sendRawResponse(hex"19 5700 00")
-        sendRawResponse(hex"19 5800 00")
-        sendResponse(PacketCoding.CreateGamePacket(0, ArmorChangedMessage(avatar_guid, 0, 0)))
-        //see capture "last", starting @ line 688
-        //note: adding a medkit creates the shortcut if it doesn't exist and dispatches an 0x28 packet to the server
-        //sendRawResponse(hex"18 7C000000 2580 692 5C0F 9E C0000018000") //reaver fury rockets, 2,6
-        sendRawResponse(hex"18 7C000000 2580 79A 0D06 86 C8000020000") //buckshot, 0,0
-        sendRawResponse(hex"18 7C000000 2580 0E0 0005 A1 C8000064000") //9mm, 3,0
-        sendRawResponse(hex"18 7C000000 2580 0E0 1506 BC C8000064000") //9mm, 6,0
-        sendRawResponse(hex"18 7C000000 2580 0C2 F805 A6 C8000002000") //medkit, 3,5
-        sendRawResponse(hex"18 7C000000 2580 0C2 F604 B8 C8000002000") //medkit, 5,5
-        //sendRawResponse(hex"18 87000000 2580 100 690B 80 8800000200008") // ACE, Boomer, pistol slot 1
-        sendRawResponse(hex"18 7C000000 2580 0C2 1A06 CA C8000002000") //medkit, 7,5
-        sendRawResponse(hex"18 DC000000 2580 542 4407 80 480000020000C04A941A0B019000000C000") // plasma grenades, pistol slot 1
-        sendRawResponse(hex"18 97000000 2580 6C2 9F05 81 48000002000080000") //rek, pistol slot 2
-        sendRawResponse(hex"18 DC000000 2580 501 6A07 B6 480000020000C04A137A0B019000000C000") // jammer grenades, 5,3
-        sendRawResponse(hex"18 DC000000 2580 501 4406 C8 480000020000C04A13C209019000000C000") // jammer grenades, 7,3
-        sendRawResponse(hex"18 DC000000 2580 2C9 B905 82 480000020000C041C00C0B0190000078000") // gauss, rifle slot 1
-        sendRawResponse(hex"18 DC000000 2580 181 F804 89 480000020000C04F35AE0D0190000030000") // sweeper, 0,3
+        sendRawResponse(hex"19 4C00 00") //suppressor/beamer?
+        sendRawResponse(hex"19 4E00 00") //beamer/suppressor?
+        sendRawResponse(hex"19 5300 00") //ammo
+        sendRawResponse(hex"19 5400 00") //ammo
+        sendRawResponse(hex"19 5500 00") //ammo
+        sendRawResponse(hex"19 5600 00") //ammo
+        sendRawResponse(hex"19 5700 00") //ammo
+        sendRawResponse(hex"19 5800 00") //ammo
+//        sendResponse(PacketCoding.CreateGamePacket(0, ArmorChangedMessage(avatar_guid, 0, 0)))
+//        //see capture "last", starting @ line 688
+//        //note: adding a medkit creates the shortcut if it doesn't exist and dispatches an 0x28 packet to the server
+//        //sendRawResponse(hex"18 7C000000 2580 692 5C0F 9E C0000018000") //reaver fury rockets, 2,6
+//        sendRawResponse(hex"18 7C000000 2580 79A 0D06 86 C8000020000") //buckshot, 0,0
+//        sendRawResponse(hex"18 7C000000 2580 0E0 0005 A1 C8000064000") //9mm, 3,0
+//        sendRawResponse(hex"18 7C000000 2580 0E0 1506 BC C8000064000") //9mm, 6,0
+//        sendRawResponse(hex"18 7C000000 2580 0C2 F805 A6 C8000002000") //medkit, 3,5
+//        sendRawResponse(hex"18 7C000000 2580 0C2 F604 B8 C8000002000") //medkit, 5,5
+//        //sendRawResponse(hex"18 87000000 2580 100 690B 80 8800000200008") // ACE, Boomer, pistol slot 1
+//        sendRawResponse(hex"18 7C000000 2580 0C2 1A06 CA C8000002000") //medkit, 7,5
+//        sendRawResponse(hex"18 DC000000 2580 542 4407 80 480000020000C04A941A0B019000000C000") // plasma grenades, pistol slot 1
+//        sendRawResponse(hex"18 97000000 2580 6C2 9F05 81 48000002000080000") //rek, pistol slot 2
+//        sendRawResponse(hex"18 DC000000 2580 501 6A07 B6 480000020000C04A137A0B019000000C000") // jammer grenades, 5,3
+//        sendRawResponse(hex"18 DC000000 2580 501 4406 C8 480000020000C04A13C209019000000C000") // jammer grenades, 7,3
+//        sendRawResponse(hex"18 DC000000 2580 2C9 B905 82 480000020000C041C00C0B0190000078000") // gauss, rifle slot 1
+//        sendRawResponse(hex"18 DC000000 2580 181 F804 89 480000020000C04F35AE0D0190000030000") // sweeper, 0,3
       }
 
     case msg @ ChatMsg(messagetype, has_wide_contents, recipient, contents, note_contents) =>
