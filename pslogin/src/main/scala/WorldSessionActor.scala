@@ -217,7 +217,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ PlayerStateMessageUpstream(avatar_guid, pos, vel, unk1, aim_pitch, unk2, seq_time, unk3, is_crouching, unk4, unk5, unk6, unk7, unk8) =>
       //log.info("PlayerState: " + msg)
-      if(is_crouching && !ArmorChangedMessage.changeOnce) {
+      if(false && is_crouching && !ArmorChangedMessage.changeOnce) {
         ArmorChangedMessage.changeOnce = true
         //carefully delete inventory
         sendRawResponse(hex"19 4C00 00") //suppressor/beamer?
@@ -334,6 +334,12 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ SplashHitMessage(bytes) =>
       log.info("SplashHitMessage: " + bytes.toString)
+
+    case msg @ ZipLineMessage(player_guid, unk1, unk2, unk3, unk4, unk5, unk6) =>
+      log.info("ZipLineMessage: " + msg)
+
+    case msg @ ProximityTerminalUseMessage(player_guid, object_guid, unk) =>
+      log.info("ProximityTerminalUseMessage: " + msg)
 
     case default => log.debug(s"Unhandled GamePacket ${pkt}")
   }
