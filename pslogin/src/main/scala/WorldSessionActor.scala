@@ -137,7 +137,28 @@ class WorldSessionActor extends Actor with MDCContextAware {
           PacketCoding.DecodeGamePacket(objectHex).require match {
             case obj @ ObjectCreateMessage(len, cls, guid, _, _) =>
               log.debug("Object: " + obj)
-              sendRawResponse(hex"E6 B8 01 06 06 00 8E 470065006E006500720061006C0047006F0072006700750074007A00 A1 46004C0059002C0041006C006C002000770065006C0063006F006D0065002C0063006E0020006C0061007300740020006E0069006700680074002100210021002100 040000007A 01 83 02 80 46004E0049004700480054003800380052004100560045004E00 8B 41006C006C002000570065006C0063006F006D006500 0A0000004A 02 83 02 00 45 80 4B004F004B006B006900610073004D00460043004E00 87 5300710075006100640020003200 040000006A FF")
+              sendResponse(PacketCoding.CreateGamePacket(0, ReplicationStreamMessage(5,12,
+                Vector(
+                  SquadListing(0, Option(SquadHeader(131,false,PlanetSideGUID(21),SquadInfo("00","0",PlanetSideGUID(1),10,10)))),
+                  SquadListing(1, Option(SquadHeader(131,false,PlanetSideGUID(22),SquadInfo("01","1",PlanetSideGUID(1),10,10)))),
+                  SquadListing(2, Option(SquadHeader(131,false,PlanetSideGUID(23),SquadInfo("02","2",PlanetSideGUID(1),10,10)))),
+                  SquadListing(3, Option(SquadHeader(131,false,PlanetSideGUID(24),SquadInfo("03","3",PlanetSideGUID(1),10,10)))),
+                  SquadListing(4, Option(SquadHeader(131,false,PlanetSideGUID(25),SquadInfo("04","4",PlanetSideGUID(1),10,10)))),
+                  SquadListing(5, Option(SquadHeader(131,false,PlanetSideGUID(26),SquadInfo("05","5",PlanetSideGUID(1),10,10)))),
+                  SquadListing(6, Option(SquadHeader(131,false,PlanetSideGUID(27),SquadInfo("06","6",PlanetSideGUID(1),10,10)))),
+                  SquadListing(7, Option(SquadHeader(131,false,PlanetSideGUID(28),SquadInfo("07","7",PlanetSideGUID(1),10,10)))),
+                  SquadListing(8, Option(SquadHeader(131,false,PlanetSideGUID(29),SquadInfo("08","8",PlanetSideGUID(1),10,10)))),
+                  SquadListing(9, Option(SquadHeader(131,false,PlanetSideGUID(30),SquadInfo("09","9",PlanetSideGUID(1),10,10)))),
+                  SquadListing(10, Option(SquadHeader(131,false,PlanetSideGUID(31),SquadInfo("10","10",PlanetSideGUID(1),10,10)))),
+                  SquadListing(11, Option(SquadHeader(131,false,PlanetSideGUID(32),SquadInfo("11","11",PlanetSideGUID(1),10,10)))),
+                  SquadListing(12, Option(SquadHeader(131,false,PlanetSideGUID(33),SquadInfo("12","12",PlanetSideGUID(1),10,10)))),
+                  SquadListing(13, Option(SquadHeader(131,false,PlanetSideGUID(34),SquadInfo("13","13",PlanetSideGUID(1),10,10)))),
+                  SquadListing(14, Option(SquadHeader(131,false,PlanetSideGUID(35),SquadInfo("14","14",PlanetSideGUID(1),10,10)))),
+                  SquadListing(15, Option(SquadHeader(131,false,PlanetSideGUID(36),SquadInfo("15","15",PlanetSideGUID(1),10,10)))),
+                  SquadListing(16, Option(SquadHeader(131,false,PlanetSideGUID(37),SquadInfo("16","16",PlanetSideGUID(1),10,10)))),
+                  SquadListing(255)
+                )
+              )))
 
               // LoadMapMessage 13714 in mossy .gcap
               // XXX: hardcoded shit
@@ -224,6 +245,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
       //log.info("PlayerState: " + msg)
       if(is_crouching && !ArmorChangedMessage.changeOnce) {
         ArmorChangedMessage.changeOnce = true
+        //sendRawResponse(hex"E620A01840C033FC")
         //carefully delete inventory
 //        sendRawResponse(hex"19 4C00 00") //beamer
 //        sendRawResponse(hex"19 4E00 00") //suppressor
@@ -234,7 +256,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 //        sendRawResponse(hex"19 5600 00") //ammo, 9mm ap
 //        sendRawResponse(hex"19 5700 00") //ammo, plasma
 //        sendRawResponse(hex"19 5800 00") //rek
-        sendResponse(PacketCoding.CreateGamePacket(0, ArmorChangedMessage(avatar_guid, 0, 0)))
+//        sendResponse(PacketCoding.CreateGamePacket(0, ArmorChangedMessage(avatar_guid, 0, 0)))
 //        //see capture "last", starting @ line 688
 //        //note: adding a medkit creates the shortcut if it doesn't exist and dispatches an 0x28 packet to the server
 //        //sendRawResponse(hex"18 7C000000 2580 692 5C0F 9E C0000018000") //reaver fury rockets, 2,6
