@@ -137,27 +137,29 @@ class WorldSessionActor extends Actor with MDCContextAware {
           PacketCoding.DecodeGamePacket(objectHex).require match {
             case obj @ ObjectCreateMessage(len, cls, guid, _, _) =>
               log.debug("Object: " + obj)
-              sendResponse(PacketCoding.CreateGamePacket(0, ReplicationStreamMessage(5,12,
-                Vector(
-                  SquadListing(0, Option(SquadHeader(131,false,PlanetSideGUID(21),SquadInfo("00","0",PlanetSideGUID(1),10,10)))),
-                  SquadListing(1, Option(SquadHeader(131,false,PlanetSideGUID(22),SquadInfo("01","1",PlanetSideGUID(1),10,10)))),
-                  SquadListing(2, Option(SquadHeader(131,false,PlanetSideGUID(23),SquadInfo("02","2",PlanetSideGUID(1),10,10)))),
-                  SquadListing(3, Option(SquadHeader(131,false,PlanetSideGUID(24),SquadInfo("03","3",PlanetSideGUID(1),10,10)))),
-                  SquadListing(4, Option(SquadHeader(131,false,PlanetSideGUID(25),SquadInfo("04","4",PlanetSideGUID(1),10,10)))),
-                  SquadListing(5, Option(SquadHeader(131,false,PlanetSideGUID(26),SquadInfo("05","5",PlanetSideGUID(1),10,10)))),
-                  SquadListing(6, Option(SquadHeader(131,false,PlanetSideGUID(27),SquadInfo("06","6",PlanetSideGUID(1),10,10)))),
-                  SquadListing(7, Option(SquadHeader(131,false,PlanetSideGUID(28),SquadInfo("07","7",PlanetSideGUID(1),10,10)))),
-                  SquadListing(8, Option(SquadHeader(131,false,PlanetSideGUID(29),SquadInfo("08","8",PlanetSideGUID(1),10,10)))),
-                  SquadListing(9, Option(SquadHeader(131,false,PlanetSideGUID(30),SquadInfo("09","9",PlanetSideGUID(1),10,10)))),
-                  SquadListing(10, Option(SquadHeader(131,false,PlanetSideGUID(31),SquadInfo("10","10",PlanetSideGUID(1),10,10)))),
-                  SquadListing(11, Option(SquadHeader(131,false,PlanetSideGUID(32),SquadInfo("11","11",PlanetSideGUID(1),10,10)))),
-                  SquadListing(12, Option(SquadHeader(131,false,PlanetSideGUID(33),SquadInfo("12","12",PlanetSideGUID(1),10,10)))),
-                  SquadListing(13, Option(SquadHeader(131,false,PlanetSideGUID(34),SquadInfo("13","13",PlanetSideGUID(1),10,10)))),
-                  SquadListing(14, Option(SquadHeader(131,false,PlanetSideGUID(35),SquadInfo("14","14",PlanetSideGUID(1),10,10)))),
-                  SquadListing(15, Option(SquadHeader(131,false,PlanetSideGUID(36),SquadInfo("15","15",PlanetSideGUID(1),10,10)))),
-                  SquadListing(16, Option(SquadHeader(131,false,PlanetSideGUID(37),SquadInfo("16","16",PlanetSideGUID(1),10,10)))),
-                  SquadListing(255)
-                )
+              sendResponse(PacketCoding.CreateGamePacket(0, ReplicationStreamMessage(5,
+                Some(ReplicationStreamMessage(6, None, Some(false),
+                  Some(Vector(
+                    SquadListing(0, Some(SquadHeader(131,false,PlanetSideGUID(65535),SquadInfo("00","0",PlanetSideGUID(1),10,10)))),
+                    SquadListing(1, Some(SquadHeader(131,false,PlanetSideGUID(22),SquadInfo("01","1",PlanetSideGUID(1),10,10)))),
+                    SquadListing(2, Some(SquadHeader(131,false,PlanetSideGUID(23),SquadInfo("02","2",PlanetSideGUID(1),10,10)))),
+                    SquadListing(3, Some(SquadHeader(131,false,PlanetSideGUID(24),SquadInfo("03","3",PlanetSideGUID(1),10,10)))),
+                    SquadListing(4, Some(SquadHeader(131,false,PlanetSideGUID(25),SquadInfo("04","4",PlanetSideGUID(1),10,10)))),
+                    SquadListing(5, Some(SquadHeader(131,false,PlanetSideGUID(26),SquadInfo("05","5",PlanetSideGUID(1),10,10)))),
+                    SquadListing(6, Some(SquadHeader(131,false,PlanetSideGUID(27),SquadInfo("06","6",PlanetSideGUID(1),10,10)))),
+                    SquadListing(7, Some(SquadHeader(131,false,PlanetSideGUID(28),SquadInfo("07","7",PlanetSideGUID(1),10,10)))),
+                    SquadListing(8, Some(SquadHeader(131,false,PlanetSideGUID(29),SquadInfo("08","8",PlanetSideGUID(1),10,10)))),
+                    SquadListing(9, Some(SquadHeader(131,false,PlanetSideGUID(30),SquadInfo("09","9",PlanetSideGUID(1),10,10)))),
+                    SquadListing(10, Some(SquadHeader(131,false,PlanetSideGUID(31),SquadInfo("10","10",PlanetSideGUID(1),10,10)))),
+                    SquadListing(11, Some(SquadHeader(131,false,PlanetSideGUID(32),SquadInfo("11","11",PlanetSideGUID(1),10,10)))),
+                    SquadListing(12, Some(SquadHeader(131,false,PlanetSideGUID(33),SquadInfo("12","12",PlanetSideGUID(1),10,10)))),
+                    SquadListing(13, Some(SquadHeader(131,false,PlanetSideGUID(34),SquadInfo("13","13",PlanetSideGUID(1),10,10)))),
+                    SquadListing(14, Some(SquadHeader(131,false,PlanetSideGUID(35),SquadInfo("14","14",PlanetSideGUID(1),10,10)))),
+                    SquadListing(15, Some(SquadHeader(131,false,PlanetSideGUID(36),SquadInfo("15","15",PlanetSideGUID(1),10,10)))),
+                    SquadListing(16, Some(SquadHeader(131,false,PlanetSideGUID(37),SquadInfo("16","16",PlanetSideGUID(1),10,10)))),
+                    SquadListing(255)
+                  ))
+                ))
               )))
 
               // LoadMapMessage 13714 in mossy .gcap
@@ -245,7 +247,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
       //log.info("PlayerState: " + msg)
       if(is_crouching && !ArmorChangedMessage.changeOnce) {
         ArmorChangedMessage.changeOnce = true
-        //sendRawResponse(hex"E620A01840C033FC")
+        sendRawResponse(hex"E6     20        40        18        01        01        49        FF")
         //carefully delete inventory
 //        sendRawResponse(hex"19 4C00 00") //beamer
 //        sendRawResponse(hex"19 4E00 00") //suppressor
