@@ -139,26 +139,26 @@ class WorldSessionActor extends Actor with MDCContextAware {
               log.debug("Object: " + obj)
               sendResponse(PacketCoding.CreateGamePacket(0, ReplicationStreamMessage(5,
                 Some(ReplicationStreamMessage(6, None, Some(false),
-                  Some(Vector(
-                    SquadListing(0, Some(SquadHeader(131,false,PlanetSideGUID(65535),SquadInfoOpt("00","0",PlanetSideGUID(1),10,10)))),
-                    SquadListing(1, Some(SquadHeader(131,false,PlanetSideGUID(22),SquadInfoOpt("01","1",PlanetSideGUID(1),10,10)))),
-                    SquadListing(2, Some(SquadHeader(131,false,PlanetSideGUID(23),SquadInfoOpt("02","2",PlanetSideGUID(1),10,10)))),
-                    SquadListing(3, Some(SquadHeader(131,false,PlanetSideGUID(24),SquadInfoOpt("03","3",PlanetSideGUID(1),10,10)))),
-                    SquadListing(4, Some(SquadHeader(131,false,PlanetSideGUID(25),SquadInfoOpt("04","4",PlanetSideGUID(1),10,10)))),
-                    SquadListing(5, Some(SquadHeader(131,false,PlanetSideGUID(26),SquadInfoOpt("05","5",PlanetSideGUID(1),10,10)))),
-                    SquadListing(6, Some(SquadHeader(131,false,PlanetSideGUID(27),SquadInfoOpt("06","6",PlanetSideGUID(1),10,10)))),
-                    SquadListing(7, Some(SquadHeader(131,false,PlanetSideGUID(28),SquadInfoOpt("07","7",PlanetSideGUID(1),10,10)))),
-                    SquadListing(8, Some(SquadHeader(131,false,PlanetSideGUID(29),SquadInfoOpt("08","8",PlanetSideGUID(1),10,10)))),
-                    SquadListing(9, Some(SquadHeader(131,false,PlanetSideGUID(30),SquadInfoOpt("09","9",PlanetSideGUID(1),10,10)))),
-                    SquadListing(10, Some(SquadHeader(131,false,PlanetSideGUID(31),SquadInfoOpt("10","10",PlanetSideGUID(1),10,10)))),
-                    SquadListing(11, Some(SquadHeader(131,false,PlanetSideGUID(32),SquadInfoOpt("11","11",PlanetSideGUID(1),10,10)))),
-                    SquadListing(12, Some(SquadHeader(131,false,PlanetSideGUID(33),SquadInfoOpt("12","12",PlanetSideGUID(1),10,10)))),
-                    SquadListing(13, Some(SquadHeader(131,false,PlanetSideGUID(34),SquadInfoOpt("13","13",PlanetSideGUID(1),10,10)))),
-                    SquadListing(14, Some(SquadHeader(131,false,PlanetSideGUID(35),SquadInfoOpt("14","14",PlanetSideGUID(1),10,10)))),
-                    SquadListing(15, Some(SquadHeader(131,false,PlanetSideGUID(36),SquadInfoOpt("15","15",PlanetSideGUID(1),10,10)))),
-                    SquadListing(16, Some(SquadHeader(131,false,PlanetSideGUID(37),SquadInfoOpt("16","16",PlanetSideGUID(1),10,10)))),
+                  Vector(
+                    SquadListing(0, Some(SquadHeader(131,false,SquadInfo("00","0",PlanetSideGUID(1),10,10, PlanetSideGUID(65535))))),
+                    SquadListing(1, Some(SquadHeader(131,false,SquadInfo("01","1",PlanetSideGUID(1),10,10, PlanetSideGUID(22))))),
+                    SquadListing(2, Some(SquadHeader(131,false,SquadInfo("02","2",PlanetSideGUID(1),10,10, PlanetSideGUID(23))))),
+                    SquadListing(3, Some(SquadHeader(131,false,SquadInfo("03","3",PlanetSideGUID(1),10,10, PlanetSideGUID(24))))),
+                    SquadListing(4, Some(SquadHeader(131,false,SquadInfo("04","4",PlanetSideGUID(1),10,10, PlanetSideGUID(25))))),
+                    SquadListing(5, Some(SquadHeader(131,false,SquadInfo("05","5",PlanetSideGUID(1),10,10, PlanetSideGUID(26))))),
+                    SquadListing(6, Some(SquadHeader(131,false,SquadInfo("06","6",PlanetSideGUID(1),10,10, PlanetSideGUID(27))))),
+                    SquadListing(7, Some(SquadHeader(131,false,SquadInfo("07","7",PlanetSideGUID(1),10,10, PlanetSideGUID(28))))),
+                    SquadListing(8, Some(SquadHeader(131,false,SquadInfo("08","8",PlanetSideGUID(1),10,10, PlanetSideGUID(29))))),
+                    SquadListing(9, Some(SquadHeader(131,false,SquadInfo("09","9",PlanetSideGUID(1),10,10, PlanetSideGUID(30))))),
+                    SquadListing(10, Some(SquadHeader(131,false,SquadInfo("10","10",PlanetSideGUID(1),10,10, PlanetSideGUID(31))))),
+                    SquadListing(11, Some(SquadHeader(131,false,SquadInfo("11","11",PlanetSideGUID(1),10,10, PlanetSideGUID(32))))),
+                    SquadListing(12, Some(SquadHeader(131,false,SquadInfo("12","12",PlanetSideGUID(1),10,10, PlanetSideGUID(33))))),
+                    SquadListing(13, Some(SquadHeader(131,false,SquadInfo("13","13",PlanetSideGUID(1),10,10, PlanetSideGUID(34))))),
+                    SquadListing(14, Some(SquadHeader(131,false,SquadInfo("14","14",PlanetSideGUID(1),10,10, PlanetSideGUID(35))))),
+                    SquadListing(15, Some(SquadHeader(131,false,SquadInfo("15","15",PlanetSideGUID(1),10,10, PlanetSideGUID(36))))),
+                    SquadListing(16, Some(SquadHeader(131,false,SquadInfo("16","16",PlanetSideGUID(1),10,10, PlanetSideGUID(37))))),
                     SquadListing(255)
-                  ))
+                  )
                 ))
               )))
 
