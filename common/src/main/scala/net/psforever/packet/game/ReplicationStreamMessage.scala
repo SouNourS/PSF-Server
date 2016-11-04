@@ -3,7 +3,7 @@ package net.psforever.packet.game
 
 import net.psforever.newcodecs.newcodecs
 import net.psforever.packet.{GamePacketOpcode, Marshallable, PacketHelpers, PlanetSideGamePacket}
-import scodec.Codec
+import scodec.{Attempt, Codec}
 import scodec.codecs._
 import shapeless._
 
@@ -17,16 +17,10 @@ final case class SquadInfoOpt(leader : Option[String],
                            size : Option[Int],
                            capacity : Option[Int])
 
-final case class SquadInfo(leader : String,
-                           task : String,
-                           continent_guid : PlanetSideGUID,
-                           size : Int,
-                           capacity : Int)
-
 final case class SquadHeader(unk1 : Int,
                              unk2 : Boolean,
                              squad_guid : PlanetSideGUID,
-                             info : SquadInfo)
+                             info : SquadInfoOpt)
 
 final case class SquadListing(index : Int = 255,
                               listing : Option[SquadHeader] = None,
@@ -58,6 +52,7 @@ object SquadInfoOpt {
     SquadInfoOpt(Some(leader), task, None, None, None)
   }
 
+  //use: SquadInfoOpt(continent_guid)
   def apply(continent_guid : PlanetSideGUID) : SquadInfoOpt = {
     SquadInfoOpt(None, None, Some(continent_guid), None, None)
   }
@@ -75,85 +70,107 @@ object SquadInfoOpt {
   }
 }
 
-object SquadInfo extends Marshallable[SquadInfo] {
-  implicit val codec : Codec[SquadInfo] = (
-    ("leader" | PacketHelpers.encodedWideString) ::
-      ("task" | PacketHelpers.encodedWideString) ::
-      ("continent_guid" | PlanetSideGUID.codec) ::
-      ignore(16) ::
-      ("size" | uint4L) ::
-      ("capacity" | uint4L)
-    ).as[SquadInfo]
-
-  implicit val alt_codec : Codec[SquadInfo] = (
-    ("leader" | PacketHelpers.encodedWideStringAligned(7)) ::
-      ("task" | PacketHelpers.encodedWideString) ::
-      ("continent_guid" | PlanetSideGUID.codec) ::
-      ignore(16) ::
-      ("size" | uint4L) ::
-      ("capacity" | uint4L)
-    ).as[SquadInfo]
-}
-
 object SquadHeader extends Marshallable[SquadHeader] {
-  type initPattern = PlanetSideGUID :: SquadInfo :: HNil
-
-  val init : Codec[initPattern] = (
+  type initPattern = PlanetSideGUID :: SquadInfoOpt :: HNil
+  val initCodec : Codec[initPattern] = (
       ("squad_guid" | PlanetSideGUID.codec) ::
         ("leader" | PacketHelpers.encodedWideString) ::
         ("task" | PacketHelpers.encodedWideString) ::
         ("continent_guid" | PlanetSideGUID.codec) ::
-        //ignore(16) ::
+        uint16L ::
         ("size" | uint4L) ::
         ("capacity" | uint4L)
     ).xmap[initPattern](
     {
-      case sguid :: lead :: tsk :: cguid :: sz :: cap :: HNil =>
-        sguid :: SquadInfo(lead, tsk, cguid, sz, cap) :: HNil
+      case sguid :: lead :: tsk :: cguid :: x :: sz :: cap :: HNil =>
+        sguid :: SquadInfoOpt(lead, tsk, cguid, sz, cap) :: HNil
     },
     {
-      case sguid :: SquadInfo(lead, task, cguid, sz, cap) :: HNil =>
-        sguid :: lead :: task :: cguid :: sz :: cap :: HNil
+      case sguid :: SquadInfoOpt(lead, task, cguid, sz, cap) :: HNil =>
+        sguid :: lead.get :: task.get :: cguid.get :: 0 :: sz.get :: cap.get :: HNil
     }
   )
-  val alt_init : Codec[initPattern] = (
+  val alt_initCodec : Codec[initPattern] = (
     ("squad_guid" | PlanetSideGUID.codec) ::
       ("leader" | PacketHelpers.encodedWideStringAligned(7)) ::
       ("task" | PacketHelpers.encodedWideString) ::
       ("continent_guid" | PlanetSideGUID.codec) ::
-      //ignore(16) ::
+      uint16L ::
       ("size" | uint4L) ::
       ("capacity" | uint4L)
     ).xmap[initPattern](
+      {
+        case sguid :: lead :: tsk :: cguid :: x :: sz :: cap :: HNil =>
+          sguid :: SquadInfoOpt(lead, tsk, cguid, sz, cap) :: HNil
+      },
+      {
+        case sguid :: SquadInfoOpt(lead, task, cguid, sz, cap) :: HNil =>
+          sguid :: lead.get :: task.get :: cguid.get :: 0 :: sz.get :: cap.get :: HNil
+      }
+    )
+
+  type sizePattern = SquadInfoOpt :: HNil
+  val sizeCodec : Codec[sizePattern] = (
+    uintL(3) ::
+      bool ::
+      uint4L
+  ).xmap[sizePattern] (
     {
-      case sguid :: lead :: tsk :: cguid :: sz :: cap :: HNil =>
-        sguid :: SquadInfo(lead, tsk, cguid, sz, cap) :: HNil
+      case unk1 :: unk2 :: sz :: HNil =>
+        SquadInfoOpt(sz, None) :: HNil
     },
     {
-      case sguid :: SquadInfo(lead, task, cguid, sz, cap) :: HNil =>
-        sguid :: lead :: task :: cguid :: sz :: cap :: HNil
+      case SquadInfoOpt(lead, tsk, cguid, sz, cap) :: HNil =>
+        2 :: false :: sz.get :: HNil
+    }
+  )
+
+  type continentPattern = SquadInfoOpt :: HNil
+  val continentCodec : Codec[continentPattern] = (
+    uintL(3) ::
+      bool ::
+      PlanetSideGUID.codec ::
+      uint16L
+  ).xmap[continentPattern] (
+    {
+      case unk1 :: unk2 :: cguid :: x :: HNil =>
+      SquadInfoOpt(cguid) :: HNil
+    },
+    {
+      case SquadInfoOpt(lead, tsk, cguid, sz, cap) :: HNil =>
+        1 :: true :: cguid.get :: 0 :: HNil
     }
   )
   //  type remove = Int :: Int :: Int :: Boolean :: Int :: Int :: HNil
   //  type updateLeader = Int :: Boolean :: Int :: Boolean :: String :: Int :: HNil
   //  type updateTask = Int :: Boolean :: Int :: Boolean :: String ::  Int :: HNil
-  //  type updateContinent = Int :: Boolean :: Int :: Boolean :: PlanetSideGUID :: Int :: HNil
-  //  type updateSize = Int ::Boolean :: Int :: Boolean :: Int :: Int :: HNil
   //  type updateLeaderSize = Int :: Boolean :: Int :: Boolean :: String :: Boolean :: Int :: Int :: Int :: HNil
   //  type updateTaskContinent = Int :: Boolean :: Int :: Boolean :: String :: Int :: Boolean :: PlanetSideGUID :: Int :: HNil
 
   implicit val codec : Codec[SquadHeader] = (
     ("unk1" | uint8L) ::
       ("unk2" | bool) ::
-      ("squad_guid" | PlanetSideGUID.codec) ::
-      ("info" | SquadInfo.codec)
+      initCodec.exmap[initPattern] (
+        {
+          case sguid :: info :: HNil => Attempt.Successful(sguid :: info :: HNil)
+        },
+        {
+          case sguid :: info :: HNil => Attempt.Successful(sguid :: info :: HNil)
+        }
+      )
     ).as[SquadHeader]
 
   implicit val alt_codec : Codec[SquadHeader] = (
     ("unk1" | uint8L) ::
       ("unk2" | bool) ::
-      ("squad_guid" | PlanetSideGUID.codec) ::
-      ("info" | SquadInfo.alt_codec)
+      alt_initCodec.exmap[initPattern] (
+        {
+          case sguid :: info :: HNil => Attempt.Successful(sguid :: info :: HNil)
+        },
+        {
+          case sguid :: info :: HNil => Attempt.Successful(sguid :: info :: HNil)
+        }
+      )
     ).as[SquadHeader]
 }
 
