@@ -4,7 +4,7 @@ package net.psforever.packet.game
 import net.psforever.newcodecs.newcodecs
 import net.psforever.packet.{GamePacketOpcode, Marshallable, PacketHelpers, PlanetSideGamePacket}
 import scodec.bits.BitVector
-import scodec.{Attempt, Codec}
+import scodec.{Codec, Err}
 import scodec.codecs._
 import shapeless._
 
@@ -21,7 +21,7 @@ final case class SquadInfo(leader : Option[String],
 
 final case class SquadHeader(action : Int,
                              unk : Boolean,
-                             //action2 : Int,
+                             action2 : Option[Int],
                              info : SquadInfo)
 
 final case class SquadListing(index : Int = 255,
@@ -29,7 +29,7 @@ final case class SquadListing(index : Int = 255,
                               na : Option[BitVector] = None)
 
 final case class ReplicationStreamMessage(behavior : Int,
-                                          init : Option[ReplicationStreamMessage] = None,
+                                          init : Option[ReplicationStreamMessage],
                                           unk : Option[Boolean] = None,
                                           entries : Vector[SquadListing] = Vector.empty)
   extends PlanetSideGamePacket {
@@ -44,7 +44,7 @@ object SquadInfo {
     SquadInfo(Some(leader), Some(task), Some(continent_guid), Some(size), Some(capacity))
   }
 
-  //use: SquadInfo(leader, task, continent_guid, size, capacity)
+  //use: SquadInfo(leader, task, continent_guid, size, capacity, sguid)
   def apply(leader : String, task : String, continent_guid : PlanetSideGUID, size : Int, capacity : Int, sguid : PlanetSideGUID) : SquadInfo = {
     SquadInfo(Some(leader), Some(task), Some(continent_guid), Some(size), Some(capacity), Some(sguid))
   }
@@ -75,6 +75,16 @@ object SquadInfo {
   def apply(size : Option[Int], capacity : Int) : SquadInfo = {
     SquadInfo(None, None, None, size, Some(capacity))
   }
+
+  //use: SquadInfo(leader, size)
+  def apply(leader : String, size : Int) : SquadInfo = {
+    SquadInfo(Some(leader), None, None, Some(size), None)
+  }
+
+  //use: SquadInfo(task, continent_guid)
+  def apply(task : String, continent_guid : PlanetSideGUID) : SquadInfo = {
+    SquadInfo(None, Some(task), Some(continent_guid), None, None, None)
+  }
 }
 
 object SquadHeader extends Marshallable[SquadHeader] {
@@ -87,14 +97,14 @@ object SquadHeader extends Marshallable[SquadHeader] {
         uint16L ::
         ("size" | uint4L) ::
         ("capacity" | uint4L)
-    ).xmap[squadPattern](
+    ).xmap[squadPattern] (
     {
       case sguid :: lead :: tsk :: cguid :: x :: sz :: cap :: HNil =>
         SquadInfo(lead, tsk, cguid, sz, cap, sguid) :: HNil
     },
     {
-      case SquadInfo(lead, task, cguid, sz, cap, sguid) :: HNil =>
-        sguid.get :: lead.get :: task.get :: cguid.get :: 0 :: sz.get :: cap.get :: HNil
+      case SquadInfo(lead, tsk, cguid, sz, cap, sguid) :: HNil =>
+        sguid.get :: lead.get :: tsk.get :: cguid.get :: 0 :: sz.get :: cap.get :: HNil
     }
   )
   val alt_initCodec : Codec[squadPattern] = (
@@ -105,82 +115,159 @@ object SquadHeader extends Marshallable[SquadHeader] {
       uint16L ::
       ("size" | uint4L) ::
       ("capacity" | uint4L)
-    ).xmap[squadPattern](
+    ).xmap[squadPattern] (
       {
         case sguid :: lead :: tsk :: cguid :: x :: sz :: cap :: HNil =>
           SquadInfo(lead, tsk, cguid, sz, cap, sguid) :: HNil
       },
       {
-        case SquadInfo(lead, task, cguid, sz, cap, sguid) :: HNil =>
-          sguid.get :: lead.get :: task.get :: cguid.get :: 0 :: sz.get :: cap.get :: HNil
+        case SquadInfo(lead, tsk, cguid, sz, cap, sguid) :: HNil =>
+          sguid.get :: lead.get :: tsk.get :: cguid.get :: 0 :: sz.get :: cap.get :: HNil
+      }
+    )
+
+  val leaderCodec : Codec[squadPattern] = (
+    bool ::
+      ("leader" | PacketHelpers.encodedWideStringAligned(7))
+    ).xmap[squadPattern] (
+      {
+        case x :: lead :: HNil =>
+          SquadInfo(lead, None) :: HNil
+      },
+      {
+        case SquadInfo(lead, None, None, None, None, None) :: HNil =>
+          true :: lead.get :: HNil
+      }
+    )
+
+  val taskOrContinentCodec : Codec[squadPattern] = (
+    bool >>:~ { path =>
+      conditional(path, "continent_guid" | PlanetSideGUID.codec) ::
+      conditional(path, uint16L) ::
+      conditional(!path, "task" | PacketHelpers.encodedWideStringAligned(7))
+    }
+    ).xmap[squadPattern] (
+      {
+        case true :: cguid :: Some(0) :: None :: HNil =>
+          SquadInfo(cguid.get) :: HNil
+        case false :: None :: None :: tsk :: HNil =>
+          SquadInfo(None, tsk.get) :: HNil
+      },
+      {
+        case SquadInfo(None, None, cguid, None, None, None) :: HNil =>
+          true :: Some(cguid.get) :: Some(0) :: None :: HNil
+        case SquadInfo(None, tsk, None, None, None, None) :: HNil =>
+          false :: None :: None :: tsk :: HNil
       }
     )
 
   val sizeCodec : Codec[squadPattern] = (
-    uintL(3) ::
-      bool ::
-      uint4L
-  ).xmap[squadPattern] (
+    bool ::
+      ("size" | uint4L)
+    ).xmap[squadPattern] (
     {
-      case unk1 :: unk2 :: sz :: HNil =>
+      case false :: sz :: HNil =>
         SquadInfo(sz, None) :: HNil
     },
     {
-      case SquadInfo(lead, tsk, cguid, sz, cap, sguid) :: HNil =>
-        2 :: false :: sz.get :: HNil
+      case SquadInfo(None, None, None, sz, None, None) :: HNil =>
+        false :: sz.get :: HNil
     }
   )
 
-  val continentCodec : Codec[squadPattern] = (
-    uintL(3) ::
-      bool ::
-      PlanetSideGUID.codec ::
-      uint16L
-  ).xmap[squadPattern] (
+  val leaderSizeCodec : Codec[squadPattern] = (
+    bool ::
+      ("leader" | PacketHelpers.encodedWideStringAligned(7)) ::
+      uint4L ::
+      ("size" | uint4L)
+    ).xmap[squadPattern] (
     {
-      case unk1 :: unk2 :: cguid :: x :: HNil =>
-      SquadInfo(cguid) :: HNil
+      case true :: lead :: 4 :: sz :: HNil =>
+        SquadInfo(lead, sz) :: HNil
     },
     {
-      case SquadInfo(lead, tsk, cguid, sz, cap, sguid) :: HNil =>
-        1 :: true :: cguid.get :: 0 :: HNil
+      case SquadInfo(lead, None, None, sz, None, None) ::HNil =>
+        true :: lead.get :: 4 :: sz.get :: HNil
     }
   )
-  //  type remove = Int :: Int :: Int :: Boolean :: Int :: Int :: HNil
-  //  type updateLeader = Int :: Boolean :: Int :: Boolean :: String :: Int :: HNil
-  //  type updateTask = Int :: Boolean :: Int :: Boolean :: String ::  Int :: HNil
-  //  type updateLeaderSize = Int :: Boolean :: Int :: Boolean :: String :: Boolean :: Int :: Int :: Int :: HNil
-  //  type updateTaskContinent = Int :: Boolean :: Int :: Boolean :: String :: Int :: Boolean :: PlanetSideGUID :: Int :: HNil
+
+  val taskAndContinentCodec : Codec[squadPattern] = (
+    bool ::
+      ("task" | PacketHelpers.encodedWideStringAligned(7)) ::
+      uintL(3) ::
+      bool ::
+      ("continent_guid" | PlanetSideGUID.codec) ::
+      uint16L
+    ).xmap[squadPattern] (
+    {
+      case false :: tsk :: 0 :: true :: cguid :: 0 :: HNil =>
+        SquadInfo(tsk, cguid) :: HNil
+    },
+    {
+      case SquadInfo(None, tsk, cguid, None, None, None) :: HNil =>
+        false :: tsk.get :: 0 :: true :: cguid.get :: 0 :: HNil
+    }
+  )
+
+  //TODO justify this mess
+  val failureCodec : Codec[squadPattern] = peek(bool).xmap[squadPattern] (
+    {
+      case false => SquadInfo(None, None, None, None, None, None) :: HNil
+      case _ => SquadInfo(None, None, None, None, None, None) :: HNil
+    },
+    {
+      case SquadInfo(None, None, None, None, None, None) :: HNil => false
+      case _ => false
+    }
+  )
 
   implicit val codec : Codec[SquadHeader] = (
     ("action" | uint8L) >>:~ { action =>
       ("unk" | bool) >>:~ { unk =>
-        initCodec.exmap[squadPattern](
-          {
-            case info :: HNil =>
-              Attempt.Successful(info :: HNil)
-          }, {
-            case info :: HNil =>
-              Attempt.Successful(info :: HNil)
-          }
-        )
-    }}
+        conditional(action != 131 && !unk, "action2" | uintL(3)) >>:~ { action2 =>
+          selectCodec(action, unk, action2)
+        }
+      }
+    }
     ).as[SquadHeader]
 
   implicit val alt_codec : Codec[SquadHeader] = (
     ("action" | uint8L) >>:~ { action =>
       ("unk" | bool) >>:~ { unk =>
-        alt_initCodec.exmap[squadPattern](
-          {
-            case info :: HNil =>
-              Attempt.Successful(info :: HNil)
-          }, {
-            case info :: HNil =>
-              Attempt.Successful(info :: HNil)
-          }
-        )
-    }}
+        conditional(action != 131, "action2" | uintL(3)) >>:~ { action2 =>
+          selectCodec(action, unk, action2, alt_initCodec)
+        }
+      }
+    }
     ).as[SquadHeader]
+
+  def selectCodec(action : Int, unk : Boolean, action2 : Option[Int], init : Codec[squadPattern] = initCodec) : Codec[squadPattern] = {
+    if(action2.isDefined) {
+      val action2Val = action2.get
+      if(action == 128 && unk) {
+        if(action2Val == 0)
+          return leaderCodec
+        else if(action2Val == 1)
+          return taskOrContinentCodec
+        else if(action2Val == 2)
+          return sizeCodec
+      }
+      else if(action == 129 && !unk) {
+        if(action2Val == 0)
+          return leaderSizeCodec
+        else if(action2Val == 1)
+          return taskAndContinentCodec
+      }
+    }
+    else {
+      if(action == 131 && !unk)
+        return init
+    }
+
+    //TODO better error handling here?
+    Err("requesting an unknown codec")
+    failureCodec
+  }
 }
 
 object SquadListing extends Marshallable[SquadListing] {
@@ -190,17 +277,16 @@ object SquadListing extends Marshallable[SquadListing] {
         newcodecs.binary_choice(index == 0,
           "listing" | SquadHeader.codec,
           "listing" | SquadHeader.alt_codec)
-      ) >>:~ { listing =>
-        conditional(listing.isEmpty, bits).hlist //consume n < 8 bits padding the tail when decoding
-      }
+      ) ::
+        conditional(index == 255, bits).hlist //consume n < 8 bits padding the tail entry, else vector will try to operate on invalid data
     }).as[SquadListing]
 }
 
 object ReplicationStreamMessage extends Marshallable[ReplicationStreamMessage] {
   implicit val codec : Codec[ReplicationStreamMessage] = (
-    (("behavior" | uintL(3)) >>:~ { action =>
-      conditional(action == 5, "init" | codec) :: //note: uses self
-        conditional(action != 5, "unk" | bool)
+    (("behavior" | uintL(3)) >>:~ { behavior =>
+      conditional(behavior == 5, "init" | codec) :: //note: uses self
+        conditional(behavior != 5 && behavior != 2, "unk" | bool)
     }) :+
       ("entries" | vector(SquadListing.codec))
     ).as[ReplicationStreamMessage]
