@@ -137,9 +137,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
           PacketCoding.DecodeGamePacket(objectHex).require match {
             case obj @ ObjectCreateMessage(len, cls, guid, _, _) =>
               log.debug("Object: " + obj)
-              sendResponse(PacketCoding.CreateGamePacket(0, ReplicationStreamMessage(5,
-                Some(ReplicationStreamMessage(6, None, Some(false),
-                  Vector(
+              sendResponse(PacketCoding.CreateGamePacket(0, ReplicationStreamMessage(5, Some(6), Some(false), Vector(
                     SquadListing(0, Some(SquadHeader(131,false,None, SquadInfo("00","0",PlanetSideGUID(1),10,10, PlanetSideGUID(65535))))),
                     SquadListing(1, Some(SquadHeader(131,false,None, SquadInfo("01","1",PlanetSideGUID(1),10,10, PlanetSideGUID(22))))),
                     SquadListing(2, Some(SquadHeader(131,false,None, SquadInfo("02","2",PlanetSideGUID(1),10,10, PlanetSideGUID(23))))),
@@ -160,7 +158,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
                     SquadListing(255)
                   )
                 ))
-              )))
+              )
 
               // LoadMapMessage 13714 in mossy .gcap
               // XXX: hardcoded shit
