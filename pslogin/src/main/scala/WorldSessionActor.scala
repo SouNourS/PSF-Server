@@ -10,6 +10,11 @@ import scodec.bits._
 import org.log4s.MDC
 import MDCContextAware.Implicits._
 import net.psforever.types.ChatMessageType
+import scodec.Codec
+import scodec.codecs._
+
+import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 class WorldSessionActor extends Actor with MDCContextAware {
   private[this] val log = org.log4s.getLogger
@@ -109,6 +114,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
   // XXX: hard coded ObjectCreateMessage
   val objectHex = hex"18 57 0C 00 00 BC 84 B0  06 C2 D7 65 53 5C A1 60 00 01 34 40 00 09 70 49  00 6C 00 6C 00 6C 00 49 00 49 00 49 00 6C 00 6C  00 6C 00 49 00 6C 00 49 00 6C 00 6C 00 49 00 6C  00 6C 00 6C 00 49 00 6C 00 6C 00 49 00 84 52 70  76 1E 80 80 00 00 00 00 00 3F FF C0 00 00 00 20  00 00 0F F6 A7 03 FF FF FF FF FF FF FF FF FF FF  FF FF FF FF FF FD 90 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00  00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46  86 C7 00 00 00 80 00 00 12 40 78 70 65 5F 73 61  6E 63 74 75 61 72 79 5F 68 65 6C 70 90 78 70 65  5F 74 68 5F 66 69 72 65 6D 6F 64 65 73 8B 75 73  65 64 5F 62 65 61 6D 65 72 85 6D 61 70 31 33 00  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02  60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80  00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41  C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00  00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05  48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32  00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90  00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8  05 26 40 00 03 20 06 C2 58 00 A7 88 00 00 02 00  00 80 00 00 "
+  val traveler = Traveler(this)
 
   def handleGamePkt(pkt : PlanetSideGamePacket) = pkt match {
     case ConnectToWorldRequestMessage(server, token, majorVersion, minorVersion, revision, buildDate, unk) =>
@@ -137,9 +143,10 @@ class WorldSessionActor extends Actor with MDCContextAware {
               log.debug("Object: " + obj)
               // LoadMapMessage 13714 in mossy .gcap
               // XXX: hardcoded shit
-              sendResponse(PacketCoding.CreateGamePacket(0, LoadMapMessage("map13","home3",40100,25,true,3770441820L))) //VS Sanctuary
               sendResponse(PacketCoding.CreateGamePacket(0, ZonePopulationUpdateMessage(PlanetSideGUID(13), 414, 138, 0, 138, 0, 138, 0, 138, 0)))
-              sendRawResponse(objectHex)
+              val home3 = Zone.get("home3").get
+              CSRZone.loadMap(traveler, home3)
+              CSRZone.loadSelf(traveler, Some(home3.locations("default")))
 
               // These object_guids are specfic to VS Sanc
               sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(2), PlanetSideEmpire.VS))) //HART building C
@@ -170,8 +177,6 @@ class WorldSessionActor extends Actor with MDCContextAware {
                 true,                //Boosted spawn room pain field
                 true)))              //Boosted generator room pain field
 
-              sendResponse(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(PlanetSideGUID(guid),0,0)))
-
               import scala.concurrent.duration._
               import scala.concurrent.ExecutionContext.Implicits.global
               clientKeepAlive = context.system.scheduler.schedule(0 seconds, 500 milliseconds, self, PokeClient())
@@ -197,6 +202,8 @@ class WorldSessionActor extends Actor with MDCContextAware {
       if (messagetype != ChatMessageType.CMT_TOGGLE_GM) {
         log.info("Chat: " + msg)
       }
+
+      CSRZone.read(traveler, msg)
 
       // TODO: handle this appropriately
       if(messagetype == ChatMessageType.CMT_QUIT) {
@@ -296,4 +303,180 @@ class WorldSessionActor extends Actor with MDCContextAware {
     log.trace("WORLD SEND RAW: " + pkt)
     sendResponse(RawPacket(pkt))
   }
+
+  def sendToSelf(msg : PlanetSidePacketContainer) : Unit = {
+    sendResponse(msg)
+  }
+
+  def sendToSelf(msg : ByteVector) : Unit = {
+    sendRawResponse(msg)
+  }
+}
+
+// for development and fun; please remove this once we have continental transfer working
+// at least, move it to a more presentable folder once we refactor WorldSessionActor
+class Traveler(private val session : WorldSessionActor) {
+  val player : ByteVector = session.objectHex
+
+  def sendToSelf(msg : ByteVector) : Unit = {
+    this.session.sendToSelf(msg)
+  }
+
+  def sendToSelf(msg : PlanetSidePacketContainer) : Unit = {
+    this.session.sendToSelf(msg)
+  }
+}
+
+object Traveler {
+  def apply(session : WorldSessionActor) : Traveler = new Traveler(session)
+}
+
+object CSRZone {
+  def read(traveler : Traveler, msg : ChatMsg) : Boolean = {
+    if(isProperRequest(msg)) {
+      val buffer = decomposeMessage(msg.contents)
+      val zone = getZone(buffer)
+      if(zone.isDefined) {
+        transfer(traveler, zone.get)
+        true
+      }
+    }
+    false
+  }
+
+  def help(traveler : Traveler) : Unit = {
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_OPEN,true,"", "use: /zone <id> [-list]", None)))
+  }
+
+  def isProperRequest(msg : ChatMsg) : Boolean ={
+    msg.messageType == ChatMessageType.CMT_ZONE
+  }
+
+  private def decomposeMessage(msg : String) : ArrayBuffer[String] = {
+    val ary = msg.trim.toLowerCase.split("//s").to[ArrayBuffer]
+    if(ary.isEmpty)
+      ary
+    //get zone id
+    var zoneId = ary.head
+    if(ary.length > 1 && (ary(1).equals("sanctuary") || ary(1).equals("range"))) {
+      ary(0) = zoneId.concat("-").concat(ary(1))
+      ary.remove(1)
+    }
+    ary
+  }
+
+  private def getZone(ary : ArrayBuffer[String]) : Option[Zone] = {
+    Zone.get(ary.head)
+  }
+
+  private def transfer(traveler : Traveler, zone : Zone) : Unit = {
+    disposeSelf(traveler)
+    loadMap(traveler, zone)
+    loadSelf(traveler, Some(zone.locations("default")))
+  }
+
+  private def disposeSelf(traveler : Traveler) : Unit = {
+    //dispose inventory
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(76),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(78),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(80),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(83),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(84),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(85),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(86),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(87),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(88),4)))
+    //dispose self
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(75),4)))
+  }
+
+  def loadMap(traveler : Traveler, zone : Zone) : Unit = {
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, LoadMapMessage(zone.map, zone.title, 40100,25,true,3770441820L)))
+  }
+
+  def loadSelf(traveler : Traveler, loc : Option[(Int, Int, Int)] = None) : Unit = {
+    var locX = 0
+    var locY = 0
+    var locZ = 0
+    if(loc.isDefined) {
+      locX = loc.get._1
+      locY = loc.get._2
+      locZ = loc.get._3
+    }
+
+    val x = uintL(12).encode(locX/2).toOption.get.toByteVector.toBitVector
+    val y = uintL(12).encode(locY/2).toOption.get.toByteVector.toBitVector
+    val z = uintL(12).encode(locZ/4).toOption.get.toByteVector.toBitVector
+    val firstPart = traveler.player.toBitVector.take(76)
+    var temp = traveler.player.toBitVector.drop(88) //first part + 'x' were removed
+    val secondPart = temp.take(8) //first spacer
+    temp = temp.drop(20) //first spacer and 'y' were removed
+    val thirdPart = temp.take(8) //second spacer
+    temp = firstPart ++ x.take(12) ++ secondPart ++ y.take(12) ++ thirdPart ++ z.take(12) ++ temp.drop(20) //second spacer and 'z' were removed
+
+    traveler.sendToSelf(temp.toByteVector)
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(PlanetSideGUID(75),0,0)))
+  }
+}
+
+object CSRWarp {
+  def read(traveler : Traveler, msg : ChatMsg) : Unit = {
+
+  }
+
+  def isProperRequest(msg : ChatMsg) : Boolean ={
+    msg.messageType == ChatMessageType.CMT_WARP
+  }
+}
+
+class Zone(val map : String, val title : String) {
+  val locations : mutable.HashMap[String, (Int, Int, Int)] = mutable.HashMap()
+  locations += "default" -> (0,0,0)
+}
+
+object Zone {
+  def apply(map : String, title : String) : Zone = new Zone(map, title)
+
+  def get(zoneId : String) : Option[Zone] = {
+    zones.get(zoneId)
+  }
+
+  private val zones = mutable.HashMap[String, Zone](
+    "solsar" -> Zone("map01", "z1"),
+    "hossin" -> Zone("map02", "z2"),
+    "cyssor" -> Zone("map03", "z3"),
+    "ishundar" -> Zone("map04", "z4"),
+    "forseral" -> Zone("map05", "z5"),
+    "ceryshen" -> Zone("map06", "z6"),
+    "esamir" -> Zone("map07", "z7"),
+    "oshur" -> Zone("map08", "z8"),
+    "searhus" -> Zone("map09", "z9"),
+    "amerish" -> Zone("map10", "z10"),
+    "nc-sanctuary" -> Zone("map11", "home1"),
+    "tr-sanctuary" -> Zone("map12", "home2"),
+    "vs-sanctuary" -> Zone("map13", "home3"),
+    "shooting-range" -> Zone("map14", "tzshvs"),
+    "driving-range" -> Zone("map15", "tzdrvs"),
+    "supai" -> Zone("ugd01", "c1"),
+    "hunhau" -> Zone("ugd02", "c2"),
+    "adlivun" -> Zone("ugd03", "c3"),
+    "byblos" -> Zone("ugd04", "c4"),
+    "annwn" -> Zone("ugd05", "c5"),
+    "drugaskan" -> Zone("ugd06", "c6"),
+    "nexus" -> Zone("map96", "i4"),
+    "desolation" -> Zone("map97", "i3"),
+    "ascension" -> Zone("map98", "i2"),
+    "extinction" -> Zone("map99", "i1")
+  )
+  zones += "home1" -> zones("nc-sanctuary")
+  zones += "home2" -> zones("tr-sanctuary")
+  zones += "home3" -> zones("vs-sanctuary")
+  zones += "cave1" -> zones("supai")
+  zones += "cave2" -> zones("hunhau")
+  zones += "cave3" -> zones("adlivun")
+  zones += "cave4" -> zones("byblos")
+  zones += "cave5" -> zones("annwn")
+  zones += "cave6" -> zones("drugaskan")
+
+  zones("home3").locations += "default" -> (3675, 2727, 91)
 }
