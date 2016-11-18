@@ -14,7 +14,8 @@ import scodec.codecs._
 
 import scala.collection.mutable
 import scala.collection.immutable
-import scala.util.Random
+import scala.collection.mutable.ArrayBuffer
+import scala.util.{Random, Try}
 
 class WorldSessionActor extends Actor with MDCContextAware {
   private[this] val log = org.log4s.getLogger
@@ -146,7 +147,10 @@ class WorldSessionActor extends Actor with MDCContextAware {
               sendResponse(PacketCoding.CreateGamePacket(0, ZonePopulationUpdateMessage(PlanetSideGUID(13), 414, 138, 0, 138, 0, 138, 0, 138, 0)))
               val home3 = Zone.get("home3").get
               Transfer.loadMap(traveler, home3)
-              Transfer.loadSelf(traveler, Zone.default(home3))
+              Transfer.loadSelf(traveler, Zone.selectRandom(home3))
+              sendResponse(PacketCoding.CreateGamePacket(0,
+                ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Welcome! The commands '/zone' and '/warp' are available for use.", None))
+              )
 
               // These object_guids are specfic to VS Sanc
               sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(2), PlanetSideEmpire.VS))) //HART building C
@@ -325,12 +329,12 @@ class WorldSessionActor extends Actor with MDCContextAware {
 /*
 The following is for development and fun.
 The code is placed herein this file because of difficulty accessing WorldSessionActor from other packages.
-Once the aforementioned has been refactored, these classes can be moved.
+Once the aforementioned class has been refactored, these classes can be moved.
 Eventually, they should be removed or replaced altogether.
  */
 /**
   * The traveler is synonymous with the player.
-  * The primary purpose of the object is to keep track of the player's session so that packets may be relayed back to him.
+  * The primary purpose of the object is to keep track of but not expose the player's session so that packets may be relayed back to him.
   * Traveler also keeps track of which zone the player currently occupies.
   * @param session the player's session
   */
@@ -395,7 +399,8 @@ object CSRZone {
     */
   def read(traveler : Traveler, msg : ChatMsg) : Boolean = {
     if(!isProperRequest(msg))
-      return false
+      return false  //we do not handle this message
+
     val buffer = decomposeMessage(msg.contents)
     if(buffer.length == 0 || buffer(0).equals("-help")) {
       CSRZone.help(traveler) //print usage information to chat
@@ -404,15 +409,11 @@ object CSRZone {
 
     var zoneId = ""
     var gateId = "" //the user can define which warpgate they may visit (actual keyword protocol missing)
-    var displayWarpgateList = false //if the user wants a printed list of warpgates for the destination zone
+    var list = false //if the user wants a printed list of destination locations
     for(o <- buffer) {
-      if(o.equals("-list")) { //TODO: keep an eye on this code path; may inadvertantly navigate down it
-        if(zoneId.equals("")) {
-          CSRZone.reply(traveler, Zone.list)
-          return false
-        }
-        else if(gateId.equals("")) {
-          displayWarpgateList = true //set only if we have not defined a warpgate
+      if(o.equals("-list")) {
+        if(zoneId.equals("") || gateId.equals("")) {
+          list = true
         }
       }
       else if(zoneId.equals(""))
@@ -423,23 +424,26 @@ object CSRZone {
 
     val zoneOpt = Zone.get(zoneId)
     if(zoneOpt.isEmpty) {
-      CSRZone.error(traveler, "/zone must be given a valid zonename (not"+zoneId+") (use '/zone -list')")
+      if(list)
+        CSRZone.reply(traveler, Zone.list)
+      else
+        CSRZone.error(traveler, "Give a valid zonename (use '/zone -list')")
       return false
     }
     val zone = zoneOpt.get
-    if(displayWarpgateList) {
-      CSRZone.reply(traveler, Zone.listWarpgates(zone))
-      return false
-    }
     traveler.zone = zoneId
-    var destination : (Int, Int, Int) = Zone.default(zone) //the destination in the new zone starts as random
+    var destination : (Int, Int, Int) = Zone.selectRandom(zone) //the destination in the new zone starts as random
 
     if(!gateId.equals("")) { //if we've defined a warpgate, and can find that warpgate, we re-assign the destination
       val gateOpt = Zone.getWarpgate(zone, gateId)
       if(gateOpt.isDefined)
         destination = gateOpt.get
       else
-        CSRZone.error(traveler, "gate id not defined for zone (use '/zone <zone> -list'")
+        CSRZone.error(traveler, "Gate id not defined (use '/zone <zone> -list')")
+    }
+    else if(list) {
+      CSRZone.reply(traveler, Zone.listWarpgates(zone))
+      return false
     }
     Transfer.zone(traveler, zone, destination)
     true
@@ -479,7 +483,7 @@ object CSRZone {
     * @param traveler the player
     */
   private def help(traveler : Traveler) : Unit = {
-    CSRZone.reply(traveler, "use: /zone [<id> [warpgate] | [-list]")
+    CSRZone.reply(traveler, "usage: /zone <id> [warpgate] | [-list]")
   }
 
   /**
@@ -488,12 +492,13 @@ object CSRZone {
     * @param traveler the player
     */
   private def error(traveler : Traveler, msg : String) : Unit = {
-    CSRZone.reply(traveler, "error: "+msg)
+    CSRZone.reply(traveler, "Error! "+msg)
   }
 }
 
 /**
-  * An implementation of the CSR command `/warp`, slightly modified to serve the purposes of the testing phases of the server.
+  * An implementation of the CSR command `/warp`, highly modified to serve the purposes of the testing phases of the server.
+  * See `help()` for details.
   */
 object CSRWarp {
   /**
@@ -505,29 +510,52 @@ object CSRWarp {
     */
   def read(traveler : Traveler, msg : ChatMsg) : Boolean = {
     if(!isProperRequest(msg))
-      return false
+      return false //we do not handle this message
+
     val buffer = decomposeMessage(msg.contents)
-    if(buffer.length == 0 || buffer(0).equals("-help")) {
+    if(buffer.length == 0 || buffer(0).equals("") || buffer(0).equals("-help")) {
       CSRWarp.help(traveler) //print usage information to chat
       return false
     }
 
-    val zone = Zone.get(traveler.zone).get //the traveler is already in the appropriate zone
-    var destId = ""
+    var destId : String = ""
+    var coords : ArrayBuffer[Int] = ArrayBuffer.empty[Int]
+    var list : Boolean = false
+    var failedCoordInput = false
     for(o <- buffer) {
-      if(o.equals("-list")) { //TODO: keep an eye on this code path; may inadvertantly navigate down it
-        if(destId.equals("")) {
-          CSRWarp.reply(traveler, Zone.listLocations(zone))
-          return false
-        }
+      val toInt = Try(o.toInt)
+      if(toInt.isSuccess) {
+        coords += toInt.get
       }
+      else if(coords.nonEmpty && coords.size < 3)
+        failedCoordInput = true
+      if(o.equals("-list"))
+        list = true
       else if(destId.equals(""))
         destId = o
     }
 
-    val dest = Zone.getWarpLocation(zone, destId)
+    if(failedCoordInput || (coords.nonEmpty && coords.size < 3)) {
+      CSRWarp.error(traveler, "Needs three integer components (<x> <y> <z>)")
+      return false
+    }
+    else {
+      coords.slice(0, 3).foreach( x => {
+        if(x < 0 || x > 8191) {
+          CSRWarp.error(traveler, "Number out of range - 0 < x < 8191, but x = "+x)
+          return false
+       }
+      })
+    }
+
+    val zone = Zone.get(traveler.zone).get //the traveler is already in the appropriate zone
+    if(list && coords.isEmpty && destId.equals("")) {
+      CSRWarp.reply(traveler, Zone.listLocations(zone))
+      return false
+    }
+    val dest : Option[(Int, Int, Int)] = if(coords.nonEmpty) Some(coords(0), coords(1), coords(2)) else Zone.getWarpLocation(zone, destId) //coords before destId
     if(dest.isEmpty) {
-      CSRWarp.error(traveler, "/warp must be given a valid location in this zone")
+      CSRWarp.error(traveler, "Invalid location")
       return false
     }
     Transfer.warp(traveler, dest.get)
@@ -539,7 +567,7 @@ object CSRWarp {
     * @param msg the message
     * @return true, if we will handle it; false, otherwise
     */
-  def isProperRequest(msg : ChatMsg) : Boolean ={
+  def isProperRequest(msg : ChatMsg) : Boolean = {
     msg.messageType == ChatMessageType.CMT_WARP
   }
 
@@ -564,11 +592,21 @@ object CSRWarp {
   }
 
   /**
-    * Print usage information to the `Traveler`'s chat window.
+    * Print usage information to the `Traveler`'s chat window.<br>
+    * <br>
+    * The "official" use information for help dictates the command should follow this format:
+    * `/warp &lt;x&gt;&lt;y&gt;&lt;z&gt; | to &lt;character&gt; | near &lt;object&gt; | above &lt;object&gt; | waypoint`.
+    * In our case, creating fixed coordinate points of interest is not terribly dissimilar from the "near" and "to" aspect.
+    * We can not currently implement most of the options for now, however.<br>
+    * <br>
+    * The destination prioritizes evaluation of the coordinates before the location string.
+    * When the user provides coordinates, he must provide all three components of the coordinate at once, else none will be accepted.
+    * If the coordinates are invalid, the location string will still be checked.
+    * "-list" is accepted while no serious attempt is made to indicate a destination (no location string or not enough coordinates).
     * @param traveler the player
     */
   private def help(traveler : Traveler) : Unit = {
-    CSRWarp.reply(traveler, "use: /warp [<id> | <x> <y> <z>] | [-list]")
+    CSRWarp.reply(traveler, "usage: /warp <location> | <x> <y> <z> | [-list]")
   }
 
   /**
@@ -577,7 +615,7 @@ object CSRWarp {
     * @param traveler the player
     */
   private def error(traveler : Traveler, msg : String) : Unit = {
-    CSRWarp.reply(traveler, "error: "+msg)
+    CSRWarp.reply(traveler, "Error! "+msg)
   }
 }
 
@@ -663,7 +701,7 @@ object Transfer {
     * The original data is then reconstructed around these new coordinates replacing the old coordinates.
     * The resulting packet is sent to the client.
     * @param traveler the player
-    * @param loc where the player is being placed in three dimensinal space
+    * @param loc where the player is being placed in three dimensional space
     */
   def loadSelf(traveler : Traveler, loc : (Int, Int, Int)) : Unit = {
     //calculate bit representation of modified coordinates
@@ -868,7 +906,7 @@ object Zone {
     * @param zone the `Zone`
     * @return the coordinates of the spawn point
     */
-  def default(zone : Zone) : (Int, Int, Int) = {
+  def selectRandom(zone : Zone) : (Int, Int, Int) = {
     var outlets = zone.locations //random location?
     if(outlets.nonEmpty) {
       return outlets.values.toArray.apply(rand.nextInt(outlets.size))
