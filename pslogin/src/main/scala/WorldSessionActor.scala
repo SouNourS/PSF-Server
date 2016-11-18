@@ -305,33 +305,76 @@ class WorldSessionActor extends Actor with MDCContextAware {
     sendResponse(RawPacket(pkt))
   }
 
+  /**
+    * `sendToSelf` is an external call that permits the session to gain access to `rightRef` so that it can dispatch a packet.
+    * @param msg a packet
+    */
   def sendToSelf(msg : PlanetSidePacketContainer) : Unit = {
     sendResponse(msg)
   }
-
+  /**
+    * `sendToSelf` is an external call that permits the session to gain access to `rightRef` so that it can dispatch a packet.
+    * @param msg the byte-code translation of a packet
+    */
   def sendToSelf(msg : ByteVector) : Unit = {
     sendRawResponse(msg)
   }
 }
 
-// for development and fun; please remove this once we have continental transfer working
-// at least, move it to a more presentable folder once we refactor WorldSessionActor
+//----------------------------------------------------------------------------------------------------------------------
+/*
+The following is for development and fun.
+The code is placed herein this file because of difficulty accessing WorldSessionActor from other packages.
+Once the aforementioned has been refactored, these classes can be moved.
+Eventually, they should be removed or replaced altogether.
+ */
+/**
+  * The traveler is synonymous with the player.
+  * The primary purpose of the object is to keep track of the player's session so that packets may be relayed back to him.
+  * Traveler also keeps track of which zone the player currently occupies.
+  * @param session the player's session
+  */
 class Traveler(private val session : WorldSessionActor) {
+  /**
+    * The byte-code form a a CreateObjectMessage that would construct the player's avatar
+    */
   val player : ByteVector = session.objectHex
+  /**
+    * The name of the zone the player currently occupies
+    */
   var zone : String = ""
 
+  /**
+    * `sendToSelf` is a call that permits the session to gain access to its internal `rightRef` so that it can dispatch a packet.
+    * @param msg a packet
+    */
   def sendToSelf(msg : ByteVector) : Unit = {
     this.session.sendRawResponse(msg)
   }
 
+  /**
+    * `sendToSelf` is a call that permits the session to gain access to its internal `rightRef` so that it can dispatch a packet.
+    * @param msg the byte-code translation of a packet
+    */
   def sendToSelf(msg : PlanetSidePacketContainer) : Unit = {
     this.session.sendResponse(msg)
   }
 }
 
 object Traveler {
+  /**
+    * An abbreviated constructor for creating `Traveler`s without invocation of `new`.
+    * @param session the player's session
+    * @return a traveler object for this player
+    */
   def apply(session : WorldSessionActor) : Traveler = new Traveler(session)
 
+  /**
+    * An abbreviated constructor for creating `Traveler`s without invocation of `new`, and for assigning a default zone.
+    * @param session the player's session
+    * @param zoneId the zone the player currently occupies
+    * @return a traveler object for this player
+    */
   def apply(session : WorldSessionActor, zoneId : String) : Traveler = {
     val traveler = new Traveler(session)
     traveler.zone = zoneId
@@ -339,27 +382,37 @@ object Traveler {
   }
 }
 
+/**
+  * An implementation of the CSR command `/zone`, slightly modified to serve the purposes of the testing phases of the server.
+  */
 object CSRZone {
+  /**
+    * Accept and confirm that a message sent to a player is a valid `/zone` invocation.
+    * If so, parse the message and send the player to whichever zone was requested.
+    * @param traveler the player
+    * @param msg the message the player received
+    * @return true, if the player is being transported to another zone; false, otherwise
+    */
   def read(traveler : Traveler, msg : ChatMsg) : Boolean = {
     if(!isProperRequest(msg))
       return false
     val buffer = decomposeMessage(msg.contents)
     if(buffer.length == 0 || buffer(0).equals("-help")) {
-      help(traveler)
+      CSRZone.help(traveler) //print usage information to chat
       return false
     }
 
     var zoneId = ""
-    var gateId = ""
-    var displayWarpgateList = false
+    var gateId = "" //the user can define which warpgate they may visit (actual keyword protocol missing)
+    var displayWarpgateList = false //if the user wants a printed list of warpgates for the destination zone
     for(o <- buffer) {
-      if(o.equals("-list")) {
+      if(o.equals("-list")) { //TODO: keep an eye on this code path; may inadvertantly navigate down it
         if(zoneId.equals("")) {
-          CSRZone.list(traveler, Zone.list)
+          CSRZone.reply(traveler, Zone.list)
           return false
         }
         else if(gateId.equals("")) {
-          displayWarpgateList = true
+          displayWarpgateList = true //set only if we have not defined a warpgate
         }
       }
       else if(zoneId.equals(""))
@@ -375,13 +428,13 @@ object CSRZone {
     }
     val zone = zoneOpt.get
     if(displayWarpgateList) {
-      CSRZone.list(traveler, Zone.listWarpgates(zone))
+      CSRZone.reply(traveler, Zone.listWarpgates(zone))
       return false
     }
     traveler.zone = zoneId
-    var destination : (Int, Int, Int) = Zone.default(zone)
+    var destination : (Int, Int, Int) = Zone.default(zone) //the destination in the new zone starts as random
 
-    if(!gateId.equals("")) {
+    if(!gateId.equals("")) { //if we've defined a warpgate, and can find that warpgate, we re-assign the destination
       val gateOpt = Zone.getWarpgate(zone, gateId)
       if(gateOpt.isDefined)
         destination = gateOpt.get
@@ -392,48 +445,79 @@ object CSRZone {
     true
   }
 
+  /**
+    * Check that the incoming message is an appropriate type for this command.
+    * @param msg the message
+    * @return true, if we will handle it; false, otherwise
+    */
   def isProperRequest(msg : ChatMsg) : Boolean ={
     msg.messageType == ChatMessageType.CMT_ZONE
   }
 
+  /**
+    * Break the message in the packet down for parsing.
+    * @param msg the contents portion of the message, a space-separated `String`
+    * @return the contents portion of the message, transformed into an `Array`
+    */
   private def decomposeMessage(msg : String) : Array[String] = {
     msg.trim.toLowerCase.split("\\s+")
   }
 
-  def help(traveler : Traveler) : Unit = {
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0,
-      ChatMsg(ChatMessageType.CMT_OPEN,true,"", "use: /zone [<id> [warpgate] | [-list]", None))
-    )
-  }
-
-  def list(traveler : Traveler, msg : String) : Unit = {
+  /**
+    * Send a message back to the `Traveler` that will be printed into his chat window.
+    * @param traveler the player
+    * @param msg the message to be sent
+    */
+  private def reply(traveler : Traveler, msg : String) : Unit = {
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0,
       ChatMsg(ChatMessageType.CMT_OPEN,true,"", msg, None))
     )
   }
 
-  def error(traveler : Traveler, msg : String) : Unit = {
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0,
-      ChatMsg(ChatMessageType.CMT_OPEN,true,"", "error: "+msg, None))
-    )
+  /**
+    * Print usage information to the `Traveler`'s chat window.
+    * @param traveler the player
+    */
+  private def help(traveler : Traveler) : Unit = {
+    CSRZone.reply(traveler, "use: /zone [<id> [warpgate] | [-list]")
+  }
+
+  /**
+    * Print error information to the `Traveler`'s chat window.<br>
+    * The most common reason for error is the lack of information, or wrong information.
+    * @param traveler the player
+    */
+  private def error(traveler : Traveler, msg : String) : Unit = {
+    CSRZone.reply(traveler, "error: "+msg)
   }
 }
 
+/**
+  * An implementation of the CSR command `/warp`, slightly modified to serve the purposes of the testing phases of the server.
+  */
 object CSRWarp {
+  /**
+    * Accept and confirm that a message sent to a player is a valid `/warp` invocation.
+    * If so, parse the message and send the player to whichever destination in this zone was requested.
+    * @param traveler the player
+    * @param msg the message the player received
+    * @return true, if the player is being transported to another place; false, otherwise
+    */
   def read(traveler : Traveler, msg : ChatMsg) : Boolean = {
     if(!isProperRequest(msg))
       return false
     val buffer = decomposeMessage(msg.contents)
     if(buffer.length == 0 || buffer(0).equals("-help")) {
-      help(traveler)
+      CSRWarp.help(traveler) //print usage information to chat
       return false
     }
 
+    val zone = Zone.get(traveler.zone).get //the traveler is already in the appropriate zone
     var destId = ""
     for(o <- buffer) {
-      if(o.equals("-list")) {
+      if(o.equals("-list")) { //TODO: keep an eye on this code path; may inadvertantly navigate down it
         if(destId.equals("")) {
-          CSRWarp.list(traveler, Zone.listLocations(Zone.get(traveler.zone).get))
+          CSRWarp.reply(traveler, Zone.listLocations(zone))
           return false
         }
       }
@@ -441,7 +525,6 @@ object CSRWarp {
         destId = o
     }
 
-    val zone = Zone.get(traveler.zone).get
     val dest = Zone.getWarpLocation(zone, destId)
     if(dest.isEmpty) {
       CSRWarp.error(traveler, "/warp must be given a valid location in this zone")
@@ -451,45 +534,95 @@ object CSRWarp {
     true
   }
 
+  /**
+    * Check that the incoming message is an appropriate type for this command.
+    * @param msg the message
+    * @return true, if we will handle it; false, otherwise
+    */
   def isProperRequest(msg : ChatMsg) : Boolean ={
     msg.messageType == ChatMessageType.CMT_WARP
   }
 
+  /**
+    * Break the message in the packet down for parsing.
+    * @param msg the contents portion of the message, a space-separated `String`
+    * @return the contents portion of the message, transformed into an `Array`
+    */
   private def decomposeMessage(msg : String) : Array[String] = {
     msg.trim.toLowerCase.split("\\s+")
   }
 
-  def help(traveler : Traveler) : Unit = {
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0,
-      ChatMsg(ChatMessageType.CMT_OPEN,true,"", "use: /warp [<id> | <x> <y> <z>] | [-list]", None))
-    )
-  }
-
-  def list(traveler : Traveler, msg : String) : Unit = {
+  /**
+    * Send a message back to the `Traveler` that will be printed into his chat window.
+    * @param traveler the player
+    * @param msg the message to be sent
+    */
+  private def reply(traveler : Traveler, msg : String) : Unit = {
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0,
       ChatMsg(ChatMessageType.CMT_OPEN,true,"", msg, None))
     )
   }
 
-  def error(traveler : Traveler, msg : String) : Unit = {
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0,
-      ChatMsg(ChatMessageType.CMT_OPEN,true,"", "error: "+msg, None))
-    )
+  /**
+    * Print usage information to the `Traveler`'s chat window.
+    * @param traveler the player
+    */
+  private def help(traveler : Traveler) : Unit = {
+    CSRWarp.reply(traveler, "use: /warp [<id> | <x> <y> <z>] | [-list]")
+  }
+
+  /**
+    * Print error information to the `Traveler`'s chat window.<br>
+    * The most common reason for error is the lack of information, or wrong information.
+    * @param traveler the player
+    */
+  private def error(traveler : Traveler, msg : String) : Unit = {
+    CSRWarp.reply(traveler, "error: "+msg)
   }
 }
 
+/**
+  * `Transfer` is a functional class intended to generalize the movement of a `Traveler`.<br>
+  * <br>
+  * Although a specific process for manually forcing a player avatar into a certain position surely exists, it is not currently known.
+  * To sidestep this knowledge limitation, the player's avatar is destructed whenever it is moved.
+  * It is then reconstructed in the place specified by the zone and the destination.
+  * The process should be replaced (for warping, anyway) as soon as the formal methodology accepted by the client is understood.
+  */
 object Transfer {
+  /**
+    * This function manages player movement within the same zone, as specified by the `/warp` command.
+    * @param traveler the player
+    * @param destination a three-coordinate location in the zone
+    */
   def warp(traveler : Traveler, destination : (Int, Int, Int)): Unit = {
     disposeSelf(traveler)
     loadSelf(traveler, destination)
   }
 
+  /**
+    * This function manages player movement between zones, as specified by the `/zone` command.
+    * @param traveler the player
+    * @param zone the `Zone` requested
+    * @param destination a three-coordinate location in the zone
+    */
   def zone(traveler : Traveler, zone : Zone, destination : (Int, Int, Int)) : Unit = {
     disposeSelf(traveler)
     loadMap(traveler, zone)
     loadSelf(traveler, destination)
   }
 
+  /**
+    * The first step involved in moving the player (like we do) is to deconstruct the player in the client.
+    * This operation is carried out through a series of `ObjectDeleteMessage` packets that undoes every item in the player's inventory.
+    * The last operation undoes the player's avatar itself.<br>
+    * <br>
+    * This function uses static object GUIDs only because the `ObjectCreateMessage` data that generates the playwer is also static.
+    * When that irons out, this simplistic step will no longer be valid, even as part of demonstration functionality.<br>
+    * <br>
+    * Sequential GUIDs that appear to be missing from the player's inventory have been noted.
+    * @param traveler the player
+    */
   private def disposeSelf(traveler : Traveler) : Unit = {
     //dispose inventory
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(76),4)))
@@ -508,12 +641,34 @@ object Transfer {
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(75),4)))
   }
 
+  /**
+    * Send the packet that causes the client to load a new `Zone`.<br>
+    * <br>
+    * The three latter parameters to `LoadMapMessage` certainly must do something; but, we do not care about them for now.
+    * @param traveler the player
+    * @param zone the `Zone` requested
+    */
   def loadMap(traveler : Traveler, zone : Zone) : Unit = {
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, LoadMapMessage(zone.map, zone.zonename, 40100,25,true,3770441820L)))
   }
 
+  /**
+    * Send the packets that create the avatar at a certain position in the current zone and assigns that avatar the status of "current."
+    * The latter is necessary to be able to control and use that avatar on the given client.<br>
+    * <br>
+    * The process in this function involves taking the static `ObjectCreateMessage` data that would create the player and disassembling it.
+    * The separated components of the data have been cut around the old coordinates of the avatar.
+    * From the `loc` the new coordinates for the position of the avatar are calculated and scaled to fit the format.
+    * (The format is a byte and a nibble, while the coordinates probably fit into two bytes.)
+    * The original data is then reconstructed around these new coordinates replacing the old coordinates.
+    * The resulting packet is sent to the client.
+    * @param traveler the player
+    * @param loc where the player is being placed in three dimensinal space
+    */
   def loadSelf(traveler : Traveler, loc : (Int, Int, Int)) : Unit = {
     //calculate bit representation of modified coordinates
+    //TODO: note the scaling: 0x0000 -> 0x000 values
+    //TODO: why does the player always get "dropped" on spawning, even if the coordinates are accurate to /loc?
     val x : BitVector = uintL(12).encode(loc._1/2).toOption.get
     val y : BitVector = uintL(12).encode(loc._2/2).toOption.get
     val z : BitVector = uintL(12).encode(loc._3/4).toOption.get
@@ -531,13 +686,34 @@ object Transfer {
   }
 }
 
+/**
+  * A crude representation of the information needed to describe a continent (hitherto, a "zone").
+  * The information is mainly catered to the simulation of the CSR commands `/zone` and `/warp`.
+  * (The exception is `alias` which is maintained for cosmetic purposes and clarification.)
+  * @param alias the common name of the zone
+  * @param map the map name of the zone (this map is loaded)
+  * @param zonename the zone's internal name
+  */
 class Zone(val alias : String, val map : String, val zonename : String) {
-  private val locations : mutable.HashMap[String, (Int, Int, Int)] = mutable.HashMap()
+  /**
+    * A listing of warpgates, geowarps, and island warpgates in this zone.
+    * The coordinates specified will only ever drop the user on a specific point within the protective bubble of the warpgate.
+    * This breaks from the expected zoning functionality where the user is placed in a random spot under the bubble.
+    * There is no prior usage details for the searchability format of this field's key values.
+    */
   private val gates : mutable.HashMap[String, (Int, Int, Int)] = mutable.HashMap()
+  /**
+    * A listing of special locations in this zone, i.e., major faciities, and some landmarks of interest.
+    * There is no prior usage details for the searchability format of this field's key values.
+    */
+  private val locations : mutable.HashMap[String, (Int, Int, Int)] = mutable.HashMap()
 }
 
 object Zone {
-  //the /zone command should use these names
+  /**
+    * A listing of all zones that can be visited by their internal name.
+    * The keys in this map should be directly usable by the `/zone` command.
+    */
   private val zones = immutable.HashMap[String, Zone](
     "z1" -> Zone("Solsar", "map01", "z1"),
     "z2" -> Zone("Hossin", "map02", "z2"),
@@ -566,7 +742,11 @@ object Zone {
     "i1" -> Zone("Extinction", "map99", "i1")
   )
 
-  //for ease of use, these names can be applied too
+  /**
+    * A listing of all zones that can be visited by their common name.
+    * The keys in this map should be directly usable by the `/zone` command.
+    * Though the behavior is undocumented, access to this alias list is for the benefit of the user.
+    */
   private val alias = immutable.HashMap[String, String](
     "solsar" -> "z1",
     "hossin" -> "z2",
@@ -594,11 +774,25 @@ object Zone {
     "ascension" -> "i2",
     "extinction" -> "i1"
   )
-  setup
+  /**
+    * A value used for selecting where to appear in a zone from the list of locations when the user has no indicated one.
+    */
   private val rand = Random
+  setup
 
-  def apply(name : String, map : String, title : String) : Zone = new Zone(name, map, title)
+  /**
+    * An abbreviated constructor for creating `Zone`s without invocation of `new`.
+    * @param alias the common name of the zone
+    * @param map the map name of the zone (this map is loaded)
+    * @param zonename the zone's internal name
+    */
+  def apply(alias : String, map : String, zonename : String) : Zone = new Zone(alias, map, zonename)
 
+  /**
+    * Get a valid `Zone`'s information.
+    * @param zoneId a name that describes the zone and should be searchable
+    * @return the `Zone`, or `None`
+    */
   def get(zoneId : String) : Option[Zone] = {
     var zId = zoneId.toLowerCase
     if(alias.get(zId).isDefined)
@@ -607,22 +801,44 @@ object Zone {
     zones.get(zId)
   }
 
-  def getWarpLocation(zone : Zone, wpoint : String) : Option[(Int, Int, Int)] = {
-    val low_wpoint = wpoint.toLowerCase
-    var location = zone.locations.get(low_wpoint)
+  /**
+    * Get a location within the `Zone`.
+    * The location should be a facility or a warpgate or interesting.
+    * @param zone the `Zone`
+    * @param locId a name that describes a known location in the provided `Zone` and is searchable
+    * @return the coordinates of that location, or None
+    */
+  def getWarpLocation(zone : Zone, locId : String) : Option[(Int, Int, Int)] = {
+    val low_locId = locId.toLowerCase
+    var location = zone.locations.get(low_locId)
     if(location.isEmpty)
-      location = zone.gates.get(low_wpoint)
+      location = zone.gates.get(low_locId)
     location
   }
 
-  def getWarpgate(zone : Zone, gate : String) : Option[(Int, Int, Int)] = {
-    zone.gates.get(gate.toLowerCase)
+  /**
+    * Get the position of a warpgate within the zone.
+    * @param zone the `Zone`
+    * @param gateId a name that describes a known warpgate in the provided `Zone` and is searchable
+    * @return the coordinates of that warpgate, or None
+    */
+  def getWarpgate(zone : Zone, gateId : String) : Option[(Int, Int, Int)] = {
+    zone.gates.get(gateId.toLowerCase)
   }
 
+  /**
+    * Get the names for all of the `Zones` that can be visited.
+    * @return all of the zonenames
+    */
   def list : String = {
     "zonenames: z1 - z10, home1 - home3, tzshtr, tzdrtr, c1 - c6, i1 - i4; zones are also aliased their continent name"
   }
 
+  /**
+    * Get the name for all of the locations that can be visited in this `Zone`, excluding warpgates.
+    * @param zone the `Zone`
+    * @return all of the location keys
+    */
   def listLocations(zone : Zone) : String = {
     var out : String = "warps: "
     if(zone.locations.nonEmpty) {
@@ -633,6 +849,11 @@ object Zone {
     out
   }
 
+  /**
+    * Get the name for all of the warpgates that can be visited in this `Zone`.
+    * @param zone the `Zone`
+    * @return all of the warpgate keys
+    */
   def listWarpgates(zone : Zone) : String = {
     var out : String = "warpgates: "
     if(zone.gates.isEmpty)
@@ -642,6 +863,11 @@ object Zone {
     out
   }
 
+  /**
+    * Select, of all the `Zone` locations and warpgates, a pseudorandom destination to spawn the player in the zone if none has been specified.
+    * @param zone the `Zone`
+    * @return the coordinates of the spawn point
+    */
   def default(zone : Zone) : (Int, Int, Int) = {
     var outlets = zone.locations //random location?
     if(outlets.nonEmpty) {
@@ -651,10 +877,14 @@ object Zone {
     if(outlets.nonEmpty) {
       return outlets.values.toArray.apply(rand.nextInt(outlets.size))
     }
-    (0, 0, 0) //fallback
+    (0, 0, 0) //fallback coordinates (that will always be valid)
   }
 
-  //zones have locations of interest (bases, warpgates, the monolith, etc.)
+  /**
+    * Load all zones with selected places of interest and the coordinates to place the player nearby that given place of interest.
+    * All of these keys should be searchable under the `/warp` command.
+    * Only the warpgate keys are searchable by the `/zone` command.
+    */
   def setup() : Unit = {
     zones("z1").gates += (
       "gate1" -> (4150, 7341, 82),
