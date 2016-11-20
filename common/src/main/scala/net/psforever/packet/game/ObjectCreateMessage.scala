@@ -7,20 +7,8 @@ import scodec.{Attempt, Codec, Err}
 import scodec.codecs._
 import shapeless._
 
-case class ObjectData(data : ByteVector) {
-  def len : Long = {
-    data.toBitVector.size
-  }
-}
-
 case class ObjectCreateMessageParent(guid : PlanetSideGUID,
                                      slot : Int)
-
-case class ObjectInit(object_class : Int,
-                      object_guid : PlanetSideGUID,
-                      parent_info : Option[ObjectCreateMessageParent]) {
-  val len : Long = if(parent_info.isDefined) 52 else 28
-}
 
 case class ObjectCreateMessage(streamLength : Long, // in bits
                                objectClass : Int,
@@ -41,60 +29,14 @@ object ObjectCreateMessageParent extends Marshallable[ObjectCreateMessageParent]
     ).as[ObjectCreateMessageParent]
 }
 
-object ObjectInit extends Marshallable[ObjectInit] {
-  type parentPattern = Int :: PlanetSideGUID :: Option[ObjectCreateMessageParent] :: HNil
-  val parentCodec : Codec[parentPattern] = (
-    ("parent_guid" | PlanetSideGUID.codec) ::
-      ("object_class" | uintL(0xb)) ::
-      ("guid" | PlanetSideGUID.codec) ::
-      ("parent_slot_index" | uint8L)
-    ).xmap[parentPattern] (
-    {
-      case pguid :: cls :: guid :: slot :: HNil =>
-        cls :: guid :: Some(ObjectCreateMessageParent(pguid, slot)) :: HNil
-    },
-    {
-      case cls :: guid :: Some(ObjectCreateMessageParent(pguid, slot)) :: HNil =>
-        pguid :: cls :: guid :: slot :: HNil
-    }
-  )
+private object ObjectInit {
+  case class _ObjectInit(object_class : Int,
+                                 object_guid : PlanetSideGUID,
+                                 parent_info : Option[ObjectCreateMessageParent])
 
-  val noParentCodec : Codec[parentPattern] = (
-    ("object_class" | uintL(0xb)) ::
-      ("guid" | PlanetSideGUID.codec)
-    ).xmap[parentPattern] (
-    {
-      case cls :: guid :: HNil =>
-        cls :: guid :: None :: HNil
-    },
-    {
-      case cls :: guid :: None :: HNil =>
-        cls :: guid :: HNil
-    }
-  )
+  def apply(data : ObjectCreateMessage.parentPattern) : _ObjectInit = data.asInstanceOf[_ObjectInit]
 
-  implicit val codec : Codec[ObjectInit] = (
-    bool >>:~ { test =>
-      newcodecs.binary_choice(test, parentCodec, noParentCodec)
-    }
-    ).exmap[ObjectInit] (
-      {
-        case true :: cls :: guid :: Some(parent_info) :: HNil =>
-          Attempt.successful(ObjectInit(cls, guid, Some(parent_info)))
-        case false :: cls :: guid :: None :: HNil =>
-          Attempt.successful(ObjectInit(cls, guid, None))
-        case true :: cls :: guid :: None :: HNil =>
-          Attempt.failure(Err("missing parent structure"))
-        case false :: cls :: guid :: Some(parent_info) :: HNil =>
-          Attempt.failure(Err("unexpected parent structure"))
-      },
-      {
-        case ObjectInit(cls, guid, Some(parent_info)) =>
-          Attempt.successful(true :: cls :: guid :: Some(parent_info) :: HNil)
-        case ObjectInit(cls, guid, None) =>
-          Attempt.successful(false :: cls :: guid :: None :: HNil)
-      }
-    )
+  def apply(x : Int, y : PlanetSideGUID, z : Option[ObjectCreateMessageParent]) : ObjectCreateMessage.parentPattern = x :: y :: z :: HNil
 }
 
 object ObjectCreateMessage extends Marshallable[ObjectCreateMessage] {
@@ -129,25 +71,25 @@ object ObjectCreateMessage extends Marshallable[ObjectCreateMessage] {
     }
   )
 
-  implicit val info_codec : Codec[ObjectInit] = (
+  implicit val info_codec : Codec[parentPattern] = (
     bool >>:~ { test =>
       newcodecs.binary_choice(test, parentCodec, noParentCodec)
     }
-    ).exmap[ObjectInit] (
+    ).exmap[parentPattern] (
     {
       case true :: cls :: guid :: Some(parent_info) :: HNil =>
-        Attempt.successful(ObjectInit(cls, guid, Some(parent_info)))
+        Attempt.successful(cls :: guid :: Some(parent_info) :: HNil)
       case false :: cls :: guid :: None :: HNil =>
-        Attempt.successful(ObjectInit(cls, guid, None))
+        Attempt.successful(cls :: guid :: None :: HNil)
       case true :: cls :: guid :: None :: HNil =>
         Attempt.failure(Err("missing parent structure"))
       case false :: cls :: guid :: Some(parent_info) :: HNil =>
         Attempt.failure(Err("unexpected parent structure"))
     },
     {
-      case ObjectInit(cls, guid, Some(parent_info)) =>
+      case cls :: guid :: Some(parent_info) :: HNil =>
         Attempt.successful(true :: cls :: guid :: Some(parent_info) :: HNil)
-      case ObjectInit(cls, guid, None) =>
+      case cls :: guid :: None :: HNil =>
         Attempt.successful(false :: cls :: guid :: None :: HNil)
     }
   )
@@ -161,11 +103,11 @@ object ObjectCreateMessage extends Marshallable[ObjectCreateMessage] {
     ).xmap[streamLengthPattern] (
     {
       case _ :: info :: data :: HNil =>
-        info.object_class :: info.object_guid :: info.parent_info :: data :: HNil
+        ObjectInit(info).object_class :: ObjectInit(info).object_guid :: ObjectInit(info).parent_info :: data :: HNil
     },
     {
       case cls :: guid :: parent_info :: data :: HNil =>
-        (32 + (if(parent_info.isDefined) 52 else 28) + data.size) :: ObjectInit(cls, guid, parent_info) :: data :: HNil //TODO optimize somehow?
+        (32 + (if(parent_info.isDefined) 52 else 28) + data.size) :: ObjectInit(cls, guid, parent_info) :: data :: HNil
     }
   )
 
