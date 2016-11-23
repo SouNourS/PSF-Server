@@ -13,9 +13,7 @@ import shapeless._
   * Only certain information will be transmitted depending on the purpose of the packet.
   * @param leader the name of the squad leader as a wide character string, or `None` if not applicable
   * @param task the task the squad is trying to perform as a wide character string, or `None` if not applicable
-  * @param continent_guid the continent on which the squad is acting, or `None` if not applicable;
-  *                       this GUID is transmitted as a 32-bit number;
-  *                       the internal GUID is 16-bit, so the last 16 bits of this field can be ignored
+  * @param zone_id the continent on which the squad is acting, or `None` if not applicable
   * @param size the current size of the squad, or `None` if not applicable;
   *             "can" be greater than `capacity`, though with issues
   * @param capacity the maximum number of members that the squad can tolerate, or `None` if not applicable;
@@ -26,7 +24,7 @@ import shapeless._
   */
 final case class SquadInfo(leader : Option[String],
                            task : Option[String],
-                           continent_guid : Option[PlanetSideGUID],
+                           zone_id : Option[PlanetSideZoneID],
                            size : Option[Int],
                            capacity : Option[Int],
                            squad_guid : Option[PlanetSideGUID] = None)
@@ -144,7 +142,7 @@ object SquadInfo {
     * @param capacity the maximum number of members that the squad can tolerate
     * @return a SquadInfo object
     */
-  def apply(leader : String, task : String, continent_guid : PlanetSideGUID, size : Int, capacity : Int) : SquadInfo = {
+  def apply(leader : String, task : String, continent_guid : PlanetSideZoneID, size : Int, capacity : Int) : SquadInfo = {
     SquadInfo(Some(leader), Some(task), Some(continent_guid), Some(size), Some(capacity))
   }
 
@@ -160,7 +158,7 @@ object SquadInfo {
     * @param squad_guid a GUID associated with the squad, used to recover the squad definition
     * @return a SquadInfo object
     */
-  def apply(leader : String, task : String, continent_guid : PlanetSideGUID, size : Int, capacity : Int, squad_guid : PlanetSideGUID) : SquadInfo = {
+  def apply(leader : String, task : String, continent_guid : PlanetSideZoneID, size : Int, capacity : Int, squad_guid : PlanetSideGUID) : SquadInfo = {
     SquadInfo(Some(leader), Some(task), Some(continent_guid), Some(size), Some(capacity), Some(squad_guid))
   }
 
@@ -205,7 +203,7 @@ object SquadInfo {
     * @param continent_guid the continent on which the squad is acting
     * @return a SquadInfo object
     */
-  def apply(continent_guid : PlanetSideGUID) : SquadInfo = {
+  def apply(continent_guid : PlanetSideZoneID) : SquadInfo = {
     SquadInfo(None, None, Some(continent_guid), None, None)
   }
 
@@ -267,7 +265,7 @@ object SquadInfo {
     * @param continent_guid the continent on which the squad is acting
     * @return a SquadInfo object
     */
-  def apply(task : String, continent_guid : PlanetSideGUID) : SquadInfo = {
+  def apply(task : String, continent_guid : PlanetSideZoneID) : SquadInfo = {
     SquadInfo(None, Some(task), Some(continent_guid), None, None, None)
   }
 }
@@ -285,20 +283,19 @@ object SquadHeader extends Marshallable[SquadHeader] {
     ("squad_guid" | PlanetSideGUID.codec) ::
       ("leader" | PacketHelpers.encodedWideString) ::
       ("task" | PacketHelpers.encodedWideString) ::
-      ("continent_guid" | PlanetSideGUID.codec) ::
-      uint16L ::
+      ("continent_guid" | PlanetSideZoneID.codec) ::
       ("size" | uint4L) ::
       ("capacity" | uint4L)
     ).exmap[squadPattern] (
     {
-      case sguid :: lead :: tsk :: cguid :: 0 :: sz :: cap :: HNil =>
+      case sguid :: lead :: tsk :: cguid :: sz :: cap :: HNil =>
         Attempt.successful(Some(SquadInfo(lead, tsk, cguid, sz, cap, sguid)) :: HNil)
       case _ =>
         Attempt.failure(Err("failed to decode squad data for adding [A] a squad entry"))
     },
     {
       case Some(SquadInfo(Some(lead), Some(tsk), Some(cguid), Some(sz), Some(cap), Some(sguid))) :: HNil =>
-        Attempt.successful(sguid :: lead :: tsk :: cguid :: 0 :: sz :: cap :: HNil)
+        Attempt.successful(sguid :: lead :: tsk :: cguid :: sz :: cap :: HNil)
       case _ =>
         Attempt.failure(Err("failed to encode squad data for adding [A] a squad entry"))
     }
@@ -311,20 +308,19 @@ object SquadHeader extends Marshallable[SquadHeader] {
     ("squad_guid" | PlanetSideGUID.codec) ::
       ("leader" | PacketHelpers.encodedWideStringAligned(7)) ::
       ("task" | PacketHelpers.encodedWideString) ::
-      ("continent_guid" | PlanetSideGUID.codec) ::
-      uint16L ::
+      ("continent_guid" | PlanetSideZoneID.codec) ::
       ("size" | uint4L) ::
       ("capacity" | uint4L)
     ).exmap[squadPattern] (
     {
-      case sguid :: lead :: tsk :: cguid :: 0 :: sz :: cap :: HNil =>
+      case sguid :: lead :: tsk :: cguid :: sz :: cap :: HNil =>
         Attempt.successful(Some(SquadInfo(lead, tsk, cguid, sz, cap, sguid)) :: HNil)
       case _ =>
         Attempt.failure(Err("failed to decode squad data for adding [B] a squad entry"))
     },
     {
       case Some(SquadInfo(Some(lead), Some(tsk), Some(cguid), Some(sz), Some(cap), Some(sguid))) :: HNil =>
-        Attempt.successful(sguid :: lead :: tsk :: cguid :: 0 :: sz :: cap :: HNil)
+        Attempt.successful(sguid :: lead :: tsk :: cguid :: sz :: cap :: HNil)
       case _ =>
         Attempt.failure(Err("failed to encode squad data for adding [B] a squad entry"))
     }
@@ -337,20 +333,19 @@ object SquadHeader extends Marshallable[SquadHeader] {
     ("squad_guid" | PlanetSideGUID.codec) ::
       ("leader" | PacketHelpers.encodedWideStringAligned(3)) ::
       ("task" | PacketHelpers.encodedWideString) ::
-      ("continent_guid" | PlanetSideGUID.codec) ::
-      uint16L ::
+      ("continent_guid" | PlanetSideZoneID.codec) ::
       ("size" | uint4L) ::
       ("capacity" | uint4L)
     ).exmap[squadPattern] (
     {
-      case sguid :: lead :: tsk :: cguid :: 0 :: sz :: cap :: HNil =>
+      case sguid :: lead :: tsk :: cguid :: sz :: cap :: HNil =>
         Attempt.successful(Some(SquadInfo(lead, tsk, cguid, sz, cap, sguid)) :: HNil)
       case _ =>
         Attempt.failure(Err("failed to decode squad data for updating a squad entry"))
     },
     {
       case Some(SquadInfo(Some(lead), Some(tsk), Some(cguid), Some(sz), Some(cap), Some(sguid))) :: HNil =>
-        Attempt.successful(sguid :: lead :: tsk :: cguid :: 0 :: sz :: cap :: HNil)
+        Attempt.successful(sguid :: lead :: tsk :: cguid :: sz :: cap :: HNil)
       case _ =>
         Attempt.failure(Err("failed to encode squad data for updating a squad entry"))
     }
@@ -382,26 +377,25 @@ object SquadHeader extends Marshallable[SquadHeader] {
     */
   private val taskOrContinentCodec : Codec[squadPattern] = (
     bool >>:~ { path =>
-      conditional(path, "continent_guid" | PlanetSideGUID.codec) ::
-        conditional(path, uint16L) ::
+      conditional(path, "continent_guid" | PlanetSideZoneID.codec) ::
         conditional(!path, "task" | PacketHelpers.encodedWideStringAligned(7))
     }
     ).exmap[squadPattern] (
     {
-      case true :: Some(cguid) :: Some(0) :: _ :: HNil =>
+      case true :: Some(cguid) :: _ :: HNil =>
         Attempt.successful(Some(SquadInfo(cguid)) :: HNil)
-      case true :: Some(cguid) :: Some(_) :: _ :: HNil =>
-        Attempt.failure(Err("failed to decode squad data for a continent - malformed GUID"))
-      case false :: _ :: _ :: Some(tsk) :: HNil =>
+      case true :: None :: _ :: HNil =>
+        Attempt.failure(Err("failed to decode squad data for a task - no continent"))
+      case false :: _ :: Some(tsk) :: HNil =>
         Attempt.successful(Some(SquadInfo(None, tsk)) :: HNil)
-      case false :: _ :: _ :: None :: HNil =>
+      case false :: _ :: None :: HNil =>
         Attempt.failure(Err("failed to decode squad data for a task - no task"))
     },
     {
       case Some(SquadInfo(_, None, Some(cguid), _, _, _)) :: HNil =>
-        Attempt.successful(true :: Some(cguid) :: Some(0) :: None :: HNil)
+        Attempt.successful(true :: Some(cguid) :: None :: HNil)
       case Some(SquadInfo(_, Some(tsk), None, _, _, _)) :: HNil =>
-        Attempt.successful(false :: None :: None :: Some(tsk) :: HNil)
+        Attempt.successful(false :: None :: Some(tsk) :: HNil)
       case Some(SquadInfo(_, Some(tsk), Some(cguid), _, _, _)) :: HNil =>
         Attempt.failure(Err("failed to encode squad data for either a task or a continent - multiple encodings reachable"))
       case _ =>
@@ -461,18 +455,17 @@ object SquadHeader extends Marshallable[SquadHeader] {
       ("task" | PacketHelpers.encodedWideStringAligned(7)) ::
       uintL(3) ::
       bool ::
-      ("continent_guid" | PlanetSideGUID.codec) ::
-      uint16L
+      ("continent_guid" | PlanetSideZoneID.codec)
     ).exmap[squadPattern] (
     {
-      case false :: tsk :: 1 :: true :: cguid :: 0 :: HNil =>
+      case false :: tsk :: 1 :: true :: cguid :: HNil =>
         Attempt.successful(Some(SquadInfo(tsk, cguid)) :: HNil)
       case _ =>
         Attempt.failure(Err("failed to decode squad data for a task and a continent"))
     },
     {
       case Some(SquadInfo(_, Some(tsk), Some(cguid), _, _, _)) :: HNil =>
-        Attempt.successful(false :: tsk :: 1 :: true :: cguid :: 0 :: HNil)
+        Attempt.successful(false :: tsk :: 1 :: true :: cguid :: HNil)
       case _ =>
         Attempt.failure(Err("failed to encode squad data for a task and a continent"))
     }
