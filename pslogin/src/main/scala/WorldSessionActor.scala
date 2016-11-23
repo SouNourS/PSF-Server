@@ -766,8 +766,15 @@ object Zone {
     "home1" -> Zone("NC Sanctuary", "map11", "home1"),
     "home2" -> Zone("TR Sanctuary", "map12", "home2"),
     "home3" -> Zone("VS Sanctuary", "map13", "home3"),
-    "tzshtr" -> Zone("VR Shooting Range", "map14", "tzshtr"),
-    "tzdrtr" -> Zone("VR Driving Range","map15", "tzdrtr"),
+    "tzshtr" -> Zone("VR Shooting Range TR", "map14", "tzshtr"),
+    "tzdrtr" -> Zone("VR Driving Range TR","map15", "tzdrtr"),
+    "tzcotr" -> Zone("VR Combat Zone TR","map16", "tzcotr"),
+    "tzshvs" -> Zone("VR Shooting Range VS", "map14", "tzshvs"),
+    "tzdrvs" -> Zone("VR Driving Range VS","map15", "tzdrvs"),
+    "tzcovs" -> Zone("VR Combat Zone VS","map16", "tzcovs"),
+    "tzshnc" -> Zone("VR Shooting Range NC", "map14", "tzshnc"),
+    "tzdrnc" -> Zone("VR Driving Range NC","map15", "tzdrnc"),
+    "tzconc" -> Zone("VR Combat Zone NC","map16", "tzconc"),
     "c1" -> Zone("Supai", "ugd01", "c1"),
     "c2" -> Zone("Hunhau", "ugd02", "c2"),
     "c3" -> Zone("Adlivun", "ugd03", "c3"),
@@ -799,8 +806,15 @@ object Zone {
     "nc-sanctuary" -> "home1",
     "tr-sanctuary" -> "home2",
     "vs-sanctuary" -> "home3",
-    "shooting" -> "tzshtr",
-    "driving" -> "tzdrtr",
+    "tr-shooting" -> "tzshtr",
+    "tr-driving" -> "tzdrtr",
+    "tr-combat" -> "tzcotr",
+    "vs-shooting" -> "tzshvs",
+    "vs-driving" -> "tzdrvs",
+    "vs-combat" -> "tzcovs",
+    "nc-shooting" -> "tzshnc",
+    "nc-driving" -> "tzdrnc",
+    "nc-combat" -> "tzconc",
     "supai" -> "c1",
     "hunhau" -> "c2",
     "adlivun" -> "c3",
@@ -1176,7 +1190,20 @@ object Zone {
       )
     zones("home3").locations += "hart_c" -> (3675, 2727, 91)
     zones("tzshtr").locations += "roof" -> (499, 1568, 25)
+    zones("tzcotr").locations += "spawn" -> (960, 1002, 32)
     zones("tzdrtr").locations += (
+      "start" -> (2457, 1864, 23),
+      "air_pad" -> (1700, 1900, 32)
+      )
+    zones("tzshvs").locations += "roof" -> (499, 1568, 25)
+    zones("tzcovs").locations += "spawn" -> (960, 1002, 32)
+    zones("tzdrvs").locations += (
+      "start" -> (2457, 1864, 23),
+      "air_pad" -> (1700, 1900, 32)
+      )
+    zones("tzshnc").locations += "roof" -> (499, 1568, 25)
+    zones("tzconc").locations += "spawn" -> (960, 1002, 32)
+    zones("tzdrnc").locations += (
       "start" -> (2457, 1864, 23),
       "air_pad" -> (1700, 1900, 32)
       )
