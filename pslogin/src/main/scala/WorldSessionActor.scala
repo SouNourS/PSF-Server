@@ -9,7 +9,8 @@ import scodec.Attempt.{Failure, Successful}
 import scodec.bits._
 import org.log4s.MDC
 import MDCContextAware.Implicits._
-import net.psforever.types.ChatMessageType
+import net.psforever.newcodecs.newcodecs
+import net.psforever.types.{ChatMessageType, Vector3}
 import scodec.codecs._
 
 import scala.collection.mutable
@@ -695,30 +696,20 @@ object Transfer {
     * Send the packets that create the avatar at a certain position in the current zone and assigns that avatar the status of "current."
     * The latter is necessary to be able to control and use that avatar on the given client.<br>
     * <br>
-    * The process in this function involves taking the static `ObjectCreateMessage` data that would create the player and disassembling it.
-    * The separated components of the data have been cut around the old coordinates of the avatar.
-    * From the `loc` the new coordinates for the position of the avatar are calculated and scaled to fit the format.
-    * (The format is a byte and a nibble, while the coordinates probably fit into two bytes.)
-    * The original data is then reconstructed around these new coordinates replacing the old coordinates.
+    * Disassemble the static `ObjectCreateMessage` data so that the existing coordinate data can be skipped over.
+    * From the `loc`, the new coordinates for the position of the avatar are calculated and then pushed into the skipped space.
     * The resulting packet is sent to the client.
+    * We have to convert all the way into a `BitVector` during the calculation process and the replace process.
+    * Stopping at only `ByteVector` would result in the data chunks being padded inappropriately.
     * @param traveler the player
     * @param loc where the player is being placed in three dimensional space
     */
   def loadSelf(traveler : Traveler, loc : (Int, Int, Int)) : Unit = {
     //calculate bit representation of modified coordinates
-    //TODO: note the scaling: 0x0000 -> 0x000 values
-    //TODO: why does the player always get "dropped" on spawning, even if the coordinates are accurate to /loc?
-    val x : BitVector = uintL(12).encode(loc._1/2).toOption.get
-    val y : BitVector = uintL(12).encode(loc._2/2).toOption.get
-    val z : BitVector = uintL(12).encode(loc._3/4).toOption.get
-    //dissect ObjectCreateMessage data portion
-    val firstPart : BitVector = traveler.player.toBitVector.take(76) //first part
-    var temp : BitVector = traveler.player.toBitVector.drop(88) //first part + 'x' were removed
-    val secondPart : BitVector = temp.take(8) //first spacer
-    temp = temp.drop(20) //first spacer and 'y' were removed
-    val thirdPart : BitVector = temp.take(8) //second spacer
-    //reconstitute ObjectCreateMessage data around new coordinates
-    temp = firstPart ++ x ++ secondPart ++ y ++ thirdPart ++ z ++ temp.drop(20) //second spacer and 'z' were removed
+    val pos : BitVector = Vector3.codec_pos.encode(Vector3(loc._1, loc._2, loc._3)).toOption.get.toByteVector.toBitVector
+    //edit in modified coordinates
+    var temp : BitVector = traveler.player.toBitVector
+    temp = temp.take(68) ++ pos ++ temp.drop(124)
     //send
     traveler.sendToSelf(temp.toByteVector)
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(PlanetSideGUID(75),0,0)))
