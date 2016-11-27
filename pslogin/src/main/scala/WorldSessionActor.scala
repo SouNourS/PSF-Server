@@ -483,7 +483,7 @@ object CSRZone {
     * @param traveler the player
     */
   private def help(traveler : Traveler) : Unit = {
-    CSRZone.reply(traveler, "usage: /zone <id> [warpgate] | [-list]")
+    CSRZone.reply(traveler, "usage: /zone <zone> [gatename] | [-list]")
   }
 
   /**
@@ -542,7 +542,7 @@ object CSRWarp {
     else {
       coords.slice(0, 3).foreach( x => {
         if(x < 0 || x > 8191) {
-          CSRWarp.error(traveler, "Number out of range - 0 < x < 8191, but x = "+x)
+          CSRWarp.error(traveler, "Out of range - 0 < n < 8191, but n = "+x)
           return false
        }
       })
@@ -550,7 +550,7 @@ object CSRWarp {
 
     val zone = Zone.get(traveler.zone).get //the traveler is already in the appropriate zone
     if(list && coords.isEmpty && destId.equals("")) {
-      CSRWarp.reply(traveler, Zone.listLocations(zone))
+      CSRWarp.reply(traveler, Zone.listLocations(zone)+"; "+Zone.listWarpgates(zone))
       return false
     }
     val dest : Option[(Int, Int, Int)] = if(coords.nonEmpty) Some(coords(0), coords(1), coords(2)) else Zone.getWarpLocation(zone, destId) //coords before destId
@@ -606,7 +606,7 @@ object CSRWarp {
     * @param traveler the player
     */
   private def help(traveler : Traveler) : Unit = {
-    CSRWarp.reply(traveler, "usage: /warp <location> | <x> <y> <z> | [-list]")
+    CSRWarp.reply(traveler, "usage: /warp <location> | <gatename> | <x> <y> <z> | [-list]")
   }
 
   /**
@@ -623,7 +623,7 @@ object CSRWarp {
   * `Transfer` is a functional class intended to generalize the movement of a `Traveler`.<br>
   * <br>
   * Although a specific process for manually forcing a player avatar into a certain position surely exists, it is not currently known.
-  * To sidestep this knowledge limitation, the player's avatar is destructed whenever it is moved.
+  * To sidestep this knowledge limitation, the player's avatar is deconstructed whenever it is moved.
   * It is then reconstructed in the place specified by the zone and the destination.
   * The process should be replaced (for warping, anyway) as soon as the formal methodology accepted by the client is understood.
   */
@@ -663,18 +663,19 @@ object Transfer {
     */
   private def disposeSelf(traveler : Traveler) : Unit = {
     //dispose inventory
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(76),4)))
-    // 77?
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(78),4)))
-    // 79?
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(80),4)))
-    // 81-82?
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(83),4)))
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(84),4)))
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(85),4)))
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(86),4)))
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(87),4)))
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(88),4)))
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(76),4))) //beamer
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(77),4))) //beamer ammo
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(78),4))) //suppressor
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(79),4))) //suppressor ammo
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(80),4))) //forceblade
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(81),4))) //forceblade ammo
+    //TODO I know that an entity 82 "exists" but I do not know if it is safe to call delete on it
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(83),4))) //9mm ammo
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(84),4))) //9mm ammo
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(85),4))) //9mm ammo
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(86),4))) //9mm ap ammo
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(87),4))) //plasma cell
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(88),4))) //rek
     //dispose self
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(75),4)))
   }
@@ -682,7 +683,7 @@ object Transfer {
   /**
     * Send the packet that causes the client to load a new `Zone`.<br>
     * <br>
-    * The three latter parameters to `LoadMapMessage` certainly must do something; but, we do not care about them for now.
+    * The four latter parameters to `LoadMapMessage` certainly must do something; but, we do not care about them for now.
     * @param traveler the player
     * @param zone the `Zone` requested
     */
@@ -830,7 +831,7 @@ object Zone {
     * A value used for selecting where to appear in a zone from the list of locations when the user has no indicated one.
     */
   private val rand = Random
-  setup
+  setup()
 
   /**
     * An abbreviated constructor for creating `Zone`s without invocation of `new`.
@@ -883,7 +884,7 @@ object Zone {
     * @return all of the zonenames
     */
   def list : String = {
-    "zonenames: z1 - z10, home1 - home3, tzshtr, tzdrtr, c1 - c6, i1 - i4; zones are also aliased their continent name"
+    "zonenames: z1 - z10, home1 - home3, tzshnc, tzdrnc, tzconc, tzshtr, tzdrtr, tzcotr, tzshvs, tzdrvs, tzcovs, c1 - c6, i1 - i4; zones are also aliased to their continent name"
   }
 
   /**
@@ -907,7 +908,7 @@ object Zone {
     * @return all of the warpgate keys
     */
   def listWarpgates(zone : Zone) : String = {
-    var out : String = "warpgates: "
+    var out : String = "gatenames: "
     if(zone.gates.isEmpty)
       out += "none"
     else
