@@ -261,7 +261,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 //        //note: adding a medkit creates the shortcut if it doesn't exist and dispatches an 0x28 packet to the server
 //        //sendRawResponse(hex"18 7C000000 2580 692 5C0F 9E C0000018000") //reaver fury rockets, 2,6
 //        sendRawResponse(hex"18 7C000000 2580 79A 0D06 86 C8000020000") //buckshot, 0,0
-        sendRawResponse(hex"18 7C000000 2580 0E0 5300 A1   C8000001FE0") //9mm, 3,0
+        sendRawResponse(hex"18 7C000000 2580 0E0 5300 A1   C80001FFFE0") //9mm, 3,0
 //        sendRawResponse(hex"18 7C000000 2580 0E0 1506 BC C8000064000") //9mm, 6,0
 //        sendRawResponse(hex"18 7C000000 2580 0C2 F805 A6 C8000002000") //medkit, 3,5
 //        sendRawResponse(hex"18 7C000000 2580 0C2 F604 B8 C8000002000") //medkit, 5,5
