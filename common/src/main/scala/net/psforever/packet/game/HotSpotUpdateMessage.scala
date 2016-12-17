@@ -80,6 +80,6 @@ object HotSpotUpdateMessage extends Marshallable[HotSpotUpdateMessage] {
   implicit val codec : Codec[HotSpotUpdateMessage] = (
     ("continent_guid" | PlanetSideGUID.codec) ::
       ("unk" | uint4L) ::
-      ("spots" | PacketHelpers.listOfNAligned(uint8L, 4, HotSpotInfo.codec))
+      ("spots" | PacketHelpers.listOfNAligned(longL(8), 4, HotSpotInfo.codec))
     ).as[HotSpotUpdateMessage]
 }

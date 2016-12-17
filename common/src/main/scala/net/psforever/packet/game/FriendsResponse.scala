@@ -75,7 +75,7 @@ object FriendsResponse extends Marshallable[FriendsResponse] {
       ("unk3" | bool) ::
       (("number_of_friends" | uint4L) >>:~ { len =>
         conditional(len > 0, "friend" | Friend.codec) ::
-          ("friends" | PacketHelpers.sizedList(len-1, Friend.codec_list)) //List of 'Friend(String, Boolean)'s without a size field when encoded
+          ("friends" | PacketHelpers.listOfNSized(len-1, Friend.codec_list)) //List of 'Friend(String, Boolean)'s without a size field when encoded
       })
     ).as[FriendsResponse]
 }

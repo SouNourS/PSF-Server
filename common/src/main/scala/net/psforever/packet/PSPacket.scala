@@ -3,7 +3,6 @@ package net.psforever.packet
 
 import java.nio.charset.Charset
 
-import scodec.Attempt.Successful
 import scodec.{Attempt, Codec, DecodeResult, Err}
 import scodec.bits._
 import scodec.codecs._
@@ -205,12 +204,55 @@ object PacketHelpers {
   def encodedStringWithLimit(limit : Int) : Codec[String] = variableSizeBytes(encodedStringSizeWithLimit(limit), ascii)
   */
 
+//  /**
+//    * Encode and decode a byte-aligned `List`.<br>
+//    * <br>
+//    * This function is copied almost verbatim from its source, with exception of swapping the normal `ListCodec` for a new `AlignedListCodec`.
+//    * @param countCodec the codec that represents the prefixed size of the `List`
+//    * @param alignment  the number of bits padded between the `List` size and the `List` contents
+//    * @param valueCodec a codec that describes each of the contents of the `List`
+//    * @tparam A the type of the `List` contents
+//    * @see codec\package.scala, listOfN
+//    * @return a codec that works on a List of A
+//    */
+//  def listOfNAligned[A](countCodec : Codec[Int], alignment : Int, valueCodec : Codec[A]) : Codec[List[A]] = {
+//    countCodec.
+//      flatZip { count => new AlignedListCodec(countCodec, valueCodec, alignment, Some(count)) }.
+//      narrow[List[A]]({ case (cnt, xs) =>
+//      if(xs.size == cnt) Attempt.successful(xs)
+//      else Attempt.failure(Err(s"Insufficient number of elements: decoded ${xs.size} but should have decoded $cnt"))
+//    }, xs => (xs.size, xs)).
+//      withToString(s"listOfN($countCodec, $valueCodec)")
+//  }
+
   /**
-    * Codec that encodes/decodes a list of `n` elements, where `n` is known at compile time.<br>
+    * Encode and decode a byte-aligned `List`.<br>
+    * <br>
+    * This function is copied almost verbatim from its source, with exception of swapping the normal `ListCodec` for a new `AlignedListCodec`.
+    * @param countCodec the codec that represents the prefixed size of the `List`
+    * @param alignment  the number of bits padded between the `List` size and the `List` contents
+    * @param valueCodec a codec that describes each of the contents of the `List`
+    * @tparam A the type of the `List` contents
+    * @see codec\package.scala, listOfN
+    * @return a codec that works on a List of A
+    */
+  def listOfNAligned[A](countCodec : Codec[Long], alignment : Int, valueCodec : Codec[A]) : Codec[List[A]] = {
+    countCodec.
+      flatZip { count => new AlignedListCodec(countCodec, valueCodec, alignment, Some(count)) }.
+      narrow[List[A]]({ case (cnt, xs) =>
+      if(xs.size == cnt) Attempt.successful(xs)
+      else Attempt.failure(Err(s"Insufficient number of elements: decoded ${xs.size} but should have decoded $cnt"))
+    }, xs => (xs.size, xs)).
+      withToString(s"listOfN($countCodec, $valueCodec)")
+  }
+
+  /**
+    * Codec that encodes/decodes a list of `n` elements, where `n` is known at compile time.
+    * Override for `Int` size, to cast to `Long`.<br>
     * <br>
     * This function is copied almost verbatim from its source, with exception of swapping the parameter that is normally a `Nat` `literal`.
     * The modified function takes a normal unsigned `Integer` and assures that the parameter is non-negative before further processing.
-    * @param size the known size of the `List`
+    * @param size  the known size of the `List`
     * @param codec a codec that describes each of the contents of the `List`
     * @tparam A the type of the `List` contents
     * @see codec\package.scala, sizedList
@@ -218,28 +260,22 @@ object PacketHelpers {
     * @see codec\package.scala, provides
     * @return a codec that works on a List of A but excludes the size from the encoding
     */
-  def sizedList[A](size : Int, codec : Codec[A]) : Codec[List[A]] = listOfN(provide(if(size < 0) 0 else size), codec)
+  def listOfNSized[A](size : Int, codec : Codec[A]) : Codec[List[A]] = listOfNSized(if(size < 0) 0L else size.asInstanceOf[Long], codec)
 
   /**
-    * Encode and decode a byte-aligned `List`.<br>
+    * Codec that encodes/decodes a list of `n` elements, where `n` is known at compile time.<br>
     * <br>
-    * This function is copied almost verbatim from its source, with exception of swapping the normal `ListCodec` for a new `AlignedListCodec`.
-    * @param countCodec the codec that represents the prefixed size of the `List`
-    * @param alignment the number of bits padded between the `List` size and the `List` contents
-    * @param valueCodec a codec that describes each of the contents of the `List`
+    * This function is copied almost verbatim from its source, with exception of swapping the parameter that is normally a `Nat` `literal`.
+    * The modified function takes a normal unsigned `Integer` and assures that the parameter is non-negative before further processing.
+    * @param size  the known size of the `List`
+    * @param codec a codec that describes each of the contents of the `List`
     * @tparam A the type of the `List` contents
+    * @see codec\package.scala, sizedList
     * @see codec\package.scala, listOfN
-    * @return a codec that works on a List of A
+    * @see codec\package.scala, provides
+    * @return a codec that works on a List of A but excludes the size from the encoding
     */
-  def listOfNAligned[A](countCodec: Codec[Int], alignment : Int, valueCodec: Codec[A]): Codec[List[A]] = {
-    countCodec.
-      flatZip { count => new AlignedListCodec(countCodec, valueCodec, alignment, Some(count)) }.
-      narrow[List[A]]({ case (cnt, xs) =>
-      if (xs.size == cnt) Attempt.successful(xs)
-      else Attempt.failure(Err(s"Insufficient number of elements: decoded ${xs.size} but should have decoded $cnt"))
-    }, xs => (xs.size, xs)).
-      withToString(s"listOfN($countCodec, $valueCodec)")
-  }
+  def listOfNSized[A](size : Long, codec : Codec[A]) : Codec[List[A]] = PacketHelpers.listOfNAligned(provide(if(size < 0) 0 else size), 0, codec)
 }
 
 /**
@@ -253,7 +289,7 @@ object PacketHelpers {
   * @tparam A the type of the `List` contents
   * @see ListCodec.scala
   */
-private class AlignedListCodec[A](countCodec : Codec[Int], valueCodec: Codec[A], alignment : Int, limit: Option[Int] = None) extends Codec[List[A]] {
+private class AlignedListCodec[A](countCodec : Codec[Long], valueCodec: Codec[A], alignment : Int, limit: Option[Long] = None) extends Codec[List[A]] {
   /**
     * Convert a `List` of elements into a byte-aligned `BitVector`.<br>
     * <br>
@@ -269,8 +305,9 @@ private class AlignedListCodec[A](countCodec : Codec[Int], valueCodec: Codec[A],
       solve match {
         case Attempt.Successful(vector) =>
           val countCodecSize : Long = countCodec.sizeBound.lowerBound
-          return Successful(vector.take(countCodecSize) ++ BitVector.fill(alignment)(false) ++ vector.drop(countCodecSize))
+          return Attempt.successful(vector.take(countCodecSize) ++ BitVector.fill(alignment)(false) ++ vector.drop(countCodecSize))
         case _ =>
+          return Attempt.failure(Err("failed to create a list"))
       }
     }
     solve
@@ -281,7 +318,10 @@ private class AlignedListCodec[A](countCodec : Codec[Int], valueCodec: Codec[A],
     * @param buffer the encoded bits in the `List`, preceded by the alignment bits
     * @return the decoded `List`
     */
-  def decode(buffer: BitVector) = Decoder.decodeCollect[List, A](valueCodec, limit)(buffer.drop(alignment))
+  def decode(buffer: BitVector) = {
+    val lim = Option( if(limit.isDefined) limit.get.asInstanceOf[Int] else 0 ) //TODO potentially unsafe size conversion
+    Decoder.decodeCollect[List, A](valueCodec, lim)(buffer.drop(alignment))
+  }
 
   /**
     * The size of the encoded `List`.<br>
@@ -291,7 +331,7 @@ private class AlignedListCodec[A](countCodec : Codec[Int], valueCodec: Codec[A],
     */
   def sizeBound = limit match {
     case None => SizeBound.unknown
-    case Some(lim) => valueCodec.sizeBound * lim.toLong
+    case Some(lim : Long) => valueCodec.sizeBound * lim
   }
 
   /**
