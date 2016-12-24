@@ -281,6 +281,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
     case msg @ GenericActionMessage(action) =>
       log.info("GenericActionMessage: " + msg)
 
+    case msg @ MountVehicleMsg(player_guid, vehicle_guid, unk) =>
+      log.info("MounVehicleMsg: "+msg)
+
     case default => log.debug(s"Unhandled GamePacket ${pkt}")
   }
 
