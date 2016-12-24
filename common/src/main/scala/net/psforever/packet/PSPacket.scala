@@ -203,4 +203,19 @@ object PacketHelpers {
 
   def encodedStringWithLimit(limit : Int) : Codec[String] = variableSizeBytes(encodedStringSizeWithLimit(limit), ascii)
   */
+
+  /**
+    * Codec that encodes/decodes a list of `n` elements, where `n` is known at compile time.<br>
+    * <br>
+    * This function is copied almost verbatim from its source, with exception of swapping the parameter that is normally a `Nat` `literal`.
+    * The modified function takes a normal unsigned `Integer` and assures that the parameter is non-negative before further processing.
+    * @param size the known size of the `List`
+    * @param codec a codec that describes each of the contents of the `List`
+    * @tparam A the type of the `List` contents
+    * @see codec\package.scala, sizedList
+    * @see codec\package.scala, listOfN
+    * @see codec\package.scala, provides
+    * @return a codec that works on a List of A but excludes the size from the encoding
+    */
+  def sizedList[A](size : Int, codec : Codec[A]) : Codec[List[A]] = listOfN(provide(if(size < 0) 0 else size), codec)
 }
