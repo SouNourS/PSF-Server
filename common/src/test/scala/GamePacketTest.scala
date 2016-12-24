@@ -1070,6 +1070,28 @@ class GamePacketTest extends Specification {
       }
     }
 
+    "HitHint" should {
+      val string = hex"0A 46 0B 01 00"
+
+      "decode" in {
+        PacketCoding.DecodePacket(string).require match {
+          case HitHint(unk1, unk2, x) =>
+            unk1 mustEqual 70
+            unk2 mustEqual 44
+            x mustEqual 16
+          case _ =>
+            ko
+        }
+      }
+
+      "encode" in {
+        val msg = HitHint(70, 44, 16)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string
+      }
+    }
+
     "AvatarFirstTimeEventMessage" should {
       val string = hex"69 4b00 c000 01000000 9e 766973697465645f63657274696669636174696f6e5f7465726d696e616c"
     
