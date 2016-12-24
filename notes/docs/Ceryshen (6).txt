@@ -1,0 +1,79 @@
+Ceryshen (6)
+1 - Akna
+2 - Anguta
+3 - Igaluk
+4 - Keelut
+5 - Nerrivik
+6 - Pinga
+7 - Sedna
+8 - Tarqaq
+9 - Tootega
+10 - Southeast Warpgate (Searhus)
+11 - SouthWest Warpgate (Cyssor)
+12 - Northwest Warpgate (Solsar)
+13 - Northeast Warpgate (VS Sanctuary)
+14 - West Outpost Gun Tower
+15 - E16 Gate Outpost Watch Tower
+16 - Southwest Tarqaq Air Tower
+17 - East Keelut Air Tower
+18 - L15 Gate Outpost Watch Tower
+19 - N15 Gate Outpost Air Tower
+20 - North Tootega Watch Tower
+21 - Northeast Pinga Air Tower
+22 - N10 Gate Outpost Gun Tower
+23 - Northwest Outpost Gun Tower
+24 - Northwest Nerrivik Air Tower
+25 - G11 Gate Outpost Gun Tower
+26 - Southwest Nerrivik Watch Tower
+27 - South Akna Gun Tower
+28 - North Keelut Gun Tower
+29 - F7 Gate Outpost Air Tower
+30 - South Igaluk Air Tower
+31 - North Sedna Watch Tower
+32 - South Tarqaq Gun Tower
+33 - Tarqaq South Bunker
+34 - Keelut East Bunker
+35 - Nerrivik South Bunker
+36 - Tootega South Bunker
+37 - Akna North Bunker
+38 - Anguta West Bunker
+39 - Sedna West Bunker
+40 - Igaluk Northeast Bunker
+41 - Pinga North Bunker (both)
+42 - Anguta East Bunker (both)
+43 - Tarqaq East Bunker (both)
+44 - Sedna East Bunker (both)
+45 - Igaluk Northwest Bunker
+46 - North Igaluk Gun Tower
+47 - Northeast Sedna Gun Tower
+48 - North Anguta Watch Tower
+49 - North Akna Air Tower
+50 - South Nerrivik Gun Tower
+51 - Northeast Warpgate Air Tower
+52 - South Tootega Gun Tower
+53 - South Keelut Gun Tower
+54 - Southwest Warpgate Outpost Air Tower
+55 - South Pinga Air Tower
+56 - J8-J9 Bridge Section 1 (North)
+57 - J8-J9 Bridge Section 2
+58 - J8-J9 Bridge Section 3
+59 - J8-J9 Bridge Section 4
+60 - J8-J9 Bridge Section 5
+61 - J8-J9 Bridge Section 6
+62 - J8-J9 Bridge Section 7
+63 - J8-J9 Bridge Section 8
+64 - J8-J9 Bridge Section 9
+65 - J8-J9 Bridge Section 10
+66 - J8-J9 Bridge Section 11
+67 - J8-J9 Bridge Section 12
+68 - J8-J9 Bridge Section 13
+69 - J8-J9 Bridge Section 14
+70 - J8-J9 Bridge Section 15
+71 - J8-J9 Bridge Section 16
+72 - J8-J9 Bridge Section 17
+73 - J8-J9 Bridge Section 18
+74 - J8-J9 Bridge Section 19
+75 - J8-J9 Bridge Section 20
+76 - J8-J9 Bridge Section 21
+18657 - Tarqaq Geowarp
+18658 - Igaluk Geowarp

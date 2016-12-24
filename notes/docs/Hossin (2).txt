@@ -1,0 +1,181 @@
+Hossin (2)
+1 - Northwest Warpgate (Amerish)
+2 - Northeast Warpgate (Ishundar)
+3 - Southeast Warpgate (TR Sanctuary)
+4 - Southwest Warpgate (Searhus)
+5 - Voltan
+6 - Naum
+7 - Zotz
+8 - Acan
+9 - Bitol
+10 - Chac
+11 - Ghanon
+12 - Ixtab
+13 - Kisin
+14 - Mulac
+15 - E10 Gate Outpost Gun Tower
+16 - Northwest Acan Watch Tower
+17 - F8 Gate Outpost Gun Tower
+18 - Southeast Kisin Air Tower
+19 - North Kisin Watch Tower
+20 - Southeast Chac Air Tower
+21 - K9 Gate Outpost Air Tower
+22 - K10 Gate Outpost Watch Tower
+23 - North Naum Gun Tower
+24 - East Naum Watch Tower
+25 - Northwest Mulac Air Tower
+26 - East Bitol Air Tower
+27 - J18 Gate Outpost Air Tower
+28 - G15 Gate Outpost Gun Tower
+29 - J15 Gate Outpost Air Tower
+30 - Southwest Ixtab Watch Tower
+31 - North Hurakan Watch Tower
+32 - East Acan Gun Tower
+33 - Southeast Ghanon Air Tower
+34 - Ixtab South Bunker
+35 - Voltan West Bunker
+36 - Ghanon West Bunker
+37 - Chac North Bunker
+38 - Naum North Bunker
+39 - Voltan South Bunker
+40 - Zotz East Bunker
+41 - Kisin South Bunker
+42 - East Voltan Watch Tower
+43 - Acan South Bunker
+44 - Ixtab North Bunker (both)
+45 - Naum South Bunker (both)
+46 - Ghanon East Bunker
+47 - Voltan East Bunker (both)
+48 - Hurakan
+49 - East Ixtab Gun Tower
+50 - M16 Gate Outpost Gun Tower
+51 - North Zotz Air Tower
+52 - East Outpost Gun Tower
+53 - K8 Bridge Section 1 (North)
+54 - K8 Bridge Section 2
+55 - K8 Bridge Section 3
+56 - K8 Bridge Section 4
+57 - K8 Bridge Section 5
+58 - K8 Bridge Section 6
+59 - K8 Bridge Section 7
+60 - K8 Bridge Section 8
+61 - K8 Bridge Section 9
+62 - K8 Bridge Section 10
+63 - K8 Bridge Section 11
+64 - K8 Bridge Section 12
+65 - K8 Bridge Section 13
+66 - K8 Bridge Section 14
+67 - K8 Bridge Section 15
+68 - K8 Bridge Section 16
+69 - K8 Bridge Section 17
+112 - J11 Bridge Section 1 (West)
+113 - J11 Bridge Section 2
+114 - J11 Bridge Section 3
+115 - J11 Bridge Section 4
+116 - J11 Bridge Section 5
+117 - J11 Bridge Section 6
+118 - J11 Bridge Section 7
+119 - J11 Bridge Section 8
+120 - J11 Bridge Section 9
+121 - J11 Bridge Section 10
+122 - J11 Bridge Section 11
+123 - J11 Bridge Section 12
+124 - J11 Bridge Section 13
+125 - J11 Bridge Section 14
+126 - J11 Bridge Section 15
+127 - J11 Bridge Section 16
+188 - L13-14 Bridge Section 1 (North)
+189 - L13-14 Bridge Section 2
+190 - L13-14 Bridge Section 3
+191 - L13-14 Bridge Section 4
+192 - L13-14 Bridge Section 5
+193 - L13-14 Bridge Section 6
+194 - L13-14 Bridge Section 7
+195 - L13-14 Bridge Section 8
+196 - L13-14 Bridge Section 9
+197 - L13-14 Bridge Section 10
+198 - L13-14 Bridge Section 11
+199 - L13-14 Bridge Section 12
+200 - L13-14 Bridge Section 13
+201 - L13-14 Bridge Section 14
+202 - L13-14 Bridge Section 15
+203 - L13-14 Bridge Section 16
+262 - L12-M11 Bridge Section 1 (West)
+263 - L12-M11 Bridge Section 2
+264 - L12-M11 Bridge Section 3
+265 - L12-M11 Bridge Section 4
+266 - L12-M11 Bridge Section 5
+267 - L12-M11 Bridge Section 6
+268 - L12-M11 Bridge Section 7
+269 - L12-M11 Bridge Section 8
+270 - L12-M11 Bridge Section 9
+271 - L12-M11 Bridge Section 10
+272 - L12-M11 Bridge Section 11
+273 - L12-M11 Bridge Section 12
+274 - L12-M11 Bridge Section 13
+275 - L12-M11 Bridge Section 14
+276 - L12-M11 Bridge Section 15
+277 - L12-M11 Bridge Section 16
+278 - L12-M11 Bridge Section 17
+279 - L12-M11 Bridge Section 18
+334 - M13-M14 Bridge Section 1 (North)
+335 - M13-M14 Bridge Section 2
+336 - M13-M14 Bridge Section 3
+337 - M13-M14 Bridge Section 4
+338 - M13-M14 Bridge Section 5
+339 - M13-M14 Bridge Section 6
+340 - M13-M14 Bridge Section 7
+341 - M13-M14 Bridge Section 8
+342 - M13-M14 Bridge Section 9
+343 - M13-M14 Bridge Section 10
+344 - M13-M14 Bridge Section 11
+345 - M13-M14 Bridge Section 12
+346 - M13-M14 Bridge Section 13
+347 - M13-M14 Bridge Section 14
+348 - M13-M14 Bridge Section 15
+349 - M13-M14 Bridge Section 16
+350 - M13-M14 Bridge Section 17
+351 - M13-M14 Bridge Section 18
+352 - M13-M14 Bridge Section 19
+353 - M13-M14 Bridge Section 20
+354 - M13-M14 Bridge Section 21
+355 - M13-M14 Bridge Section 22
+356 - M13-M14 Bridge Section 23
+357 - M13-M14 Bridge Section 24
+448 - M15-M16 Bridge Section 1 (Northwest)
+449 - M15-M16 Bridge Section 2
+450 - M15-M16 Bridge Section 3
+451 - M15-M16 Bridge Section 4
+452 - M15-M16 Bridge Section 5
+453 - M15-M16 Bridge Section 6
+454 - M15-M16 Bridge Section 7
+455 - M15-M16 Bridge Section 8
+456 - M15-M16 Bridge Section 9
+457 - M15-M16 Bridge Section 10
+458 - M15-M16 Bridge Section 11
+459 - M15-M16 Bridge Section 12
+460 - M15-M16 Bridge Section 13
+461 - M15-M16 Bridge Section 14
+529 - J9 Bridge Section 1 (West)
+530 - J9 Bridge Section 2
+531 - J9 Bridge Section 3
+532 - J9 Bridge Section 4
+533 - J9 Bridge Section 5
+534 - J9 Bridge Section 6
+535 - J9 Bridge Section 7
+536 - J9 Bridge Section 8
+537 - J9 Bridge Section 9
+538 - J9 Bridge Section 10
+539 - J9 Bridge Section 11
+540 - J9 Bridge Section 12
+541 - J9 Bridge Section 13
+542 - J9 Bridge Section 14
+543 - J9 Bridge Section 15
+544 - J9 Bridge Section 16
+545 - J9 Bridge Section 17
+546 - J9 Bridge Section 18
+547 - J9 Bridge Section 19
+548 - J9 Bridge Section 20
+549 - J9 Bridge Section 21
+18907 - Bitol Geowarp
+18908 - Naum Geowarp

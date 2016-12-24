@@ -1,0 +1,164 @@
+Extinction (29)
+1 - J9 Bunker (both)
+2 - I12 Bunker (both)
+3 - K12 Bunker (both)
+4 - L10-L11 Bunker (both)
+5 - K9 Bunker (both)
+6 - I10 Bunker (both)
+7 - Mithra
+8 - Hvar
+9 - Northwest Volcano Gun Tower
+10 - Yazata Air Tower
+11 - South Warpgate Air Tower
+12 - South Volcano Gun Tower
+13 - Northeast Volcano Gun Tower
+14 - Mithra Air Tower
+15 - H10 Gate Watch Tower
+16 - L8 Gate Watch Tower
+17 - Hvar Watch Tower
+18 - Yazata
+19 - M7 Bunker
+20 - L7 West Bunker
+21 - M14 Bunker (West)
+22 - M14 Bunker (East)
+23 - G11 Bunker
+24 - I6-J6 Bridge Section 1 (West)
+25 - I6-J6 Bridge Section 2
+26 - I6-J6 Bridge Section 3
+27 - I6-J6 Bridge Section 4
+28 - I6-J6 Bridge Section 5
+29 - I6-J6 Bridge Section 6
+30 - I6-J6 Bridge Section 7
+31 - I6-J6 Bridge Section 8
+32 - I6-J6 Bridge Section 9
+91 - G14 Bridge Section 1 (North)
+92 - G14 Bridge Section 2
+93 - G14 Bridge Section 3
+94 - G14 Bridge Section 4
+95 - G14 Bridge Section 5
+96 - G14 Bridge Section 6
+97 - G14 Bridge Section 7
+98 - G14 Bridge Section 8
+133 - I11-I12 Bridge Section 1 (North)
+134 - I11-I12 Bridge Section 2
+135 - I11-I12 Bridge Section 3
+136 - I11-I12 Bridge Section 4
+137 - I11-I12 Bridge Section 5
+138 - I11-I12 Bridge Section 6
+139 - I11-I12 Bridge Section 7
+140 - I11-I12 Bridge Section 8
+141 - I11-I12 Bridge Section 9
+184 - K12-L11 Bridge Section 1 (South)
+185 - K12-L11 Bridge Section 2
+186 - K12-L11 Bridge Section 3
+187 - K12-L11 Bridge Section 4
+188 - K12-L11 Bridge Section 5
+189 - K12-L11 Bridge Section 6
+190 - K12-L11 Bridge Section 7
+191 - K12-L11 Bridge Section 8
+192 - K12-L11 Bridge Section 9
+227 - J9-K9 Bridge Section 1 (East)
+228 - J9-K9 Bridge Section 2
+229 - J9-K9 Bridge Section 3
+230 - J9-K9 Bridge Section 4
+231 - J9-K9 Bridge Section 5
+232 - J9-K9 Bridge Section 6
+233 - J9-K9 Bridge Section 7
+234 - J9-K9 Bridge Section 8
+235 - J9-K9 Bridge Section 9
+285 - H12-I12 Bridge Section 1 (West)
+286 - H12-I12 Bridge Section 2
+287 - H12-I12 Bridge Section 3
+288 - H12-I12 Bridge Section 4
+289 - H12-I12 Bridge Section 5
+290 - H12-I12 Bridge Section 6
+291 - H12-I12 Bridge Section 7
+292 - H12-I12 Bridge Section 8
+293 - H12-I12 Bridge Section 9
+294 - H12-I12 Bridge Section 10
+351 - H10-I10 Bridge Section 1 (West)
+352 - H10-I10 Bridge Section 2
+353 - H10-I10 Bridge Section 3
+354 - H10-I10 Bridge Section 4
+355 - H10-I10 Bridge Section 5
+356 - H10-I10 Bridge Section 6
+357 - H10-I10 Bridge Section 7
+358 - H10-I10 Bridge Section 8
+359 - H10-I10 Bridge Section 9
+360 - H10-I10 Bridge Section 10
+410 - L11 Bridge Section 1 (Southeast)
+411 - L11 Bridge Section 2
+412 - L11 Bridge Section 3
+413 - L11 Bridge Section 4
+414 - L11 Bridge Section 5
+415 - L11 Bridge Section 6
+416 - L11 Bridge Section 7
+417 - L11 Bridge Section 8
+418 - L11 Bridge Section 9
+419 - L11 Bridge Section 10
+420 - L11 Bridge Section 11
+487 - K8-K9 Bridge Section 1 (South)
+488 - K8-K9 Bridge Section 2
+489 - K8-K9 Bridge Section 3
+490 - K8-K9 Bridge Section 4
+491 - K8-K9 Bridge Section 5
+492 - K8-K9 Bridge Section 6
+493 - K8-K9 Bridge Section 7
+494 - K8-K9 Bridge Section 8
+495 - K8-K9 Bridge Section 9
+537 - L13 Bridge Section 1 (Southeast)
+538 - L13 Bridge Section 2
+539 - L13 Bridge Section 3
+540 - L13 Bridge Section 4
+541 - L13 Bridge Section 5
+542 - L13 Bridge Section 6
+543 - L13 Bridge Section 7
+544 - L13 Bridge Section 8
+545 - L13 Bridge Section 9
+546 - L13 Bridge Section 10
+603 - K14-L13 Bridge Section 1 (East)
+604 - K14-L13 Bridge Section 2
+605 - K14-L13 Bridge Section 3
+606 - K14-L13 Bridge Section 4
+607 - K14-L13 Bridge Section 5
+608 - K14-L13 Bridge Section 6
+609 - K14-L13 Bridge Section 7
+610 - K14-L13 Bridge Section 8
+611 - K14-L13 Bridge Section 9
+656 - H9-H10 Bridge Section 1 (South)
+657 - H9-H10 Bridge Section 2
+658 - H9-H10 Bridge Section 3
+659 - H9-H10 Bridge Section 4
+660 - H9-H10 Bridge Section 5
+661 - H9-H10 Bridge Section 6
+662 - H9-H10 Bridge Section 7
+663 - H9-H10 Bridge Section 8
+664 - H9-H10 Bridge Section 9
+665 - H9-H10 Bridge Section 10
+721 - J8 Bridge Section 1 (North)
+722 - J8 Bridge Section 2
+723 - J8 Bridge Section 3
+724 - J8 Bridge Section 4
+725 - J8 Bridge Section 5
+726 - J8 Bridge Section 6
+727 - J8 Bridge Section 7
+728 - J8 Bridge Section 8
+761 - M7-M8 Bridge Section 1 (Northwest)
+762 - M7-M8 Bridge Section 2
+763 - M7-M8 Bridge Section 3
+764 - M7-M8 Bridge Section 4
+765 - M7-M8 Bridge Section 5
+766 - M7-M8 Bridge Section 6
+767 - M7-M8 Bridge Section 7
+799 - M12 Bridge Section 1 (North)
+800 - M12 Bridge Section 2
+801 - M12 Bridge Section 3
+802 - M12 Bridge Section 4
+803 - M12 Bridge Section 5
+804 - M12 Bridge Section 6
+805 - M12 Bridge Section 7
+806 - M12 Bridge Section 8
+807 - M12 Bridge Section 9
+10461 - West Warpgate
+10462 - North Warpgate
+10464 - South Warpgate

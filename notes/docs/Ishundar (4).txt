@@ -1,0 +1,131 @@
+Ishundar (4)
+1 - East Warpgate (Forseral)
+2 - North Warpgate (Cyssor)
+3 - South Warpgate (Esamir)
+4 - West Warpgate (Hossin)
+5 - Akkan
+6 - Baal
+7 - Dagon
+8 - Enkidu
+9 - Girru
+10 - Hanish
+11 - Irkalla
+12 _ Kusag
+13 - Lahar
+14 - Marduk
+15 - Neti
+16 - Zaqar
+17 - South Marduk Gun Tower
+18 - Northeast Neti Gun Tower
+19 - Southwest Zaqar Gun Tower
+20 - East Zaqar Air Tower
+21 - North Neti Watch Tower
+22 - O13 Gate Outpost Watch Tower
+23 - South Kaang Gun Tower
+24 - Northwest Kusang Watch Tower
+25 - N10 Gate Outpost Watch Tower
+26 - O12 Gate Outpost Gun Tower
+27 - Central Outpost Watch Tower
+28 - East Akkan Watch Tower
+29 - North Enkidu Gun Tower
+30 - Southwest Enkidu Air Tower
+31 - D13 Gate Outpost Watch Tower
+32 - C11 Gate Outpost Watch Tower
+33 - East Girru Gun Tower
+34 - Southeast Hanish Gun Tower
+35 - Northeast Akkan Watch tower
+36 - West Girru Air Tower
+37 - North Dagon Gun Tower
+38 - Southeast Baal Gun Tower
+39 - West Outpost Watch Tower
+40 - Southeast Dagon Air Tower
+41 - L12 Gate Outpost Air Tower
+42 - Dagon South Bunker
+43 - Akkan North Bunker
+44 - Enkidu East Bunker
+45 - Neti South Bunker
+46 - Hanish West Bunker
+47 - Irkalla East Bunker
+48 - Zaqar North Bunker
+49 - Kusag West Bunker
+50 - Marduk Southeast Bunker (both)
+51 - Baal South Bunker (both)
+52 - Girru Southwest Bunker (both)
+53 - Lahar Southeast Bunker (both)
+54 - Akkan West Bunker (both)
+55 - South Irkalla Air Tower
+56 - Southwest Hanish Air Tower
+57 - East Outpost Air Tower
+58 - Southwest Lahar Gun Tower
+59 - L4 Gate Outpost Watch Tower
+60 - Northwest Akkan Air Tower
+61 - K18 Gate Outpost Air Tower
+62 - North Marduk Air Tower
+63 - Northeast Baal Air Tower
+64 - E7 East Bunker
+65 - West Hanish Gun Tower
+66 - F12-F13 Bridge Section 1 (Northeast)
+67 - F12-F13 Bridge Section 2
+68 - F12-F13 Bridge Section 3
+69 - F12-F13 Bridge Section 4
+70 - F12-F13 Bridge Section 5
+71 - F12-F13 Bridge Section 6
+72 - F12-F13 Bridge Section 7
+73 - F12-F13 Bridge Section 8
+74 - F12-F13 Bridge Section 9
+75 - F12-F13 Bridge Section 10
+76 - F12-F13 Bridge Section 11
+77 - F12-F13 Bridge Section 12
+78 - F12-F13 Bridge Section 13
+117 - E7 Bridge Section 1 (North)
+118 - E7 Bridge Section 2
+119 - E7 Bridge Section 3
+120 - E7 Bridge Section 4
+121 - E7 Bridge Section 5
+122 - E7 Bridge Section 6
+123 - E7 Bridge Section 7
+124 - E7 Bridge Section 8
+125 - E7 Bridge Section 9
+138 - L5 Bridge Section 1 (Northeast)
+139 - L5 Bridge Section 2
+140 - L5 Bridge Section 3
+141 - L5 Bridge Section 4
+142 - L5 Bridge Section 5
+143 - L5 Bridge Section 6
+144 - L5 Bridge Section 7
+145 - L5 Bridge Section 8
+146 - L5 Bridge Section 9
+147 - L5 Bridge Section 10
+148 - L5 Bridge Section 11
+149 - L5 Bridge Section 12
+150 - L5 Bridge Section 13
+206 - N14-O13 Bridge Section 1 (West)
+207 - N14-O13 Bridge Section 2
+208 - N14-O13 Bridge Section 3
+209 - N14-O13 Bridge Section 4
+210 - N14-O13 Bridge Section 5
+211 - N14-O13 Bridge Section 6
+212 - N14-O13 Bridge Section 7
+213 - N14-O13 Bridge Section 8
+214 - N14-O13 Bridge Section 9
+215 - N14-O13 Bridge Section 10
+247 - J13 Bridge Section 1 (West)
+248 - J13 Bridge Section 2
+249 - J13 Bridge Section 3
+250 - J13 Bridge Section 4
+251 - J13 Bridge Section 5
+252 - J13 Bridge Section 6
+253 - J13 Bridge Section 7
+254 - J13 Bridge Section 8
+255 - J13 Bridge Section 9
+256 - J13 Bridge Section 10
+257 - J13 Bridge Section 11
+258 - J13 Bridge Section 12
+308 - I15-J15 Bridge Section 1 (Northwest)
+309 - I15-J15 Bridge Section 2
+310 - I15-J15 Bridge Section 3
+311 - I15-J15 Bridge Section 4
+312 - I15-J15 Bridge Section 5
+313 - I15-J15 Bridge Section 6
+26620 - Hanish Geowarp
+26621 - Marduk Geowarp

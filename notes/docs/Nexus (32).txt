@@ -1,0 +1,10 @@
+Nexus (32)
+1 - Atar
+2 - North Rim Gun Tower
+3 - East Rim Gun Tower
+4 - South Rim Gun Tower
+5 - L8 Gate Watch Tower
+6 - K14 Gate Watch Tower
+10000 - Geowarp
+10001 - North Warpgate
+10002 - South Warpgate

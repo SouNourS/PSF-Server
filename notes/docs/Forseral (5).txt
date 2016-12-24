@@ -1,0 +1,63 @@
+Forseral (5)
+1 - South Warpgate (Ascension)
+2 - North Warpgate (Ishundar)
+3 - West Warpgate (VS Sanctuary)
+4 - East Warpgate (Esamir)
+5 - Ogma
+6 - Neit
+7 - Lugh
+8 - Gwydion
+9 - Dagda
+10 - Pwyll
+11 - Anu
+12 - Bel
+13 - Eadon
+14 - R11 Gate Outpost Gun Tower
+15 - Northwest Eadon Watch Tower
+16 - Northeast Anu Air Tower
+17 - I16 Gate Gun Tower
+18 - North Caer Watch Tower
+19 - South Gwydion Air Tower
+20 - Northwest Gwydion Gun Tower
+21 - North Dagda Watch Tower
+22 - Northwest Lugh Gun Tower
+23 - D12 Gate Outpost Air Tower
+24 - North Pwyll Air Tower
+25 - J5 Gate Outpost Gun Tower
+26 - North Bel Watch Tower 
+27 - South Bel Gun Tower
+28 - Bel South Bunker
+29 - Neit North Bunker
+30 - Gwydion Southeast Bunker
+31 - Anu SouthWest Bunker
+32 - Anu Northwest Bunker
+33 - Eadon South Bunker (both)
+34 - Neti Southwest Bunker (both)
+35 - Dagda West Bunker (both)
+36 - Caer
+37 - North Ogma Gun Tower
+38 - South Neit Watch Tower
+39 - West Pwyll Gun Tower
+40 - I7 Bunker
+41 - L13 Bunker
+42 - N14 Bridge Section 1 (West)
+43 - N14 Bridge Section 2
+44 - N14 Bridge Section 3
+45 - N14 Bridge Section 4
+46 - N14 Bridge Section 5
+47 - N14 Bridge Section 6
+48 - N14 Bridge Section 7
+49 - N14 Bridge Section 8
+50 - N14 Bridge Section 9
+69 - O13-O14 Bridge Section 1 (South)
+70 - O13-O14 Bridge Section 2
+71 - O13-O14 Bridge Section 3
+72 - O13-O14 Bridge Section 4
+73 - O13-O14 Bridge Section 5
+74 - O13-O14 Bridge Section 6
+75 - O13-O14 Bridge Section 7
+76 - O13-O14 Bridge Section 8
+77 - O13-O14 Bridge Section 9
+78 - O13-O14 Bridge Section 10
+21074 - Pwyll Geowarp
+21078 - Caer Geowarp

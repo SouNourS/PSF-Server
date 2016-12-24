@@ -1,0 +1,57 @@
+Solsar (1)
+1 - West Warpgate (Desolation)
+2 - East Warpgate (Cyssor)
+3 - South Warpgate (TR Sanctuary)
+4 - North Warpgate (Ceryshen)
+5 - Seth
+6 - Bastet
+7 - Aton
+8 - Hapi
+9 - Thoth
+10 - Mont
+11 - Amun
+12 - Horus
+13 - Sobek
+14 - H17 Gate Outpost Gun Tower
+15 - South Amun Watch Tower
+16 - Southeast Amun Air Tower
+17 - West Thoth Gun Tower
+18 - North Hapi Watch Tower
+19 - Northwest Seth Air Tower
+20 - West Sobek Gun Tower
+21 - South Mont Gun Tower
+22 - South Sobek Watch Tower
+23 - Northwest Mont Air Tower
+24 - East Bastet Gun Tower
+25 - N12 Gate Outpost Gun Tower
+26 - Amun South Bunker
+27 - Horus North Bunker
+28 - Sobek South Bunker
+29 - Mont South Bunker
+30 - Aton South Bunker
+31 - Seth East South Bunker
+32 - Southwest Aton Gun Tower
+33 - Seth East Bunker (both)
+34 - Hapi North Bunker (both)
+35 - Thoth West Bunker (both)
+36 - East Seth Gun Tower
+37 - North Aton Watch Tower
+38 - Northeast Horus Gun Tower
+39 - G7 Gate Outpost Air Tower
+40 - North Bastet Air Tower
+41 - K3 Gate Outpost Watch Tower
+42 - J17 Gate Outpost Air Tower
+43 - L16-L17 Bridge Section 1 (East)
+44 - L16-L17 Bridge Section 2
+45 - L16-L17 Bridge Section 3
+46 - L16-L17 Bridge Section 4
+47 - L16-L17 Bridge Section 5
+48 - L16-L17 Bridge Section 6
+49 - L16-L17 Bridge Section 7
+66 - N6 Bridge Section 1 (West)
+67 - N6 Bridge Section 2
+68 - N6 Bridge Section 3
+69 - N6 Bridge Section 4
+70 - N6 Bridge Section 5
+19998 - Sobek Geowarp
+19999 - Bastet Geowarp

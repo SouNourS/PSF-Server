@@ -1,0 +1,75 @@
+Oshur Prime (8)
+1 - Northeast Warpgate
+2 - Northwest Warpgate
+3 - Southwest Warpgate
+4 - Southeast Warpgate
+5 - Atar
+6 - Dahaka
+7 - Hvar
+8 - Izha
+9 - Jamshid
+10 - Mithra
+11 - Rashnu
+12 - Yazata
+13 - Zal
+14 - I7 Gate Outpost Gun Tower
+15 - Southwest Hvar Watch Tower
+16 - North Jamshid Gun Tower
+17 - West Atar Air Tower
+18 - H15 Gate Outpost Watch Tower
+19 - Northeast Dahaka Air Tower
+20 - South Dahaka Watch Tower
+21 - West Yazata Gun Tower
+22 - M9 Gate Outpost Gun Tower
+23 - Northeast Zal Watch Tower
+24 - Southeast Izha Air Tower
+25 - South Izha Air Tower
+26 - O14 Gate Outpost Watch Tower
+27 - M15 Gate Outpost Gun Tower
+28 - Jamshid Southeast Bunker
+29 - Atar Northewest Bunker
+30 - Zal East Bunker
+31 - Mithra Northeast Bunker
+32 - Yazata Northeast Bunker
+33 - Dahaka East Bunker
+34 - Rashnu Northeast Bunker
+35 - Atar East Bunker (both)
+36 - Mithra South Bunker
+37 - Hvar North Bunker
+38 - Izha East Bunker (both)
+39 - East Mithra Air Tower
+40 - Southeast Rashnu Gun Tower
+41 - North Atar Air Tower
+42 - Southeast Zal Gun Tower
+43 - South Yazata Air Tower
+44 - West Izha Gun Tower
+45 - N7 Gate Outpost Watch Tower
+46 - Hvar South Bunker
+47 - N14 Bridge Section 1 (West)
+48 - N14 Bridge Section 2
+49 - N14 Bridge Section 3
+50 - N14 Bridge Section 4
+51 - N14 Bridge Section 5
+52 - N14 Bridge Section 6
+53 - N14 Bridge Section 7
+54 - N14 Bridge Section 8
+69 - M13 Bridge Section 1 (West)
+70 - M13 Bridge Section 2
+71 - M13 Bridge Section 3
+72 - M13 Bridge Section 4
+73 - M13 Bridge Section 5
+74 - M13 Bridge Section 6
+75 - M13 Bridge Section 7
+76 - M13 Bridge Section 8
+89 - J10 Bridge Section 1 (Northwest)
+90 - J10 Bridge Section 2
+91 - J10 Bridge Section 3
+92 - J10 Bridge Section 4
+93 - J10 Bridge Section 5
+94 - J10 Bridge Section 6
+95 - J10 Bridge Section 7
+96 - J10 Bridge Section 8
+97 - J10 Bridge Section 9
+98 - J10 Bridge Section 10
+24811 - Dahaka Geowarp
+24815 - Izha Geowarp

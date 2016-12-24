@@ -1,0 +1,356 @@
+Cyssor (3)
+1 - Aja
+2 - Bomazi
+3 - Northwest Warpgate (Solsar)
+4 - Chuku
+5 - Ekera
+6 - Faro
+7 - Wele
+8 - Itan
+9 - Southwest Warpgate (Esamir)
+10 - Leza
+11 - Tore
+12 - Nzame
+13 - Southeast Warpgate (Ceryshen)
+14 - Orisha
+15 - Pamba
+16 - Shango
+17 - Northeast Warpgate (Ishundar)
+18 - Gunuku
+19 - Honsi
+20 - Kaang
+21 - Mukuru
+22 - South Wele Gun Tower
+23 - North Aja Watch Tower
+24 - Northeast Aja Air Tower
+25 - South Bomazi Air Tower
+26 - Northeast Nzame Gun Tower
+27 - D16 Gate Outpost Gun Tower
+28 - South Leza Watch Tower
+29 - Southeast Tore Watch Tower
+30 - Northeast Tore Watch Tower
+31 - N15 Gate Outpost Gun Tower
+32 - Southeast Gunuku Watch Tower
+33 - North Gunuku Gun Tower
+34 - South Faro Watch Tower
+35 - Southwest Honsi Gun Tower
+36 - G5 Gate Outpost Gun Tower
+37 - West Chuku Air Tower
+38 - West Ekera Gun Tower
+39 - East Faro Air Tower
+40 - R8 Gate Outpost Watch Tower
+41 - Northwest Pamba Gun Tower
+42 - West Orisha Watch Tower
+43 - South Kaang Gun Tower
+44 - North Kaang Air Tower
+45 - Southwest Itan Watch Tower
+46 - Itan North Bunker
+47 - Faro East Bunker
+48 - M8 Bunker
+49 - H17 Bunker
+50 - Gunuku South Bunker
+51 - Nzame East Bunker
+52 - Nzame South Bunker
+53 - Chuku Northeast Bunker
+54 - Wele South Bunker
+55 - Shango West Bunker
+56 - Mukuru East Bunker
+57 - Ekera South Bunker
+58 - Honsi West Bunker (both)
+59 - Leza Southwest Bunker (both)
+60 - Gunuku North Bunker (both)
+61 - Northeast Wele Gun Tower
+62 - South Nzame Watch Tower
+63 - East Mukuru Watch Tower
+64 - North Tore Gun Tower
+65 - East Shango Gun Tower
+66 - Southeast Pamba Watch Tower
+67 - South Chuku Gun Tower
+68 - North Honsi Watch Tower
+69 - Bomazi Geowarp Outpost Air Tower
+70 - Q12 Bunker
+71 - M11 Bunker
+72 - B6 Bridge Section 1 (South)
+73 - B6 Bridge Section 2
+74 - B6 Bridge Section 3
+75 - B6 Bridge Section 4
+76 - B6 Bridge Section 5
+77 - B6 Bridge Section 6
+78 - B6 Bridge Section 7
+79 - B6 Bridge Section 8
+80 - B6 Bridge Section 9
+81 - B6 Bridge Section 10
+82 - B6 Bridge Section 11
+83 - B6 Bridge Section 12
+84 - B6 Bridge Section 13
+85 - B6 Bridge Section 14
+86 - B6 Bridge Section 15
+161 - B5-C6 Bridge Section 1 (West)
+162 - B5-C6 Bridge Section 2
+163 - B5-C6 Bridge Section 3
+164 - B5-C6 Bridge Section 4
+165 - B5-C6 Bridge Section 5
+166 - B5-C6 Bridge Section 6
+167 - B5-C6 Bridge Section 7
+168 - B5-C6 Bridge Section 8
+169 - B5-C6 Bridge Section 9
+170 - B5-C6 Bridge Section 10
+171 - B5-C6 Bridge Section 11
+214 - C7-D6 Bridge Section 1 (South)
+215 - C7-D6 Bridge Section 2
+216 - C7-D6 Bridge Section 3
+217 - C7-D6 Bridge Section 4
+218 - C7-D6 Bridge Section 5
+219 - C7-D6 Bridge Section 6
+220 - C7-D6 Bridge Section 7
+221 - C7-D6 Bridge Section 8
+222 - C7-D6 Bridge Section 9
+223 - C7-D6 Bridge Section 10
+224 - C7-D6 Bridge Section 11
+225 - C7-D6 Bridge Section 12
+226 - C7-D6 Bridge Section 13
+227 - C7-D6 Bridge Section 14
+228 - C7-D6 Bridge Section 15
+229 - C7-D6 Bridge Section 16
+230 - C7-D6 Bridge Section 17
+231 - C7-D6 Bridge Section 18
+232 - C7-D6 Bridge Section 19
+325 - D11 Bridge Section 1 (East)
+326 - D11 Bridge Section 2
+327 - D11 Bridge Section 3
+328 - D11 Bridge Section 4
+329 - D11 Bridge Section 5
+330 - D11 Bridge Section 6
+331 - D11 Bridge Section 7
+332 - D11 Bridge Section 8
+333 - D11 Bridge Section 9
+334 - D11 Bridge Section 10
+335 - D11 Bridge Section 11
+336 - D11 Bridge Section 12
+337 - D11 Bridge Section 13
+338 - D11 Bridge Section 14
+339 - D11 Bridge Section 15
+340 - D11 Bridge Section 16
+341 - D11 Bridge Section 17
+342 - D11 Bridge Section 18
+343 - D11 Bridge Section 19
+344 - D11 Bridge Section 20
+345 - D11 Bridge Section 21
+346 - D11 Bridge Section 22
+347 - D11 Bridge Section 23
+348 - D11 Bridge Section 24
+349 - D11 Bridge Section 25
+350 - D11 Bridge Section 26
+351 - D11 Bridge Section 27
+457 - C14-C15 Bridge Section 1 (West)
+458 - C14-C15 Bridge Section 2
+459 - C14-C15 Bridge Section 3
+460 - C14-C15 Bridge Section 4
+461 - C14-C15 Bridge Section 5
+462 - C14-C15 Bridge Section 6
+463 - C14-C15 Bridge Section 7
+464 - C14-C15 Bridge Section 8
+465 - C14-C15 Bridge Section 9
+466 - C14-C15 Bridge Section 10
+467 - C14-C15 Bridge Section 11
+468 - C14-C15 Bridge Section 12
+469 - C14-C15 Bridge Section 13
+470 - C14-C15 Bridge Section 14
+471 - C14-C15 Bridge Section 15
+528 - C14-C16 Bridge Section 1 (North)
+529 - C14-C16 Bridge Section 2
+530 - C14-C16 Bridge Section 3
+531 - C14-C16 Bridge Section 4
+532 - C14-C16 Bridge Section 5
+533 - C14-C16 Bridge Section 6
+534 - C14-C16 Bridge Section 7
+535 - C14-C16 Bridge Section 8
+536 - C14-C16 Bridge Section 9
+537 - C14-C16 Bridge Section 10
+564 - E16-D15 Bridge Section 1 (South)
+565 - E16-D15 Bridge Section 2
+566 - E16-D15 Bridge Section 3
+567 - E16-D15 Bridge Section 4
+568 - E16-D15 Bridge Section 5
+569 - E16-D15 Bridge Section 6
+570 - E16-D15 Bridge Section 7
+571 - E16-D15 Bridge Section 8
+572 - E16-D15 Bridge Section 9
+573 - E16-D15 Bridge Section 10
+574 - E16-D15 Bridge Section 11
+575 - E16-D15 Bridge Section 12
+576 - E16-D15 Bridge Section 13
+577 - E16-D15 Bridge Section 14
+578 - E16-D15 Bridge Section 15
+579 - E16-D15 Bridge Section 16
+580 - E16-D15 Bridge Section 17
+581 - E16-D15 Bridge Section 18
+582 - E16-D15 Bridge Section 19
+583 - E16-D15 Bridge Section 20
+584 - E16-D15 Bridge Section 21
+700 - H17-I17 Bridge Section 1 (West)
+701 - H17-I17 Bridge Section 2
+702 - H17-I17 Bridge Section 3
+703 - H17-I17 Bridge Section 4
+704 - H17-I17 Bridge Section 5
+705 - H17-I17 Bridge Section 6
+706 - H17-I17 Bridge Section 7
+707 - H17-I17 Bridge Section 8
+708 - H17-I17 Bridge Section 9
+709 - H17-I17 Bridge Section 10
+710 - H17-I17 Bridge Section 11
+711 - H17-I17 Bridge Section 12
+712 - H17-I17 Bridge Section 13
+713 - H17-I17 Bridge Section 14
+714 - H17-I17 Bridge Section 15
+715 - H17-I17 Bridge Section 16
+716 - H17-I17 Bridge Section 17
+717 - H17-I17 Bridge Section 18
+718 - H17-I17 Bridge Section 19
+719 - H17-I17 Bridge Section 20
+720 - H17-I17 Bridge Section 21
+721 - H17-I17 Bridge Section 22
+722 - H17-I17 Bridge Section 23
+723 - H17-I17 Bridge Section 24
+724 - H17-I17 Bridge Section 25
+725 - H17-I17 Bridge Section 26
+726 - H17-I17 Bridge Section 27
+727 - H17-I17 Bridge Section 28
+728 - H17-I17 Bridge Section 29
+729 - H17-I17 Bridge Section 30
+730 - H17-I17 Bridge Section 31
+731 - H17-I17 Bridge Section 32
+732 - H17-I17 Bridge Section 33
+733 - H17-I17 Bridge Section 34
+734 - H17-I17 Bridge Section 35
+735 - H17-I17 Bridge Section 36
+921 - M11-N12 Bridge Section 1 (Northwest)
+922 - M11-N12 Bridge Section 2
+923 - M11-N12 Bridge Section 3
+924 - M11-N12 Bridge Section 4
+925 - M11-N12 Bridge Section 5
+926 - M11-N12 Bridge Section 6
+927 - M11-N12 Bridge Section 7
+928 - M11-N12 Bridge Section 8
+929 - M11-N12 Bridge Section 9
+930 - M11-N12 Bridge Section 10
+931 - M11-N12 Bridge Section 11
+932 - M11-N12 Bridge Section 12
+961 - N9 Bridge Section 1 (West)
+962 - N9 Bridge Section 2
+963 - N9 Bridge Section 3
+964 - N9 Bridge Section 4
+965 - N9 Bridge Section 5
+966 - N9 Bridge Section 6
+967 - N9 Bridge Section 7
+968 - N9 Bridge Section 8
+969 - N9 Bridge Section 9
+970 - N9 Bridge Section 10
+971 - N9 Bridge Section 11
+972 - N9 Bridge Section 12
+1004 - M8 Bridge Section 1 (Northeast)
+1005 - M8 Bridge Section 2
+1006 - M8 Bridge Section 3
+1007 - M8 Bridge Section 4
+1008 - M8 Bridge Section 5
+1009 - M8 Bridge Section 6
+1010 - M8 Bridge Section 7
+1023 - Q12 Bridge Section 1 (Southeast)
+1024 - Q12 Bridge Section 2
+1025 - Q12 Bridge Section 3
+1026 - Q12 Bridge Section 4
+1027 - Q12 Bridge Section 5
+1028 - Q12 Bridge Section 6
+1029 - Q12 Bridge Section 7
+1030 - Q12 Bridge Section 8
+1031 - Q12 Bridge Section 9
+1032 - Q12 Bridge Section 10
+1033 - Q12 Bridge Section 11
+1034 - Q12 Bridge Section 12
+1035 - Q12 Bridge Section 13
+1036 - Q12 Bridge Section 14
+1037 - Q12 Bridge Section 15
+1038 - Q12 Bridge Section 16
+1111 - P6-Q7 Bridge Section 1 (East)
+1112 - P6-Q7 Bridge Section 2
+1113 - P6-Q7 Bridge Section 3
+1114 - P6-Q7 Bridge Section 4
+1115 - P6-Q7 Bridge Section 5
+1116 - P6-Q7 Bridge Section 6
+1117 - P6-Q7 Bridge Section 7
+1118 - P6-Q7 Bridge Section 8
+1119 - P6-Q7 Bridge Section 9
+1120 - P6-Q7 Bridge Section 10
+1121 - P6-Q7 Bridge Section 11
+1122 - P6-Q7 Bridge Section 12
+1123 - P6-Q7 Bridge Section 13
+1124 - P6-Q7 Bridge Section 14
+1125 - P6-Q7 Bridge Section 15
+1126 - P6-Q7 Bridge Section 16
+1127 - P6-Q7 Bridge Section 17
+1128 - P6-Q7 Bridge Section 18
+1129 - P6-Q7 Bridge Section 19
+1130 - P6-Q7 Bridge Section 20
+1131 - P6-Q7 Bridge Section 21
+1132 - P6-Q7 Bridge Section 22
+1133 - P6-Q7 Bridge Section 23
+1134 - P6-Q7 Bridge Section 24
+1135 - P6-Q7 Bridge Section 25
+1257 - M3 Bridge Section 1 (East)
+1258 - M3 Bridge Section 2
+1259 - M3 Bridge Section 3
+1260 - M3 Bridge Section 4
+1261 - M3 Bridge Section 5
+1262 - M3 Bridge Section 6
+1263 - M3 Bridge Section 7
+1265 - O5 Bridge Section 1 (East)
+1266 - O5 Bridge Section 2
+1267 - O5 Bridge Section 3
+1268 - O5 Bridge Section 4
+1269 - O5 Bridge Section 5
+1270 - O5 Bridge Section 6
+1271 - O5 Bridge Section 7
+1272 - O5 Bridge Section 8
+1273 - O5 Bridge Section 9
+1274 - O5 Bridge Section 10
+1275 - O5 Bridge Section 11
+1296 - J5 Bridge Section 1 (South)
+1297 - J5 Bridge Section 2
+1298 - J5 Bridge Section 3
+1299 - J5 Bridge Section 4
+1300 - J5 Bridge Section 5
+1301 - J5 Bridge Section 6
+1302 - J5 Bridge Section 7
+1303 - J5 Bridge Section 8
+1304 - J5 Bridge Section 9
+1305 - J5 Bridge Section 10
+1306 - J5 Bridge Section 11
+1307 - J5 Bridge Section 12
+1308 - J5 Bridge Section 13
+1309 - J5 Bridge Section 14
+1359 - I12 Bridge Section 1 (South)
+1360 - I12 Bridge Section 2
+1361 - I12 Bridge Section 3
+1362 - I12 Bridge Section 4
+1363 - I12 Bridge Section 5
+1364 - I12 Bridge Section 6
+1365 - I12 Bridge Section 7
+1366 - I12 Bridge Section 8
+1367 - I12 Bridge Section 9
+1388 - H4-I4 Bridge Section 1 (West)
+1389 - H4-I4 Bridge Section 2
+1390 - H4-I4 Bridge Section 3
+1391 - H4-I4 Bridge Section 4
+1392 - H4-I4 Bridge Section 5
+1393 - H4-I4 Bridge Section 6
+1394 - H4-I4 Bridge Section 7
+1395 - H4-I4 Bridge Section 8
+1396 - H4-I4 Bridge Section 9
+1397 - H4-I4 Bridge Section 10
+1398 - H4-I4 Bridge Section 11
+1399 - H4-I4 Bridge Section 12
+1400 - H4-I4 Bridge Section 13
+1401 - H4-I4 Bridge Section 14
+1402 - H4-I4 Bridge Section 15
+25936 - Bomazi Geowarp
+25937 - Shango Geowarp
