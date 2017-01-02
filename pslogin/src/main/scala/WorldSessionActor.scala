@@ -189,7 +189,8 @@ class WorldSessionActor extends Actor with MDCContextAware {
               // todox PlayerAvatar dont work
 //              PlayerMasterList.userClaimsCharacter(sessionId, guid) // ... we do this when sending a SetCurrentAvatarMessa
               sendResponse(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(guid,0,0)))
-              sendResponse(PacketCoding.CreateGamePacket(0, CreateShortcutMessage(PlanetSideGUID(guid), 1, 0, true, Shortcut.MEDKIT)))
+              // todox CreateShortcutMessage dont work
+//              sendResponse(PacketCoding.CreateGamePacket(0, CreateShortcutMessage(PlanetSideGUID(guid), 1, 0, true, Shortcut.MEDKIT)))
 
               import scala.concurrent.duration._
               import scala.concurrent.ExecutionContext.Implicits.global
@@ -314,6 +315,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ MountVehicleMsg(player_guid, vehicle_guid, unk) =>
       log.info("MounVehicleMsg: "+msg)
+
+    case msg @ SplashHitMessage(bytes) =>
+      log.info("SplashHitMessage: " + bytes.toString)
 
     case default => log.debug(s"Unhandled GamePacket ${pkt}")
   }
