@@ -335,6 +335,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
     case msg @ SplashHitMessage(bytes) =>
       log.info("SplashHitMessage: " + bytes.toString)
 
+    case msg @ WarpgateRequest(continent_guid, building_guid, dest_building_guid, dest_continent_guid, unk1, unk2) =>
+      log.info("WarpgateRequest: " + msg)
+
     case default => log.debug(s"Unhandled GamePacket ${pkt}")
   }
 
