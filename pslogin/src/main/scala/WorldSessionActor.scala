@@ -146,15 +146,16 @@ class WorldSessionActor extends Actor with MDCContextAware {
               sendRawResponse(objectHex)
 
               //hardcoded avatar and some pertinent equipment setup
-              val avatar : PlayerAvatar = PlayerAvatar(guid, "IlllIIIlllIlIllIlllIllI", PlanetSideEmpire.VS, false, 0, 0)
-              avatar.setExoSuitType(0); // Standard Exo-Suit
-              //init holsters
-              avatar.setEquipmentInHolster(0, Tool(0, 0) ) // Beamer in pistol slot 1
-              avatar.setEquipmentInHolster(2, Tool(1, 1) ) // Suppressor in rifle slot 1
-              avatar.setEquipmentInHolster(4, Tool(2, 2) ) // Force Blade in melee slot
-              avatar.setUsedHolster(0) // Start with Beamer drawn
-              //add avatar
-              PlayerMasterList.addPlayer(avatar, sessionId) // If created/added when sessionId is unavailable ...
+              // todox PlayerAvatar dont work
+//              val avatar : PlayerAvatar = PlayerAvatar(guid, "IlllIIIlllIlIllIlllIllI", PlanetSideEmpire.VS, false, 0, 0)
+//              avatar.setExoSuitType(0); // Standard Exo-Suit
+//              //init holsters
+//              avatar.setEquipmentInHolster(0, Tool(0, 0) ) // Beamer in pistol slot 1
+//              avatar.setEquipmentInHolster(2, Tool(1, 1) ) // Suppressor in rifle slot 1
+//              avatar.setEquipmentInHolster(4, Tool(2, 2) ) // Force Blade in melee slot
+//              avatar.setUsedHolster(0) // Start with Beamer drawn
+//              //add avatar
+//              PlayerMasterList.addPlayer(avatar, sessionId) // If created/added when sessionId is unavailable ...
 
               // These object_guids are specfic to VS Sanc
               sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(2), PlanetSideEmpire.VS))) //HART building C
@@ -185,7 +186,8 @@ class WorldSessionActor extends Actor with MDCContextAware {
                 true,                //Boosted spawn room pain field
                 true)))              //Boosted generator room pain field
 
-              PlayerMasterList.userClaimsCharacter(sessionId, guid) // ... we do this when sending a SetCurrentAvatarMessa
+              // todox PlayerAvatar dont work
+//              PlayerMasterList.userClaimsCharacter(sessionId, guid) // ... we do this when sending a SetCurrentAvatarMessa
               sendResponse(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(guid,0,0)))
               sendResponse(PacketCoding.CreateGamePacket(0, CreateShortcutMessage(PlanetSideGUID(guid), 1, 0, true, Shortcut.MEDKIT)))
 
