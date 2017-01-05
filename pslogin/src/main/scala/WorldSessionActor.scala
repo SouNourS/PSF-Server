@@ -10,7 +10,7 @@ import scodec.bits._
 import org.log4s.MDC
 import MDCContextAware.Implicits._
 import net.psforever.newcodecs.newcodecs
-import net.psforever.types.{ChatMessageType, Vector3}
+import net.psforever.types.{ChatMessageType, TransactionType, Vector3}
 import scodec.codecs._
 
 import scala.collection.mutable
@@ -274,6 +274,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ ItemTransactionMessage(terminal_guid, transaction_type, item_page, item_name, unk1, item_guid) =>
       log.info("ItemTransaction: " + msg)
+      if(transaction_type == TransactionType.Sell) {
+        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(item_guid, 0)))
+      }
 
     case msg @ WeaponDelayFireMessage(seq_time, weapon_guid) =>
       log.info("WeaponDelayFire: " + msg)
