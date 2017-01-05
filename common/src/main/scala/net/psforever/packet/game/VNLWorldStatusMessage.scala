@@ -17,7 +17,7 @@ object WorldStatus extends Enumeration {
 // this enumeration starts from one and is subtracted from before processing (0x005FF12A)
 object ServerType extends Enumeration(1) {
   type Type = Value
-  val Development, Beta, Released = Value
+  val Development, Beta, Released, Released2 = Value
 
   implicit val codec = PacketHelpers.createEnumerationCodec(this, uint8L)
 }
