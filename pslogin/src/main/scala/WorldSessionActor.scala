@@ -11,7 +11,7 @@ import scodec.bits._
 import org.log4s.MDC
 import MDCContextAware.Implicits._
 import net.psforever.newcodecs.newcodecs
-import net.psforever.types.{ChatMessageType, Vector3}
+import net.psforever.types.{ChatMessageType, TransactionType, Vector3}
 import scodec.codecs._
 
 import scala.collection.mutable
@@ -325,6 +325,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ ItemTransactionMessage(terminal_guid, transaction_type, item_page, item_name, unk1, item_guid) =>
       log.info("ItemTransaction: " + msg)
+      if(transaction_type == TransactionType.Sell) {
+        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(item_guid, 0)))
+      }
 
     case msg @ WeaponDelayFireMessage(seq_time, weapon_guid) =>
       log.info("WeaponDelayFire: " + msg)
@@ -701,8 +704,7 @@ object Transfer {
     * @param destination a three-coordinate location in the zone
     */
   def warp(traveler : Traveler, destination : (Int, Int, Int)): Unit = {
-    disposeSelf(traveler)
-    loadSelf(traveler, destination)
+    moveSelf(traveler, destination)
   }
 
   /**
@@ -722,7 +724,7 @@ object Transfer {
     * This operation is carried out through a series of `ObjectDeleteMessage` packets that undoes every item in the player's inventory.
     * The last operation undoes the player's avatar itself.<br>
     * <br>
-    * This function uses static object GUIDs only because the `ObjectCreateMessage` data that generates the playwer is also static.
+    * This function uses static object GUIDs only because the `ObjectCreateMessage` data that generates the player is also static.
     * When that irons out, this simplistic step will no longer be valid, even as part of demonstration functionality.<br>
     * <br>
     * Sequential GUIDs that appear to be missing from the player's inventory have been noted.
@@ -736,7 +738,7 @@ object Transfer {
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(79),4))) //suppressor ammo
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(80),4))) //forceblade
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(81),4))) //forceblade ammo
-    //TODO I know that an entity 82 "exists" but I do not know if it is safe to call delete on it
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(82),4))) //mystery item
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(83),4))) //9mm ammo
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(84),4))) //9mm ammo
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(85),4))) //9mm ammo
@@ -774,11 +776,24 @@ object Transfer {
     //calculate bit representation of modified coordinates
     val pos : BitVector = Vector3.codec_pos.encode(Vector3(loc._1, loc._2, loc._3)).toOption.get.toByteVector.toBitVector
     //edit in modified coordinates
+    val pkt = PlayerStateShiftMessage(1, ShiftState(Vector3(loc._1.toFloat, loc._2.toFloat, loc._3.toFloat), 0), true)
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, pkt))
+
     var temp : BitVector = traveler.player.toBitVector
     temp = temp.take(68) ++ pos ++ temp.drop(124)
     //send
     traveler.sendToSelf(temp.toByteVector)
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(PlanetSideGUID(75),0,0)))
+  }
+
+  /**
+    * Send the packet that moves the avatar to a certain position in the current zone.
+    * @param traveler the player
+    * @param loc where the player is being placed in three dimensional space
+    */
+  def moveSelf(traveler : Traveler, loc : (Int, Int, Int)) : Unit = {
+    val pkt = PlayerStateShiftMessage(1, ShiftState(Vector3(loc._1.toFloat, loc._2.toFloat, loc._3.toFloat), 0), false)
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, pkt))
   }
 }
 
