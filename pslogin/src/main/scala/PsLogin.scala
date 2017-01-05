@@ -158,7 +158,8 @@ object PsLogin {
     ).asJava
 
     /** Start up the main actor system. This "system" is the home for all actors running on this server */
-    system = ActorSystem("PsLogin", ConfigFactory.parseMap(config))
+//    system = ActorSystem("PsLogin", ConfigFactory.parseMap(config))
+    implicit val system = ActorSystem("PsLogin", ConfigFactory.parseMap(config))
 
     /** Create pipelines for the login and world servers
       *
@@ -178,9 +179,11 @@ object PsLogin {
       SessionPipeline("world-session-", Props[WorldSessionActor])
     )
 
+    val serviceManager = ServiceManager.boot
+    serviceManager ! ServiceManager.Register(Props[ChatService], "chat")
+
     val loginServerPort = 51000
     val worldServerPort = 51001
-
 
     // Uncomment for network simulation
     // TODO: make this config or command flag
