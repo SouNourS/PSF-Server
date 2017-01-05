@@ -73,7 +73,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
     case PokeClient() =>
       sendResponse(PacketCoding.CreateGamePacket(0, KeepAliveMessage(0)))
     case ChatMessage(to, from, data) =>
-      sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_OPEN, true, from, data, None)))
+      println(to.drop(6))
+      if(to.drop(6) == "local") sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_OPEN, true, from, data, None)))
+      if(to.drop(6) == "squad")sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_SQUAD, true, from, data, None)))
     case default => failWithError(s"Invalid packet class received: $default")
   }
 
@@ -220,6 +222,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 //              sendResponse(PacketCoding.CreateGamePacket(0, CreateShortcutMessage(PlanetSideGUID(guid), 1, 0, true, Shortcut.MEDKIT)))
 
               chatService ! ChatService.Join("local")
+              chatService ! ChatService.Join("squad")
 
               import scala.concurrent.duration._
               import scala.concurrent.ExecutionContext.Implicits.global
@@ -286,23 +289,23 @@ class WorldSessionActor extends Actor with MDCContextAware {
       sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(messagetype, has_wide_contents, recipient, contents, note_contents)))
 
     case msg @ ChangeFireModeMessage(item_guid, fire_mode) =>
-      log.info("ChangeFireMode: " + msg)
+//      log.info("ChangeFireMode: " + msg)
 
     case msg @ ChangeFireStateMessage_Start(item_guid) =>
-      log.info("ChangeFireState_Start: " + msg)
+//      log.info("ChangeFireState_Start: " + msg)
 
     case msg @ ChangeFireStateMessage_Stop(item_guid) =>
-      log.info("ChangeFireState_Stop: " + msg)
+//      log.info("ChangeFireState_Stop: " + msg)
 
     case msg @ EmoteMsg(avatar_guid, emote) =>
       log.info("Emote: " + msg)
       sendResponse(PacketCoding.CreateGamePacket(0, EmoteMsg(avatar_guid, emote)))
 
     case msg @ DropItemMessage(item_guid) =>
-      log.info("DropItem: " + msg)
+//      log.info("DropItem: " + msg)
 
     case msg @ ReloadMessage(item_guid, ammo_clip, unk1) =>
-      log.info("Reload: " + msg)
+//      log.info("Reload: " + msg)
       sendResponse(PacketCoding.CreateGamePacket(0, ReloadMessage(item_guid, 10000, unk1)))
 
     case msg @ ObjectHeldMessage(avatar_guid, held_holsters, unk1) =>
@@ -317,21 +320,21 @@ class WorldSessionActor extends Actor with MDCContextAware {
       //log.info("AvatarJump: " + msg)
 
     case msg @ RequestDestroyMessage(object_guid) =>
-      log.info("RequestDestroy: " + msg)
+//      log.info("RequestDestroy: " + msg)
       // TODO: Make sure this is the correct response in all cases
       sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(object_guid, 0)))
 
     case msg @ ObjectDeleteMessage(object_guid, unk1) =>
-      log.info("ObjectDelete: " + msg)
+//      log.info("ObjectDelete: " + msg)
 
     case msg @ MoveItemMessage(item_guid, avatar_guid_1, avatar_guid_2, dest, unk1) =>
-      log.info("MoveItem: " + msg)
+//      log.info("MoveItem: " + msg)
 
     case msg @ ChangeAmmoMessage(item_guid, unk1) =>
-      log.info("ChangeAmmo: " + msg)
+//      log.info("ChangeAmmo: " + msg)
 
     case msg @ UseItemMessage(avatar_guid, unk1, object_guid, unk2, unk3, unk4, unk5, unk6, unk7, unk8, unk9) =>
-      log.info("UseItem: " + msg)
+//      log.info("UseItem: " + msg)
       // TODO: Not all fields in the response are identical to source in real packet logs (but seems to be ok)
       // TODO: Not all incoming UseItemMessage's respond with another UseItemMessage (i.e. doors only send out GenericObjectStateMsg)
       sendResponse(PacketCoding.CreateGamePacket(0, UseItemMessage(avatar_guid, unk1, object_guid, unk2, unk3, unk4, unk5, unk6, unk7, unk8, unk9)))
@@ -339,43 +342,43 @@ class WorldSessionActor extends Actor with MDCContextAware {
       sendResponse(PacketCoding.CreateGamePacket(0, GenericObjectStateMsg(object_guid, 16)))
 
     case msg @ GenericObjectStateMsg(object_guid, unk1) =>
-      log.info("GenericObjectState: " + msg)
+//      log.info("GenericObjectState: " + msg)
 
     case msg @ ItemTransactionMessage(terminal_guid, transaction_type, item_page, item_name, unk1, item_guid) =>
-      log.info("ItemTransaction: " + msg)
+//      log.info("ItemTransaction: " + msg)
       if(transaction_type == TransactionType.Sell) {
         sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(item_guid, 0)))
       }
 
     case msg @ WeaponDelayFireMessage(seq_time, weapon_guid) =>
-      log.info("WeaponDelayFire: " + msg)
+//      log.info("WeaponDelayFire: " + msg)
 
     case msg @ WeaponFireMessage(seq_time, weapon_guid, projectile_guid, shot_origin, unk1, unk2, unk3, unk4, unk5, unk6, unk7) =>
-      log.info("WeaponFire: " + msg)
+//      log.info("WeaponFire: " + msg)
 
     case msg @ HitMessage(seq_time, projectile_guid, unk1, hit_info, unk2, unk3, unk4) =>
-      log.info("Hit: " + msg)
+//      log.info("Hit: " + msg)
 
     case msg @ AvatarFirstTimeEventMessage(avatar_guid, object_guid, unk1, event_name) =>
       toto += 1
       val tata = toto * 100000
       sendResponse(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(avatar_guid,tata,0)))
-      log.info("AvatarFirstTimeEvent: " + msg)
+//      log.info("AvatarFirstTimeEvent: " + msg)
 
     case msg @ AvatarGrenadeStateMessage(player_guid, state) =>
-      log.info("AvatarGrenadeStateMessage: " + msg)
+//      log.info("AvatarGrenadeStateMessage: " + msg)
 	  
     case msg @ GenericActionMessage(action) =>
-      log.info("GenericActionMessage: " + msg)
+//      log.info("GenericActionMessage: " + msg)
 
     case msg @ MountVehicleMsg(player_guid, vehicle_guid, unk) =>
-      log.info("MounVehicleMsg: "+msg)
+//      log.info("MountVehicleMsg: "+msg)
 
     case msg @ SplashHitMessage(bytes) =>
-      log.info("SplashHitMessage: " + bytes.toString)
+//      log.info("SplashHitMessage: " + bytes.toString)
 
     case msg @ WarpgateRequest(continent_guid, building_guid, dest_building_guid, dest_continent_guid, unk1, unk2) =>
-      log.info("WarpgateRequest: " + msg)
+//      log.info("WarpgateRequest: " + msg)
 
     case default => log.debug(s"Unhandled GamePacket ${pkt}")
   }

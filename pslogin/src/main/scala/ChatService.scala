@@ -79,6 +79,8 @@ class ChatService extends Actor {
       msg.messageType match {
         case ChatMessageType.CMT_OPEN =>
           chatEvents.publish(ChatMessage("/chat/local", from, msg.contents))
+        case ChatMessageType.CMT_SQUAD =>
+          chatEvents.publish(ChatMessage("/chat/squad", from, msg.contents))
         case _ =>
       }
     case _ =>
