@@ -1,6 +1,8 @@
 // Copyright (c) 2016 PSForever.net to present
 import java.net.{InetAddress, InetSocketAddress}
 
+import net.psforever.packet.game.objectcreate._
+
 //import akka.actor.{Actor, ActorRef, Cancellable, MDCContextAware}
 import akka.actor.{Actor, ActorIdentity, ActorRef, Cancellable, Identify, MDCContextAware}
 import net.psforever.objects._
@@ -135,8 +137,34 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
   // XXX: hard coded ObjectCreateMessage
 //  val objectHex = hex"18 57 0C 00 00 BC 84 B0  06 C2 D7 65 53 5C A1 60 00 01 34 40 00 09 70 49  00 6C 00 6C 00 6C 00 49 00 49 00 49 00 6C 00 6C  00 6C 00 49 00 6C 00 49 00 6C 00 6C 00 49 00 6C  00 6C 00 6C 00 49 00 6C 00 6C 00 49 00 84 52 70  76 1E 80 80 00 00 00 00 00 3F FF C0 00 00 00 20  00 00 0F F6 A7 03 FF FF FF FF FF FF FF FF FF FF  FF FF FF FF FF FD 90 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00  00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46  86 C7 00 00 00 80 00 00 12 40 78 70 65 5F 73 61  6E 63 74 75 61 72 79 5F 68 65 6C 70 90 78 70 65  5F 74 68 5F 66 69 72 65 6D 6F 64 65 73 8B 75 73  65 64 5F 62 65 61 6D 65 72 85 6D 61 70 31 33 00  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02  60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80  00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41  C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00  00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05  48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32  00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90  00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8  05 26 40 00 03 20 06 C2 58 00 A7 88 00 00 02 00  00 80 00 00 "
-  val objectHex = hex"18 57 0C 00 00 BC 84 B0  06 C2 D7 65 53 5C A1 60 00 01 34 40 00 09 70 49  00 6C 00 6C 00 6C 00 49 00 49 00 49 00 6C 00 6C  00 6C 00 49 00 6C 00 49 00 6C 00 6C 00 49 00 6C  00 6C 00 6C 00 49 00 6C 00 6C 00 49 00 34 52 70  76 1E 80 80 00 00 00 00 00 3F FF C0 00 00 00 20  00 00 0F F6 A7 03 FF FF FF FF FF FF FF FF FF FF  FF FF FF FF FF FD 90 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00  00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46  86 C7 00 00 00 80 00 00 12 40 78 70 65 5F 73 61  6E 63 74 75 61 72 79 5F 68 65 6C 70 90 78 70 65  5F 74 68 5F 66 69 72 65 6D 6F 64 65 73 8B 75 73  65 64 5F 62 65 61 6D 65 72 85 6D 61 70 31 33 00  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02  60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80  00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41  C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00  00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05  48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32  00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90  00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8  05 26 40 00 03 20 06 C2 58 00 A7 88 00 00 02 00  00 80 00 00 "
-  val traveler = Traveler(this, "home3")
+  var objectHex = hex"18 57 0C 00 00 BC 84 B0  06 C2 D7 65 53 5C A1 60 00 01 34 40 00 09 70 49  00 6C 00 6C 00 6C 00 49 00 49 00 49 00 6C 00 6C  00 6C 00 49 00 6C 00 49 00 6C 00 6C 00 49 00 6C  00 6C 00 6C 00 49 00 6C 00 6C 00 49 00 34 52 70  76 1E 80 80 00 00 00 00 00 3F FF C0 00 00 00 20  00 00 0F F6 A7 03 FF FF FF FF FF FF FF FF FF FF  FF FF FF FF FF FD 90 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00  00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46  86 C7 00 00 00 80 00 00 12 40 78 70 65 5F 73 61  6E 63 74 75 61 72 79 5F 68 65 6C 70 90 78 70 65  5F 74 68 5F 66 69 72 65 6D 6F 64 65 73 8B 75 73  65 64 5F 62 65 61 6D 65 72 85 6D 61 70 31 33 00  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02  60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80  00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41  C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00  00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05  48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32  00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90  00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8  05 26 40 00 03 20 06 C2 58 00 A7 88 00 00 02 00  00 80 00 00 "
+  println(objectHex)
+//  val msg = ObjectCreateMessage(3159,121,PlanetSideGUID(75),None,Some(CharacterData(CharacterAppearanceData(Vector3(3674.8438f,2726.789f,91.15625f),19,2,false,4,"IlllIIIlllIlIllIlllIllI",1,2,2,9,1,3,118,30,32896,65535,2,255,106,7,RibbonBars(4294,2949,9496,4967)),100,100,50,1,7,7,100,100,28,4,44,84,104,1900,List("xpe_sanctuary_help", "xpe_th_firemodes", "used_beamer", "map13"),List(),InventoryData(true,false,false,List(InventoryItem2(InternalSlot(140,PlanetSideGUID(76),0,WeaponData(8,InternalSlot(272,PlanetSideGUID(77),0,AmmoBoxData(16))))), InventoryItem2(InternalSlot(845,PlanetSideGUID(78),2,WeaponData(8,InternalSlot(28,PlanetSideGUID(79),0,AmmoBoxData(25))))), InventoryItem2(InternalSlot(324,PlanetSideGUID(80),4,WeaponData(8,InternalSlot(540,PlanetSideGUID(81),0,AmmoBoxData(1))))), InventoryItem2(InternalSlot(456,PlanetSideGUID(82),5,AmmoBoxData(1))), InventoryItem2(InternalSlot(28,PlanetSideGUID(83),6,AmmoBoxData(50))), InventoryItem2(InternalSlot(28,PlanetSideGUID(84),9,AmmoBoxData(50))), InventoryItem2(InternalSlot(28,PlanetSideGUID(85),12,AmmoBoxData(50))), InventoryItem2(InternalSlot(29,PlanetSideGUID(86),33,AmmoBoxData(50))), InventoryItem2(InternalSlot(272,PlanetSideGUID(87),36,AmmoBoxData(50))), InventoryItem2(InternalSlot(728,PlanetSideGUID(88),39,REKData(8))))))))
+  val msg = ObjectCreateMessage(3159,121,PlanetSideGUID(75),None,Some(CharacterData(CharacterAppearanceData(Vector3(3674.8438f,2726.789f,91.15625f),19,0,false,4,"TestChar",0,2,2,9,1,3,118,30,32896,65535,2,255,106,7,RibbonBars(1,20,300,220)),
+    100,90,75,1,7,7,100,100,28,4,44,84,104,1900,
+    List("xpe_sanctuary_help", "xpe_th_firemodes", "used_beamer", "map13"),
+    List(),
+    InventoryData(true,false,false,
+      List(InventoryItem2(InternalSlot(140,PlanetSideGUID(76),0,WeaponData(8,
+        InternalSlot(272,PlanetSideGUID(77),0,AmmoBoxData(16))))),
+        InventoryItem2(InternalSlot(845,PlanetSideGUID(78),2,WeaponData(8,
+          InternalSlot(28,PlanetSideGUID(79),0,AmmoBoxData(25))))),
+        InventoryItem2(InternalSlot(324,PlanetSideGUID(80),4,WeaponData(8,
+          InternalSlot(540,PlanetSideGUID(81),0,AmmoBoxData(1))))),
+        InventoryItem2(InternalSlot(456,PlanetSideGUID(82),5,AmmoBoxData(1))),
+        InventoryItem2(InternalSlot(28,PlanetSideGUID(83),6,AmmoBoxData(50))),
+        InventoryItem2(InternalSlot(28,PlanetSideGUID(84),9,AmmoBoxData(50))),
+        InventoryItem2(InternalSlot(28,PlanetSideGUID(85),12,AmmoBoxData(50))),
+        InventoryItem2(InternalSlot(29,PlanetSideGUID(86),33,AmmoBoxData(50))),
+        InventoryItem2(InternalSlot(272,PlanetSideGUID(87),36,AmmoBoxData(50))),
+        InventoryItem2(InternalSlot(728,PlanetSideGUID(88),39,REKData(8))),
+        InventoryItem2(InternalSlot(28,PlanetSideGUID(89),60,AmmoBoxData(50))),
+        InventoryItem2(InternalSlot(29,PlanetSideGUID(90),63,AmmoBoxData(50))),
+        InventoryItem2(InternalSlot(272,PlanetSideGUID(91),66,AmmoBoxData(50)))      )))))
+
+  objectHex = PacketCoding.EncodePacket(msg).require.toByteVector
+  println(objectHex)
+  val traveler = Traveler(this, "home2")
 
   def handleGamePkt(pkt : PlanetSideGamePacket) = pkt match {
     case ConnectToWorldRequestMessage(server, token, majorVersion, minorVersion, revision, buildDate, unk) =>
@@ -147,6 +175,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
       // ObjectCreateMessage
       sendRawResponse(objectHex)
+//      sendResponse(PacketCoding.CreateGamePacket(0,ObjectCreateMessage(3159,121,PlanetSideGUID(75),None,Some(CharacterData(CharacterAppearanceData(Vector3(3674.8438f,2726.789f,91.15625f),19,2,false,4,"IlllIIIlllIlIllIlllIllI",1,2,2,9,1,3,118,30,32896,65535,2,255,106,7,RibbonBars(4294,2949,9496,4967)),100,100,50,1,7,7,100,100,28,4,44,84,104,1900,List("xpe_sanctuary_help", "xpe_th_firemodes", "used_beamer", "map13"),List(),InventoryData(true,false,false,List(InventoryItem2(InternalSlot(140,PlanetSideGUID(76),0,WeaponData(8,InternalSlot(272,PlanetSideGUID(77),0,AmmoBoxData(16))))), InventoryItem2(InternalSlot(845,PlanetSideGUID(78),2,WeaponData(8,InternalSlot(28,PlanetSideGUID(79),0,AmmoBoxData(25))))), InventoryItem2(InternalSlot(324,PlanetSideGUID(80),4,WeaponData(8,InternalSlot(540,PlanetSideGUID(81),0,AmmoBoxData(1))))), InventoryItem2(InternalSlot(456,PlanetSideGUID(82),5,AmmoBoxData(1))), InventoryItem2(InternalSlot(28,PlanetSideGUID(83),6,AmmoBoxData(50))), InventoryItem2(InternalSlot(28,PlanetSideGUID(84),9,AmmoBoxData(50))), InventoryItem2(InternalSlot(28,PlanetSideGUID(85),12,AmmoBoxData(50))), InventoryItem2(InternalSlot(29,PlanetSideGUID(86),33,AmmoBoxData(50))), InventoryItem2(InternalSlot(272,PlanetSideGUID(87),36,AmmoBoxData(50))), InventoryItem2(InternalSlot(728,PlanetSideGUID(88),39,REKData(8))))))))))
+
+
       // XXX: hard coded message
       sendRawResponse(hex"14 0F 00 00 00 10 27 00  00 C1 D8 7A 02 4B 00 26 5C B0 80 00 ")
 
@@ -166,15 +197,15 @@ class WorldSessionActor extends Actor with MDCContextAware {
               // LoadMapMessage 13714 in mossy .gcap
               // XXX: hardcoded shit
               sendResponse(PacketCoding.CreateGamePacket(0, ZonePopulationUpdateMessage(PlanetSideGUID(13), 414, 138, 0, 138, 0, 138, 0, 138, 0)))
-              val home3 = Zone.get("home3").get
-              Transfer.loadMap(traveler, home3)
-              Transfer.loadSelf(traveler, Zone.selectRandom(home3))
+              val home2 = Zone.get("home2").get
+              Transfer.loadMap(traveler, home2)
+              Transfer.loadSelf(traveler, Zone.selectRandom(home2))
               sendResponse(PacketCoding.CreateGamePacket(0,
                 ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Welcome! The commands '/zone' and '/warp' are available for use.", None))
               )
 
               //hardcoded avatar and some pertinent equipment setup
-              // todox PlayerAvatar dont work
+//              // todox PlayerAvatar dont work
 //              val avatar : PlayerAvatar = PlayerAvatar(guid, "IlllIIIlllIlIllIlllIllI", PlanetSideEmpire.VS, false, 0, 0)
 //              avatar.setExoSuitType(0); // Standard Exo-Suit
 //              //init holsters
@@ -269,7 +300,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 //      }
 
       if (messagetype == ChatMessageType.CMT_VOICE) {
-        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_VOICE, false, "IlllIIIlllIlIllIlllIllI", contents,None)))
+        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_VOICE, false, "TestChar", contents,None)))
       }
 
       CSRZone.read(traveler, msg)

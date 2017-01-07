@@ -1,9 +1,12 @@
 // Copyright (c) 2016 PSForever.net to present
+import java.util.Locale
+
 import net.psforever.objects._
 import org.specs2.mutable._
 import net.psforever.types._
 
 class GameObjectTest extends Specification {
+  Locale.setDefault(Locale.US);
   "Game objects" in {
     "PSGameObject" should {
       "constructor (default) / getPosition" in {

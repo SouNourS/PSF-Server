@@ -1,6 +1,8 @@
 // Copyright (c) 2016 PSForever.net to present
 package net.psforever.objects
 
+import java.util.Locale
+
 import net.psforever.types.Vector3
 
 /**

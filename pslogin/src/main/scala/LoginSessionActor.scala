@@ -137,7 +137,7 @@ class LoginSessionActor extends Actor with MDCContextAware {
 //  @shapls-05=Amerish
 //  @shapls-06=Searhus
 //  @shapls-07=Ceryshen
-  val serverName = "amspls-01"
+  val serverName = "PSForever"
   val serverAddress = new InetSocketAddress(LoginConfig.serverIpAddress.getHostAddress, 51001)
 
   def handleGamePkt(pkt : PlanetSideGamePacket) = pkt match {
@@ -170,8 +170,8 @@ class LoginSessionActor extends Actor with MDCContextAware {
   def updateServerList() = {
     val msg = VNLWorldStatusMessage("Welcome to PlanetSide! ",
       Vector(
-        WorldInformation(serverName, WorldStatus.Up, ServerType.Released2,
-          Vector(WorldConnectionInfo(serverAddress)), PlanetSideEmpire.TR)
+        WorldInformation(serverName, WorldStatus.Up, ServerType.Beta,
+          Vector(WorldConnectionInfo(serverAddress)), PlanetSideEmpire.NC)
       ))
 
     sendResponse(PacketCoding.CreateGamePacket(0, msg))

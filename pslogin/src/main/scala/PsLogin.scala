@@ -1,6 +1,7 @@
 // Copyright (c) 2016 PSForever.net to present
 import java.net.InetAddress
 import java.io.File
+import java.util.Locale
 
 import akka.actor.{ActorSystem, Props}
 import ch.qos.logback.classic.LoggerContext
@@ -212,6 +213,7 @@ object PsLogin {
   }
 
   def main(args : Array[String]) : Unit = {
+    Locale.setDefault(Locale.US);
     this.args = args
     run()
 
