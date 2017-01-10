@@ -7,9 +7,9 @@ import scodec.codecs._
 object TransactionType extends Enumeration {
   type Type = Value
   val Unk0,
-      Unk1,
+      Learn, // certif term
       Buy,
-      Sell,
+      Sell, // forget on certif term
       Unk4,
       Unk5,
       Unk6,

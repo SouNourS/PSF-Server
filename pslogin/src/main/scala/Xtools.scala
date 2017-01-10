@@ -14,7 +14,7 @@ object Xtools {
   def main(args: Array[String]): Unit = {
     for (file <- new File("D:\\decode_capture\\").listFiles) {
       val FileToRead = file.toString
-      val FileToWrite = "F:\\_" + FileToRead.drop(3).dropRight(FileToRead.toString.length - FileToRead.toString.indexOf(".txt")) + "_decoded.txt"
+      val FileToWrite = "D:\\_" + FileToRead.drop(3).dropRight(FileToRead.toString.length - FileToRead.toString.indexOf(".txt")) + "_decoded.txt"
       val fw = new FileWriter(FileToWrite, true)
 
       for (line <- Source.fromFile(FileToRead).getLines()) {
