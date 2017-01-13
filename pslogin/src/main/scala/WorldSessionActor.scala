@@ -200,9 +200,8 @@ class WorldSessionActor extends Actor with MDCContextAware {
               val home2 = Zone.get("home2").get
               Transfer.loadMap(traveler, home2)
               Transfer.loadSelf(traveler, Zone.selectRandom(home2))
-              sendResponse(PacketCoding.CreateGamePacket(0,
-                ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Welcome! The commands '/zone' and '/warp' are available for use.", None))
-              )
+              sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Welcome! The commands '/zone' and '/warp' are available for use.", None)))
+              sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_EXPANSIONS,true,"", "1 on", None)))
 
               //hardcoded avatar and some pertinent equipment setup
 //              // todox PlayerAvatar dont work
@@ -217,12 +216,45 @@ class WorldSessionActor extends Actor with MDCContextAware {
 //              PlayerMasterList.addPlayer(avatar, sessionId) // If created/added when sessionId is unavailable ...
 
               // These object_guids are specfic to VS Sanc
-              sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(2), PlanetSideEmpire.VS))) //HART building C
-              sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(29), PlanetSideEmpire.NC))) //South Villa Gun Tower
+//              for(nanototo <- 0 to 1024)
+//                sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(nanototo), PlanetSideEmpire.TR)))
+              sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(2), PlanetSideEmpire.TR))) //HART building C
+              sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(29), PlanetSideEmpire.TR))) //South Villa Gun Tower
+//              sendResponse(PacketCoding.CreateGamePacket(0, SetEmpireMessage(PlanetSideGUID(1397), PlanetSideEmpire.TR)))
 
               sendResponse(PacketCoding.CreateGamePacket(0, TimeOfDayMessage(0, 4653056, 0, 0, 32, 65)))
               sendResponse(PacketCoding.CreateGamePacket(0, ContinentalLockUpdateMessage(PlanetSideGUID(13), PlanetSideEmpire.VS))) // "The VS have captured the VS Sanctuary."
               sendResponse(PacketCoding.CreateGamePacket(0, BroadcastWarpgateUpdateMessage(PlanetSideGUID(13), PlanetSideGUID(1), 32))) // VS Sanctuary: Inactive Warpgate -> Broadcast Warpgate
+
+
+
+//              //Little job to load some data from gcap files
+//              import scala.io.Source
+//              val bufferedFile = Source.fromFile(".\\pslogin\\src\\main\\scala\\BuildingInfoUpdateMessage.txt")
+//              for (line <- bufferedFile.getLines){
+//                val SomeDataFromFile = line.split(',')
+//                sendResponse(PacketCoding.CreateGamePacket(0,BuildingInfoUpdateMessage(
+//                  PlanetSideGUID(SomeDataFromFile{0}.toInt),
+//                  PlanetSideGUID(SomeDataFromFile{1}.toInt),
+//                  SomeDataFromFile{2}.toInt,
+//                  SomeDataFromFile{3}.toBoolean,
+//                  PlanetSideEmpire(SomeDataFromFile{4}.toInt),
+//                  SomeDataFromFile{5}.toInt,
+//                  PlanetSideEmpire(SomeDataFromFile{6}.toInt),
+//                  SomeDataFromFile{7}.toInt,
+//                  PlanetSideGeneratorState(SomeDataFromFile{8}.toInt),
+//                  SomeDataFromFile{9}.toBoolean,
+//                  SomeDataFromFile{10}.toBoolean,
+//                  SomeDataFromFile{11}.toInt,
+//                  SomeDataFromFile{12}.toInt,
+//                  SomeDataFromFile{13}.toInt,
+//                  SomeDataFromFile{14}.toInt,
+//                  SomeDataFromFile{15}.toBoolean,
+//                  SomeDataFromFile{16}.toInt,
+//                  SomeDataFromFile{17}.toBoolean,
+//                  SomeDataFromFile{18}.toBoolean)))
+//              }
+//              bufferedFile.close()
 
               sendResponse(PacketCoding.CreateGamePacket(0,BuildingInfoUpdateMessage(
                 PlanetSideGUID(6),   //Ceryshen
@@ -359,6 +391,10 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ AvatarJumpMessage(state) =>
       log.info("AvatarJump: " + msg)
+
+    case msg @ ZipLineMessage(player_guid,origin_side,unk1,unk2,unk3,unk4,unk5) =>
+      log.info("ZipLineMessage: " + msg)
+      sendResponse(PacketCoding.CreateGamePacket(0,ZipLineMessage(player_guid,origin_side,unk1,unk2,unk3,unk4,unk5)))
 
     case msg @ RequestDestroyMessage(object_guid) =>
       log.info("RequestDestroy: " + msg)
