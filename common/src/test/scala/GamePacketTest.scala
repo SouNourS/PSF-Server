@@ -5,7 +5,7 @@ import java.util.Locale
 import org.specs2.mutable._
 import net.psforever.packet._
 import net.psforever.packet.game._
-import net.psforever.packet.game.objectcreate.{InventoryItem2, _}
+import net.psforever.packet.game.objectcreate.{InventoryItem, _}
 import net.psforever.types._
 //import scodec.Attempt
 import scodec.{Attempt, Err}
@@ -401,16 +401,16 @@ class GamePacketTest extends Specification {
           255, 106, 7,
           RibbonBars()
         )
-        val inv = InventoryItem2(0x8C, PlanetSideGUID(76), 0, WeaponData(8, 0x110, PlanetSideGUID(77), 0, AmmoBoxData(16))) ::
-          InventoryItem2(0x34D, PlanetSideGUID(78), 2, WeaponData(8, 0x1C, PlanetSideGUID(79), 0, AmmoBoxData(25))) ::
-          InventoryItem2(0x144, PlanetSideGUID(80), 4, WeaponData(8, 0x21C, PlanetSideGUID(81), 0, AmmoBoxData(1))) ::
-          InventoryItem2(0x1C8, PlanetSideGUID(82), 5, AmmoBoxData(1)) ::
-          InventoryItem2(0x1C, PlanetSideGUID(83), 6, AmmoBoxData(50)) ::
-          InventoryItem2(0x1C, PlanetSideGUID(84), 9, AmmoBoxData(50)) ::
-          InventoryItem2(0x1C, PlanetSideGUID(85), 12, AmmoBoxData(50)) ::
-          InventoryItem2(0x1D, PlanetSideGUID(86), 33, AmmoBoxData(50)) ::
-          InventoryItem2(0x110, PlanetSideGUID(87), 36, AmmoBoxData(50)) ::
-          InventoryItem2(0x2D8, PlanetSideGUID(88), 39, REKData(8)) ::
+        val inv = InventoryItem(0x8C, PlanetSideGUID(76), 0, WeaponData(8, 0x110, PlanetSideGUID(77), 0, AmmoBoxData(16))) ::
+          InventoryItem(0x34D, PlanetSideGUID(78), 2, WeaponData(8, 0x1C, PlanetSideGUID(79), 0, AmmoBoxData(25))) ::
+          InventoryItem(0x144, PlanetSideGUID(80), 4, WeaponData(8, 0x21C, PlanetSideGUID(81), 0, AmmoBoxData(1))) ::
+          InventoryItem(0x1C8, PlanetSideGUID(82), 5, AmmoBoxData(1)) ::
+          InventoryItem(0x1C, PlanetSideGUID(83), 6, AmmoBoxData(50)) ::
+          InventoryItem(0x1C, PlanetSideGUID(84), 9, AmmoBoxData(50)) ::
+          InventoryItem(0x1C, PlanetSideGUID(85), 12, AmmoBoxData(50)) ::
+          InventoryItem(0x1D, PlanetSideGUID(86), 33, AmmoBoxData(50)) ::
+          InventoryItem(0x110, PlanetSideGUID(87), 36, AmmoBoxData(50)) ::
+          InventoryItem(0x2D8, PlanetSideGUID(88), 39, REKData(8)) ::
           Nil
         val obj = CharacterData(
           app,

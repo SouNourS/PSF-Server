@@ -16,7 +16,7 @@ import scodec.codecs._
   * @param item the object in inventory
   * @see InternalSlot
   */
-case class InventoryItem2(item : InternalSlot) extends StreamBitSize {
+case class InventoryItem(item : InternalSlot) extends StreamBitSize {
   /**
     * Performs a "sizeof()" analysis of the given object.
     * @see ConstructorData.bitsize
@@ -25,19 +25,19 @@ case class InventoryItem2(item : InternalSlot) extends StreamBitSize {
   override def bitsize : Long = item.bitsize
 }
 
-object InventoryItem2 extends Marshallable[InventoryItem2] {
+object InventoryItem extends Marshallable[InventoryItem] {
   /**
-    * An abbreviated constructor for creating an `InventoryItem2` without interacting with `InternalSlot` directly.
+    * An abbreviated constructor for creating an `InventoryItem` without interacting with `InternalSlot` directly.
     * @param objClass the code for the type of object (ammunition) being constructed
     * @param guid the globally unique id assigned to the ammunition
     * @param parentSlot the slot where the ammunition is to be installed in the weapon
     * @param obj the constructor data
-    * @return an InventoryItem2
+    * @return an InventoryItem
     */
-  def apply(objClass : Int, guid : PlanetSideGUID, parentSlot : Int, obj : ConstructorData) : InventoryItem2 =
-    InventoryItem2(InternalSlot(objClass, guid, parentSlot, obj))
+  def apply(objClass : Int, guid : PlanetSideGUID, parentSlot : Int, obj : ConstructorData) : InventoryItem =
+    InventoryItem(InternalSlot(objClass, guid, parentSlot, obj))
 
-  implicit val codec : Codec[InventoryItem2] = (
+  implicit val codec : Codec[InventoryItem] = (
     "item" | InternalSlot.codec
-  ).as[InventoryItem2]
+  ).as[InventoryItem]
 }

@@ -30,7 +30,7 @@ import shapeless.{::, HNil}
 case class InventoryData(unk1 : Boolean,
                          unk2 : Boolean,
                          unk3 : Boolean,
-                         contents : List[InventoryItem2]) extends StreamBitSize {
+                         contents : List[InventoryItem]) extends StreamBitSize {
   /**
     * Performs a "sizeof()" analysis of the given object.
     * @see ConstructorData.bitsize
@@ -54,7 +54,7 @@ object InventoryData extends Marshallable[InventoryData] {
       (("len" | uint8L) >>:~ { len =>
         ("unk2" | bool) ::
           ("unk3" | bool) ::
-          ("contents" | PacketHelpers.listOfNSized(len, InventoryItem2.codec)) ::
+          ("contents" | PacketHelpers.listOfNSized(len, InventoryItem.codec)) ::
           ignore(4)
       })
       ).xmap[InventoryData] (
