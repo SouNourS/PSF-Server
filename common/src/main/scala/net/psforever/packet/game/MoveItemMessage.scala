@@ -22,6 +22,6 @@ object MoveItemMessage extends Marshallable[MoveItemMessage] {
         ("avatar_guid_1" | PlanetSideGUID.codec) ::
         ("avatar_guid_2" | PlanetSideGUID.codec) ::
         ("dest" | uint16L) ::
-        ("unk1" | uint16L)
+        ("unk1" | uint16L) // Todo ammo quantity
     ).as[MoveItemMessage]
 }
