@@ -466,7 +466,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
     case msg @ GenericActionMessage(action) =>
       log.info("GenericActionMessage: " + msg)
 
-    case msg @ MountVehicleMsg(player_guid, vehicle_guid, unk) =>
+    case msg @ MountVehicleMsg(player_guid, vehicle_guid, seat) =>
       log.info("MountVehicleMsg: "+msg)
       sendResponse(PacketCoding.CreateGamePacket(0, ObjectAttachMessage(vehicle_guid,player_guid,0)))
 
