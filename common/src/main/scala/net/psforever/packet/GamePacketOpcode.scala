@@ -328,7 +328,7 @@ object GamePacketOpcode extends Enumeration {
     case 0x06 => noDecoder(UnknownMessage6)
     case 0x07 => noDecoder(UnknownMessage7)
     // 0x08
-    case 0x08 => noDecoder(PlayerStateMessage)
+    case 0x08 => game.PlayerStateMessage.decode
     case 0x09 => game.HitMessage.decode
     case 0x0a => game.HitHint.decode
     case 0x0b => noDecoder(DamageMessage)
@@ -528,9 +528,9 @@ object GamePacketOpcode extends Enumeration {
     case 0xaf => noDecoder(CSAssistCommentMessage)
 
     // OPCODES 0xb0-bf
-    case 0xb0 => noDecoder(VoiceHostRequest)
-    case 0xb1 => noDecoder(VoiceHostKill)
-    case 0xb2 => noDecoder(VoiceHostInfo)
+    case 0xb0 => game.VoiceHostRequest.decode
+    case 0xb1 => game.VoiceHostKill.decode
+    case 0xb2 => game.VoiceHostInfo.decode
     case 0xb3 => noDecoder(BattleplanMessage)
     case 0xb4 => game.BattleExperienceMessage.decode
     case 0xb5 => noDecoder(TargetingImplantRequest)

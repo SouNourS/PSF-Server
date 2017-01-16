@@ -3,14 +3,11 @@ package net.psforever.packet
 
 import java.nio.charset.Charset
 
-import scodec.Attempt.Successful
-import scodec.{Attempt, Codec, DecodeResult, Err}
+import scodec.{DecodeResult, Err, Codec, Attempt}
 import scodec.bits._
 import scodec.codecs._
 import scodec._
 import shapeless._
-
-import scala.util.Success
 
 /** The base of all packets */
 sealed trait PlanetSidePacket extends Serializable {
@@ -64,7 +61,7 @@ final case class PlanetSidePacketFlags(packetType : PacketType.Value, secured : 
 /** Codec for [[PlanetSidePacketFlags]] */
 object PlanetSidePacketFlags extends Marshallable[PlanetSidePacketFlags] {
   implicit val codec : Codec[PlanetSidePacketFlags] = (
-      ("packet_type" | PacketType.codec) :: // first 4-bits
+    ("packet_type" | PacketType.codec) :: // first 4-bits
       ("unused" | constant(bin"0")) ::
       ("secured" | bool) ::
       ("advanced" | constant(bin"1")) :: // we only support "advanced packets"
@@ -180,7 +177,6 @@ object PacketHelpers {
       exmap[Int](
         (a : Either[Int, Int]) => {
           val result = a.fold[Int](a => a, a => a)
-
           if(result > limit)
             Attempt.failure(Err(s"Encoded string exceeded byte limit of $limit"))
           else
@@ -190,7 +186,6 @@ object PacketHelpers {
           if(a > limit)
             return Attempt.failure(Err("adsf"))
           //return Left(Attempt.failure(Err(s"Encoded string exceeded byte limit of $limit")))
-
           if(a > 0x7f)
             return Attempt.successful(Left(a))
           else
@@ -198,7 +193,6 @@ object PacketHelpers {
         }
     )
   }
-
   def encodedStringWithLimit(limit : Int) : Codec[String] = variableSizeBytes(encodedStringSizeWithLimit(limit), ascii)
   */
 
@@ -251,7 +245,6 @@ object PacketHelpers {
   * @tparam A the type of the `List` contents
   * @see ListCodec.scala
   */
-
 private class AlignedListCodec[A](countCodec : Codec[Long], valueCodec: Codec[A], alignment : Int, limit: Option[Long] = None) extends Codec[List[A]] {
   /**
     * Convert a `List` of elements into a byte-aligned `BitVector`.<br>

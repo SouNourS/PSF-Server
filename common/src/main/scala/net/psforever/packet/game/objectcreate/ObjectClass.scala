@@ -20,6 +20,7 @@ object ObjectClass {
   final val BULLETS_9MM = 0x1C // 28
   final val BULLETS_9MM_AP = 0x1D // 29
   final val ENERGY_CELL = 0x110 // 272
+  final val JAMMER_GRENADE_PACK = 0x19D
   final val JAMMER_GRENADE_AMMO = 0x1A1 // 417
   final val FORCE_BLADE_AMMO = 0x21C // 540
   final val PLASMA_GRENADE_AMMO = 0x2A9 // 681
@@ -2168,9 +2169,11 @@ object ObjectClass {
       case ObjectClass.GAUSS => WeaponData.genericCodec
       case ObjectClass.JAMMER_GRENADE => WeaponData.genericCodec
       case ObjectClass.JAMMER_GRENADE_AMMO => AmmoBoxData.genericCodec
+      case ObjectClass.JAMMER_GRENADE_PACK => AmmoBoxData.genericCodec
       case ObjectClass.MEDKIT => AmmoBoxData.genericCodec
       case ObjectClass.PLASMA_GRENADE => WeaponData.genericCodec
       case ObjectClass.PLASMA_GRENADE_AMMO => AmmoBoxData.genericCodec
+      case ObjectClass.PUNISHER => ConcurrentFeedWeaponData.genericCodec
       case ObjectClass.REK => REKData.genericCodec
       case ObjectClass.SLOT_BLOCKER => AmmoBoxData.genericCodec
       case ObjectClass.SUPPRESSOR => WeaponData.genericCodec
@@ -2181,7 +2184,6 @@ object ObjectClass {
       case ObjectClass.STRIKER_MISSILE => AmmoBoxData.genericCodec
       case ObjectClass.ARMOR_CANISTER => AmmoBoxData.genericCodec
       case ObjectClass.CHAIN_BLADE => WeaponData.genericCodec
-      case ObjectClass.PUNISHER => WeaponData.genericCodec
       case ObjectClass.NANO_DISPENSER => WeaponData.genericCodec // TODO maybe tools, not weapon
       case ObjectClass.DRAGON => WeaponData.genericCodec
       case ObjectClass.BOLT_DRIVER => WeaponData.genericCodec

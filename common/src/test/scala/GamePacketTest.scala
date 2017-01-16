@@ -7,7 +7,6 @@ import net.psforever.packet._
 import net.psforever.packet.game._
 import net.psforever.packet.game.objectcreate.{InventoryItem, _}
 import net.psforever.types._
-//import scodec.Attempt
 import scodec.{Attempt, Err}
 import scodec.Attempt.Successful
 import scodec.bits._
@@ -124,6 +123,114 @@ class GamePacketTest extends Specification {
       }
     }
 
+    "PlayerStateMessage" should {
+      val string_short = hex"08 A006 DFD17 B5AEB 380B 0F80002990"
+      val string_mod = hex"08 A006 DFD17 B5AEB 380B 0F80002985" //slightly modified from above to demonstrate active booleans
+      val string_vel = hex"08 A006 4DD47 CDB1B 0C0B A8C1A5000403008014A4"
+
+      "decode (short)" in {
+        PacketCoding.DecodePacket(string_short).require match {
+          case PlayerStateMessage(guid, pos, vel, facingYaw, facingPitch, facingUpper, unk1, crouching, jumping, unk2, unk3) =>
+            guid mustEqual PlanetSideGUID(1696)
+            pos.x mustEqual 4003.7422f
+            pos.y mustEqual 5981.414f
+            pos.z mustEqual 44.875f
+            vel.isDefined mustEqual false
+            facingYaw mustEqual 31
+            facingPitch mustEqual 0
+            facingUpper mustEqual 0
+            unk1 mustEqual 83
+            crouching mustEqual false
+            jumping mustEqual false
+            unk2 mustEqual false
+            unk3 mustEqual false
+          case default =>
+            ko
+        }
+      }
+
+      "decode (mod)" in {
+        PacketCoding.DecodePacket(string_mod).require match {
+          case PlayerStateMessage(guid, pos, vel, facingYaw, facingPitch, facingUpper, unk1, crouching, jumping, unk2, unk3) =>
+            guid mustEqual PlanetSideGUID(1696)
+            pos.x mustEqual 4003.7422f
+            pos.y mustEqual 5981.414f
+            pos.z mustEqual 44.875f
+            vel.isDefined mustEqual false
+            facingYaw mustEqual 31
+            facingPitch mustEqual 0
+            facingUpper mustEqual 0
+            unk1 mustEqual 83
+            crouching mustEqual false
+            jumping mustEqual true
+            unk2 mustEqual false
+            unk3 mustEqual true
+          case default =>
+            ko
+        }
+      }
+
+      "decode (vel)" in {
+        PacketCoding.DecodePacket(string_vel).require match {
+          case PlayerStateMessage(guid, pos, vel, facingYaw, facingPitch, facingUpper, unk1, crouching, jumping, unk2, unk3) =>
+            guid mustEqual PlanetSideGUID(1696)
+            pos.x mustEqual 4008.6016f
+            pos.y mustEqual 5987.6016f
+            pos.z mustEqual 44.1875f
+            vel.isDefined mustEqual true
+            vel.get.x mustEqual 2.53125f
+            vel.get.y mustEqual 6.5625f
+            vel.get.z mustEqual 0.0f
+            facingYaw mustEqual 24
+            facingPitch mustEqual 4
+            facingUpper mustEqual 0
+            unk1 mustEqual 165
+            crouching mustEqual false
+            jumping mustEqual false
+            unk2 mustEqual false
+            unk3 mustEqual false
+          case default =>
+            ko
+        }
+      }
+
+      "encode (short)" in {
+        val msg = PlayerStateMessage(
+          PlanetSideGUID(1696),
+          Vector3(4003.7422f, 5981.414f, 44.875f),
+          None,
+          31, 0, 0, 83,
+          false, false, false, false)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string_short
+      }
+
+      "encode (mod)" in {
+        val msg = PlayerStateMessage(
+          PlanetSideGUID(1696),
+          Vector3(4003.7422f, 5981.414f, 44.875f),
+          None,
+          31, 0, 0, 83,
+          false, true, false, true)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string_mod
+      }
+
+      "encode (vel)" in {
+        val msg = PlayerStateMessage(
+          PlanetSideGUID(1696),
+          Vector3(4008.6016f, 5987.6016f, 44.1875f),
+          Some(Vector3(2.53125f, 6.5625f, 0f)),
+          24, 4, 0, 165,
+          false, false, false, false)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string_vel
+      }
+    }
+
     "ActionResultMessage" should {
       "decode" in {
         PacketCoding.DecodePacket(hex"1f 80").require match {
@@ -157,6 +264,7 @@ class GamePacketTest extends Specification {
       var string_inventoryItem = hex"46 04 C0 08 08 80 00 00 20 00 0C 04 10 29 A0 10 19 00 00 04 00 00"
       val string_9mm = hex"18 7C000000 2580 0E0 0005 A1 C8000064000"
       val string_gauss = hex"18 DC000000 2580 2C9 B905 82 480000020000C04 1C00C0B0190000078000"
+      val string_punisher = hex"18 27010000 2580 612 a706 82 080000020000c08 1c13a0d01900000780 13a4701a072000000800"
       val string_rek = hex"18 97000000 2580 6C2 9F05 81 48000002000080000"
       val string_testchar = hex"18 570C0000 BC8 4B00 6C2D7 65535 CA16 0 00 01 34 40 00 0970 49006C006C006C004900490049006C006C006C0049006C0049006C006C0049006C006C006C0049006C006C004900 84 52 70 76 1E 80 80 00 00 00 00 00 3FFFC 0 00 00 00 20 00 00 0F F6 A7 03 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FC 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 90 01 90 00 64 00 00 01 00 7E C8 00 C8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 C0 00 42 C5 46  86 C7 00 00 00 80 00 00 12 40 78 70 65 5F 73 61 6E 63 74 75 61 72 79 5F 68 65 6C 70 90 78 70 65 5F 74 68 5F 66 69 72 65 6D 6F 64 65 73 8B 75 73 65 64 5F 62 65 61 6D 65 72 85 6D 61 70 31 33 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 0A 23 02 60 04 04 40 00 00 10 00 06 02 08 14 D0 08 0C 80 00 02 00 02 6B 4E 00 82 88 00 00 02 00 00 C0 41 C0 9E 01 01 90 00 00 64 00 44 2A 00 10 91 00 00 00 40 00 18 08 38 94 40 20 32 00 00 00 80 19 05 48 02 17 20 00 00 08 00 70 29 80 43 64 00 00 32 00 0E 05 40 08 9C 80 00 06 40 01 C0 AA 01 19 90 00 00 C8 00 3A 15 80 28 72 00 00 19 00 04 0A B8 05 26 40 00 03 20 06 C2 58 00 A7 88 00 00 02 00 00 80 00 00"
 
@@ -211,6 +319,33 @@ class GamePacketTest extends Specification {
             ko
         }
       }
+
+      "decode (punisher)" in {
+        PacketCoding.DecodePacket(string_punisher).require match {
+          case obj @ ObjectCreateMessage(len, cls, guid, parent, data) =>
+            len mustEqual 295
+            cls mustEqual 706
+            guid mustEqual PlanetSideGUID(1703)
+            parent.isDefined mustEqual true
+            parent.get.guid mustEqual PlanetSideGUID(75)
+            parent.get.slot mustEqual 2
+            data.isDefined mustEqual true
+            val obj_wep = data.get.asInstanceOf[ConcurrentFeedWeaponData]
+            obj_wep.unk mustEqual 0
+            val obj_ammo = obj_wep.ammo
+            obj_ammo.size mustEqual 2
+            obj_ammo.head.objectClass mustEqual 28
+            obj_ammo.head.guid mustEqual PlanetSideGUID(1693)
+            obj_ammo.head.parentSlot mustEqual 0
+            obj_ammo.head.obj.asInstanceOf[AmmoBoxData].magazine mustEqual 30
+            obj_ammo(1).objectClass mustEqual 413
+            obj_ammo(1).guid mustEqual PlanetSideGUID(1564)
+            obj_ammo(1).parentSlot mustEqual 1
+            obj_ammo(1).obj.asInstanceOf[AmmoBoxData].magazine mustEqual 1
+          case _ =>
+            ko
+          }
+        }
 
       "decode (rek)" in {
         PacketCoding.DecodePacket(string_rek).require match {
@@ -375,6 +510,14 @@ class GamePacketTest extends Specification {
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string_gauss
+      }
+
+      "encode (punisher)" in {
+        val obj = ConcurrentFeedWeaponData(0, AmmoBoxData(28, PlanetSideGUID(1693), 0, AmmoBoxData(30)) :: AmmoBoxData(413, PlanetSideGUID(1564), 1, AmmoBoxData(1)) :: Nil)
+        val msg = ObjectCreateMessage(0, 706, PlanetSideGUID(1703), ObjectCreateMessageParent(PlanetSideGUID(75), 2), obj)
+        var pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string_punisher
       }
 
       "encode (rek)" in {
@@ -649,7 +792,7 @@ class GamePacketTest extends Specification {
       }
     }
 	
-	    "CreateShortcutMessage" should {
+    "CreateShortcutMessage" should {
       val stringMedkit = hex"28 7210 01 00 90 C0 6D65646B6974 80 80"
       val stringMacro = hex"28 4C05 08 00 B1 C0 73686F72746375745F6D6163726F 83 4E00 5400 5500 9B 2F00 7000 6C00 6100 7400 6F00 6F00 6E00 2000 4900 6E00 6300 6F00 6D00 6900 6E00 6700 2000 4E00 5400 5500 2000 7300 7000 6100 6D00 2100"
       val stringRemove = hex"28 4C05 01 00 00"
@@ -666,7 +809,7 @@ class GamePacketTest extends Specification {
             shortcut.get.tile mustEqual "medkit"
             shortcut.get.effect1 mustEqual ""
             shortcut.get.effect2 mustEqual ""
-          case default =>
+          case _ =>
             ko
         }
       }
@@ -683,7 +826,7 @@ class GamePacketTest extends Specification {
             shortcut.get.tile mustEqual "shortcut_macro"
             shortcut.get.effect1 mustEqual "NTU"
             shortcut.get.effect2 mustEqual "/platoon Incoming NTU spam!"
-          case default =>
+          case _ =>
             ko
         }
       }
@@ -696,7 +839,7 @@ class GamePacketTest extends Specification {
             unk mustEqual 0
             addShortcut mustEqual false
             shortcut.isDefined mustEqual false
-          case default =>
+          case _ =>
             ko
         }
       }
@@ -755,12 +898,12 @@ class GamePacketTest extends Specification {
         Shortcut.SURGE.get.tile mustEqual "surge"
       }
     }
-	
-	    "ObjectAttachMessage" should {
+
+    "ObjectAttachMessage" should {
       val stringToInventory = hex"2A 9F05 D405 86"
       val stringToCursor = hex"2A 9F05 D405 00FA"
 
-      "encode (inventory 1,1)" in {
+      "decode (inventory 1,1)" in {
         PacketCoding.DecodePacket(stringToInventory).require match {
           case ObjectAttachMessage(player_guid, item_guid, index) =>
             player_guid mustEqual PlanetSideGUID(1439)
@@ -771,7 +914,7 @@ class GamePacketTest extends Specification {
         }
       }
 
-      "encode (cursor)" in {
+      "decode (cursor)" in {
         PacketCoding.DecodePacket(stringToCursor).require match {
           case ObjectAttachMessage(player_guid, item_guid, index) =>
             player_guid mustEqual PlanetSideGUID(1439)
@@ -782,20 +925,22 @@ class GamePacketTest extends Specification {
         }
       }
 
-      "decode (inventory 1,1)" in {
+      "encode (inventory 1,1)" in {
         val msg = ObjectAttachMessage(PlanetSideGUID(1439), PlanetSideGUID(1492), 6)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual stringToInventory
       }
 
-      "decode (cursor)" in {
+      "encode (cursor)" in {
         val msg = ObjectAttachMessage(PlanetSideGUID(1439), PlanetSideGUID(1492), 250)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual stringToCursor
+
       }
     }
+
 
     "DropItemMessage" should {
       val string = hex"37 4C00"
@@ -994,20 +1139,16 @@ class GamePacketTest extends Specification {
 
       "decode" in {
         PacketCoding.DecodePacket(string).require match {
-          case TimeOfDayMessage(unk1, time, unk2, unk3, unk4, unk5) =>
-            unk1 mustEqual 0
-            time mustEqual 4653056
-            unk2 mustEqual 0
-            unk3 mustEqual 0
-            unk4 mustEqual 32
-            unk5 mustEqual 65
+          case TimeOfDayMessage(time, unk) =>
+            time mustEqual 1191182336
+            unk mustEqual 1092616192
           case default =>
             ko
         }
       }
 
       "encode" in {
-        val msg = TimeOfDayMessage(0, 4653056, 0, 0, 32, 65)
+        val msg = TimeOfDayMessage(1191182336)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string
@@ -1054,10 +1195,10 @@ class GamePacketTest extends Specification {
 
       "decode (short)" in {
         PacketCoding.DecodePacket(string_short).require match {
-          case PlayerStateShiftMessage(unk1, state, unk2) =>
-            unk1 mustEqual 6
+          case PlayerStateShiftMessage(state, unk) =>
             state.isDefined mustEqual false
-            unk2 mustEqual true
+            unk.isDefined mustEqual true
+            unk.get mustEqual 5
           case _ =>
             ko
         }
@@ -1065,15 +1206,15 @@ class GamePacketTest extends Specification {
 
       "decode (pos)" in {
         PacketCoding.DecodePacket(string_pos).require match {
-          case PlayerStateShiftMessage(unk1, state, unk2) =>
-            unk1 mustEqual 1
+          case PlayerStateShiftMessage(state, unk) =>
             state.isDefined mustEqual true
+            state.get.unk mustEqual 1
             state.get.pos.x mustEqual 4624.703f
             state.get.pos.y mustEqual 5922.1484f
             state.get.pos.z mustEqual 46.171875f
             state.get.viewYawLim mustEqual 255
             state.get.vel.isDefined mustEqual false
-            unk2 mustEqual false
+            unk.isDefined mustEqual false
           case _ =>
             ko
         }
@@ -1081,9 +1222,9 @@ class GamePacketTest extends Specification {
 
       "decode (pos and vel)" in {
         PacketCoding.DecodePacket(string_posAndVel).require match {
-          case PlayerStateShiftMessage(unk1, state, unk2) =>
-            unk1 mustEqual 2
+          case PlayerStateShiftMessage(state, unk) =>
             state.isDefined mustEqual true
+            state.get.unk mustEqual 2
             state.get.pos.x mustEqual 4645.75f
             state.get.pos.y mustEqual 5811.6016f
             state.get.pos.z mustEqual 50.3125f
@@ -1092,32 +1233,28 @@ class GamePacketTest extends Specification {
             state.get.vel.get.x mustEqual 2.8125f
             state.get.vel.get.y mustEqual -8.0f
             state.get.vel.get.z mustEqual 0.375f
-            unk2 mustEqual false
+            unk.isDefined mustEqual false
           case _ =>
             ko
         }
       }
 
       "encode (short)" in {
-        val msg = PlayerStateShiftMessage(6, true)
+        val msg = PlayerStateShiftMessage(5)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string_short
       }
 
       "encode (pos)" in {
-        val msg = PlayerStateShiftMessage(1,
-          ShiftState(Vector3(4624.703f, 5922.1484f, 46.171875f), 255),
-          false)
+        val msg = PlayerStateShiftMessage(ShiftState(1, Vector3(4624.703f, 5922.1484f, 46.171875f), 255))
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string_pos
       }
 
       "encode (pos and vel)" in {
-        val msg = PlayerStateShiftMessage(2,
-          ShiftState(Vector3(4645.75f, 5811.6016f, 50.3125f), 14, Vector3(2.8125f, -8.0f, 0.375f)),
-          false)
+        val msg = PlayerStateShiftMessage(ShiftState(2, Vector3(4645.75f, 5811.6016f, 50.3125f), 14, Vector3(2.8125f, -8.0f, 0.375f)))
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string_posAndVel
@@ -2271,16 +2408,14 @@ class GamePacketTest extends Specification {
 
       "decode (one friend)" in {
         PacketCoding.DecodePacket(stringOneFriend).require match {
-          case FriendsResponse(unk1, unk2, unk3, unk4, number_of_friends, friend, list) =>
-            unk1 mustEqual 3
+          case FriendsResponse(action, unk2, unk3, unk4, list) =>
+            action mustEqual 3
             unk2 mustEqual 0
             unk3 mustEqual true
             unk4 mustEqual true
-            number_of_friends mustEqual 1
-            friend.isDefined mustEqual true
-            friend.get.name mustEqual "KurtHectic-G"
-            friend.get.online mustEqual false
-            list.size mustEqual 0
+            list.size mustEqual 1
+            list.head.name mustEqual "KurtHectic-G"
+            list.head.online mustEqual false
           case default =>
             ko
         }
@@ -2288,24 +2423,22 @@ class GamePacketTest extends Specification {
 
       "decode (multiple friends)" in {
         PacketCoding.DecodePacket(stringManyFriends).require match {
-          case FriendsResponse(unk1, unk2, unk3, unk4, number_of_friends, friend, list) =>
-            unk1 mustEqual 0
+          case FriendsResponse(action, unk2, unk3, unk4, list) =>
+            action mustEqual 0
             unk2 mustEqual 0
             unk3 mustEqual true
             unk4 mustEqual true
-            number_of_friends mustEqual 5
-            friend.isDefined mustEqual true
-            friend.get.name mustEqual "Angello-W"
-            friend.get.online mustEqual false
-            list.size mustEqual 4
-            list.head.name mustEqual "thephattphrogg"
+            list.size mustEqual 5
+            list.head.name mustEqual "Angello-W"
             list.head.online mustEqual false
-            list(1).name mustEqual "Kimpossible12"
+            list(1).name mustEqual "thephattphrogg"
             list(1).online mustEqual false
-            list(2).name mustEqual "Zearthling"
+            list(2).name mustEqual "Kimpossible12"
             list(2).online mustEqual false
-            list(3).name mustEqual "KurtHectic-G"
+            list(3).name mustEqual "Zearthling"
             list(3).online mustEqual false
+            list(4).name mustEqual "KurtHectic-G"
+            list(4).online mustEqual false
           case default =>
             ko
         }
@@ -2313,13 +2446,11 @@ class GamePacketTest extends Specification {
 
       "decode (short)" in {
         PacketCoding.DecodePacket(stringShort).require match {
-          case FriendsResponse(unk1, unk2, unk3, unk4, number_of_friends, friend, list) =>
-            unk1 mustEqual 4
+          case FriendsResponse(action, unk2, unk3, unk4, list) =>
+            action mustEqual 4
             unk2 mustEqual 0
             unk3 mustEqual true
             unk4 mustEqual true
-            number_of_friends mustEqual 0
-            friend.isDefined mustEqual false
             list.size mustEqual 0
           case default =>
             ko
@@ -2327,24 +2458,25 @@ class GamePacketTest extends Specification {
       }
 
       "encode (one friend)" in {
-        val msg = FriendsResponse(3, 0, true, true, 1, Option(Friend("KurtHectic-G", false)))
+        val msg = FriendsResponse(3, 0, true, true, Friend("KurtHectic-G", false) :: Nil)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual stringOneFriend
       }
 
       "encode (multiple friends)" in {
-        val msg = FriendsResponse(0, 0, true, true, 5, Option(Friend("Angello-W", false)), Friend("thephattphrogg", false) ::
-                                                                                            Friend("Kimpossible12", false) ::
-                                                                                            Friend("Zearthling", false) ::
-                                                                                            Friend("KurtHectic-G", false) :: Nil)
+        val msg = FriendsResponse(0, 0, true, true, Friend("Angello-W", false) ::
+          Friend("thephattphrogg", false) ::
+          Friend("Kimpossible12", false) ::
+          Friend("Zearthling", false) ::
+          Friend("KurtHectic-G", false) :: Nil)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual stringManyFriends
       }
 
       "encode (short)" in {
-        val msg = FriendsResponse(4, 0, true, true, 0)
+        val msg = FriendsResponse(4, 0, true, true)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual stringShort
@@ -2373,20 +2505,20 @@ class GamePacketTest extends Specification {
       }
     }
 
-	"TrainingZoneMessage" should {
+    "TrainingZoneMessage" should {
       val string = hex"75 13 000000"
 
       "decode" in {
         PacketCoding.DecodePacket(string).require match {
-          case TrainingZoneMessage(zone) =>
-            zone mustEqual 19
+          case TrainingZoneMessage(zone, unk) =>
+            zone mustEqual PlanetSideGUID(19)
           case default =>
             ko
         }
       }
 
       "encode" in {
-        val msg = TrainingZoneMessage(19)
+        val msg = TrainingZoneMessage(PlanetSideGUID(19))
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string
@@ -2529,23 +2661,16 @@ class GamePacketTest extends Specification {
       "decode" in {
         HotSpotInfo.codec.decode(string.toBitVector) match {
           case Attempt.Successful(decoded) =>
-            decoded.value.x mustEqual 2000
-            decoded.value.y mustEqual 2700
-            decoded.value.scale mustEqual 128
+            decoded.value.x mustEqual 4000.0f
+            decoded.value.y mustEqual 5400.0f
+            decoded.value.scale mustEqual 64.0f
           case _ =>
             ko
         }
       }
 
-      "encode (long-hand)" in {
-        val msg = HotSpotInfo(0, 2000, 0, 2700, 128)
-        val pkt = HotSpotInfo.codec.encode(msg).require.toByteVector
-
-        pkt mustEqual string
-      }
-
-      "encode (short-hand)" in {
-        val msg = HotSpotInfo(2000, 2700, 128)
+      "encode" in {
+        val msg = HotSpotInfo(4000.0f, 5400.0f, 64.0f)
         val pkt = HotSpotInfo.codec.encode(msg).require.toByteVector
 
         pkt mustEqual string
@@ -2574,9 +2699,9 @@ class GamePacketTest extends Specification {
             continent_guid mustEqual PlanetSideGUID(5)
             unk mustEqual 1
             spots.size mustEqual 1
-            spots.head.x mustEqual 2350
-            spots.head.y mustEqual 1300
-            spots.head.scale mustEqual 128
+            spots.head.x mustEqual 4700.0f
+            spots.head.y mustEqual 2600.0f
+            spots.head.scale mustEqual 64.0f
           case _ =>
             ko
         }
@@ -2588,12 +2713,12 @@ class GamePacketTest extends Specification {
             continent_guid mustEqual PlanetSideGUID(5)
             unk mustEqual 5
             spots.size mustEqual 2
-            spots.head.x mustEqual 2000
-            spots.head.y mustEqual 2700
-            spots.head.scale mustEqual 128
-            spots(1).x mustEqual 2750
-            spots(1).y mustEqual 1100
-            spots(1).scale mustEqual 128
+            spots.head.x mustEqual 4000.0f
+            spots.head.y mustEqual 5400.0f
+            spots.head.scale mustEqual 64.0f
+            spots(1).x mustEqual 5500.0f
+            spots(1).y mustEqual 2200.0f
+            spots(1).scale mustEqual 64.0f
           case _ =>
             ko
         }
@@ -2606,13 +2731,13 @@ class GamePacketTest extends Specification {
       }
 
       "encode (one)" in {
-        val msg = HotSpotUpdateMessage(PlanetSideGUID(5),1, HotSpotInfo(0,2350,0,1300,128)::Nil)
+        val msg = HotSpotUpdateMessage(PlanetSideGUID(5),1, HotSpotInfo(4700.0f, 2600.0f, 64.0f)::Nil)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
         pkt mustEqual stringOne
       }
 
       "encode (two)" in {
-        val msg = HotSpotUpdateMessage(PlanetSideGUID(5),5, HotSpotInfo(0,2000,0,2700,128)::HotSpotInfo(0,2750,0,1100,128)::Nil)
+        val msg = HotSpotUpdateMessage(PlanetSideGUID(5),5, HotSpotInfo(4000.0f, 5400.0f, 64.0f)::HotSpotInfo(5500.0f, 2200.0f, 64.0f)::Nil)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
         pkt mustEqual stringTwo
       }
