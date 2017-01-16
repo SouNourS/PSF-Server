@@ -131,7 +131,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
   //currently, the character's starting BEP is discarded due to unknown bit format
   val app = CharacterAppearanceData(
     Vector3(3674.8438f, 2726.789f, 91.15625f),
-    19,
+    32,
     0,
     false,
     4,
@@ -141,7 +141,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
     2, 9,
     1,
     3, 118, 30, 0x8080, 0xFFFF, 2,
-    255, 106, 7,
+    0, 0, 7,
     RibbonBars(6,7,8,220)
   )
   val inv =
@@ -149,13 +149,17 @@ class WorldSessionActor extends Actor with MDCContextAware {
     InventoryItem(ObjectClass.SUPPRESSOR, PlanetSideGUID(78), 2, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(79), 0, AmmoBoxData(25))) ::
     InventoryItem(ObjectClass.CHAIN_BLADE, PlanetSideGUID(80), 4, WeaponData(8, ObjectClass.FORCE_BLADE_AMMO, PlanetSideGUID(81), 0, AmmoBoxData(1))) ::
     InventoryItem(ObjectClass.SLOT_BLOCKER, PlanetSideGUID(82), 5, AmmoBoxData(1)) ::
-    InventoryItem(ObjectClass.BULLETS_9MM, PlanetSideGUID(83), 6, AmmoBoxData(50)) ::
+    InventoryItem(ObjectClass.BUCKSHOT, PlanetSideGUID(83), 6, AmmoBoxData(25)) ::
     InventoryItem(ObjectClass.BULLETS_9MM, PlanetSideGUID(84), 9, AmmoBoxData(50)) ::
     InventoryItem(ObjectClass.BULLETS_9MM, PlanetSideGUID(85), 12, AmmoBoxData(50)) ::
-    InventoryItem(ObjectClass.BULLETS_9MM_AP, PlanetSideGUID(86), 33, AmmoBoxData(50)) ::
-    InventoryItem(ObjectClass.BUCKSHOT, PlanetSideGUID(87), 36, AmmoBoxData(25)) ::
-    InventoryItem(ObjectClass.REK, PlanetSideGUID(88), 39, REKData(8)) ::
-    InventoryItem(ObjectClass.MEDKIT, PlanetSideGUID(89), 60, AmmoBoxData(1)) ::
+    InventoryItem(ObjectClass.MEDKIT, PlanetSideGUID(91), 33, AmmoBoxData(1)) ::
+    InventoryItem(ObjectClass.REK, PlanetSideGUID(88), 37, REKData(8)) ::
+    InventoryItem(ObjectClass.MEDKIT, PlanetSideGUID(89), 51, AmmoBoxData(1)) ::
+    InventoryItem(ObjectClass.MEDKIT, PlanetSideGUID(90), 69, AmmoBoxData(1)) ::
+    InventoryItem(ObjectClass.BULLETS_9MM_AP, PlanetSideGUID(86), 64, AmmoBoxData(50)) ::
+    InventoryItem(ObjectClass.PLASMA_GRENADE, PlanetSideGUID(92), 40, WeaponData(8, ObjectClass.PLASMA_GRENADE_AMMO, PlanetSideGUID(93), 0, AmmoBoxData(3))) ::
+    InventoryItem(ObjectClass.PLASMA_GRENADE, PlanetSideGUID(94), 58, WeaponData(8, ObjectClass.PLASMA_GRENADE_AMMO, PlanetSideGUID(95), 0, AmmoBoxData(3))) ::
+    InventoryItem(ObjectClass.PLASMA_GRENADE, PlanetSideGUID(96), 76, WeaponData(8, ObjectClass.PLASMA_GRENADE_AMMO, PlanetSideGUID(97), 0, AmmoBoxData(3))) ::
     Nil
   val obj = CharacterData(
     app,
@@ -393,9 +397,19 @@ class WorldSessionActor extends Actor with MDCContextAware {
     case msg @ AvatarJumpMessage(state) =>
       log.info("AvatarJump: " + msg)
 
-    case msg @ ZipLineMessage(player_guid,origin_side,unk1,unk2,unk3,unk4,unk5) =>
+    case msg @ ZipLineMessage(player_guid,origin_side,action,id,unk3,unk4,unk5) =>
       log.info("ZipLineMessage: " + msg)
-      sendResponse(PacketCoding.CreateGamePacket(0,ZipLineMessage(player_guid,origin_side,unk1,unk2,unk3,unk4,unk5)))
+      if(action == 0) {
+        sendResponse(PacketCoding.CreateGamePacket(0,ZipLineMessage(player_guid,origin_side,action,id,unk3,unk4,unk5)))
+      }
+      else if(action == 1) {
+        //disembark from zipline at destination?
+        sendResponse(PacketCoding.CreateGamePacket(0, ZipLineMessage(player_guid, origin_side, 3, id, unk3, unk4, unk5)))
+      }
+      else if(action == 2) {
+        //get off by force
+        sendResponse(PacketCoding.CreateGamePacket(0, ZipLineMessage(player_guid, origin_side, 3, id, unk3, unk4, unk5)))
+      }
 
     case msg @ RequestDestroyMessage(object_guid) =>
       log.info("RequestDestroy: " + msg)
@@ -408,7 +422,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ MoveItemMessage(item_guid, avatar_guid_1, avatar_guid_2, dest, unk1) =>
       log.info("MoveItem: " + msg)
-      sendResponse(PacketCoding.CreateGamePacket(0, MoveItemMessage(item_guid, avatar_guid_1, avatar_guid_2, dest, unk1)))
+      sendResponse(PacketCoding.CreateGamePacket(0, ObjectAttachMessage(avatar_guid_1,item_guid,dest)))
 
     case msg @ ChangeAmmoMessage(item_guid, unk1) =>
       log.info("ChangeAmmo: " + msg)
@@ -419,8 +433,12 @@ class WorldSessionActor extends Actor with MDCContextAware {
       // TODO: Not all fields in the response are identical to source in real packet logs (but seems to be ok)
       // TODO: Not all incoming UseItemMessage's respond with another UseItemMessage (i.e. doors only send out GenericObjectStateMsg)
       sendResponse(PacketCoding.CreateGamePacket(0, UseItemMessage(avatar_guid, unk1, object_guid, unk2, unk3, unk4, unk5, unk6, unk7, unk8, unk9)))
-      // TODO: This should only actually be sent to doors upon opening; may break non-door items upon use
-      sendResponse(PacketCoding.CreateGamePacket(0, GenericObjectStateMsg(object_guid, 16)))
+      if(unk1 != 0){ // TODO : medkit use ?!
+        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(unk1), 2)))
+      } else {
+        // TODO: This should only actually be sent to doors upon opening; may break non-door items upon use
+        sendResponse(PacketCoding.CreateGamePacket(0, GenericObjectStateMsg(object_guid, 16)))
+      }
 
     case msg @ GenericObjectStateMsg(object_guid, unk1) =>
       log.info("GenericObjectState: " + msg)
@@ -467,6 +485,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ WarpgateRequest(continent_guid, building_guid, dest_building_guid, dest_continent_guid, unk1, unk2) =>
       log.info("WarpgateRequest: " + msg)
+
+    case msg @ GenericCollisionMsg(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) =>
+      log.info("GenericCollision: "+msg)
 
     case default => log.debug(s"Unhandled GamePacket ${pkt}")
   }

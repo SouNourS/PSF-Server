@@ -9,19 +9,19 @@ import scodec.codecs._
   * The player is interacting with a zipline.
   * @param player_guid the player
   * @param origin_side whether this corresponds with the "entry" or the "exit" of the zipline, as per the direction of the light pulse visuals
-  * @param unk1 na; usually 0?
-  * @param unk2 na; a number that is consistent to a zipline point but is not a building GUID?
-  * @param unk3 na; changes as the user moves; seems to be related to x or y coordinate of contact
-  * @param unk4 na; changes as the user moves; seems to be related to y or x coordinate of contact
-  * @param unk5 na; changes as the user moves; seems to be related to z (vertical) coordinate of contact
+  * @param action na; usually 0?
+  * @param id na; a number that is consistent to a zipline point but is not a building GUID?
+  * @param unk1 na; changes as the user moves; seems to be related to x or y coordinate of contact
+  * @param unk2 na; changes as the user moves; seems to be related to y or x coordinate of contact
+  * @param unk3 na; changes as the user moves; seems to be related to z (vertical) coordinate of contact
   */
 final case class ZipLineMessage(player_guid : PlanetSideGUID,
                                 origin_side : Boolean,
-                                unk1 : Int,
+                                action : Int,
+                                id : Long,
+                                unk1 : Long,
                                 unk2 : Long,
-                                unk3 : Long,
-                                unk4 : Long,
-                                unk5 : Long)
+                                unk3 : Long)
   extends PlanetSideGamePacket {
   type Packet = ZipLineMessage
   def opcode = GamePacketOpcode.ZipLineMessage
@@ -32,8 +32,8 @@ object ZipLineMessage extends Marshallable[ZipLineMessage] {
   implicit val codec : Codec[ZipLineMessage] = (
     ("player_guid" | PlanetSideGUID.codec) ::
       ("origin_side" | bool) ::
-      ("unk1" | uintL(2)) ::
-      ("unk2" | uint32L) ::
+      ("action" | uint2) ::
+      ("id" | uint32L) ::
       ("unk3" | uint32L) ::
       ("unk4" | uint32L) ::
       ("unk5" | uint32L)
