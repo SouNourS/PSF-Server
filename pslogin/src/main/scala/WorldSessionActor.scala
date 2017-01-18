@@ -90,6 +90,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
   }
 
   def handleControlPkt(pkt : PlanetSideControlPacket) = {
+//    println(pkt)
     pkt match {
       case SlottedMetaPacket(slot, subslot, innerPacket) =>
         sendResponse(PacketCoding.CreateControlPacket(SlottedMetaAck(slot, subslot)))
@@ -322,13 +323,13 @@ class WorldSessionActor extends Actor with MDCContextAware {
         log.info("Chat: " + msg)
       }
 
-//      if(messagetype == ChatMessageType.CMT_OPEN) {
-//        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(4717), 0)))
-//        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(5398), 0)))
-//        val msg = ObjectCreateMessage(0,contents.toInt,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(75),1)),Some(WeaponData(0,InternalSlot(417,PlanetSideGUID(5398),0,AmmoBoxData(500)))))
-//        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
-//        sendRawResponse(pkt)
-//      }
+      if(messagetype == ChatMessageType.CMT_OPEN) {
+        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(4717), 0)))
+        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(5398), 0)))
+        val msg = ObjectCreateMessage(0,contents.toInt,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(75),1)),Some(WeaponData(0,InternalSlot(417,PlanetSideGUID(5398),0,AmmoBoxData(500)))))
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+        sendRawResponse(pkt)
+      }
 
 //      if(messagetype == ChatMessageType.CMT_TELL) {
 //        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_223,true,"","@CTF_Failed_SourceResecured^@TerranRepublic~^@Hanish~",None)))
@@ -453,6 +454,35 @@ class WorldSessionActor extends Actor with MDCContextAware {
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
         sendRawResponse(pkt)
       }
+      if(transaction_type == TransactionType.Learn && item_name == "anti_vehicular") {
+        sendRawResponse(hex"2c4b001804000000")
+        sendRawResponse(hex"2c4b00180a000000")
+        sendRawResponse(hex"2c4b001801000000")
+        sendRawResponse(hex"2c4b001802000000")
+        sendRawResponse(hex"2c4b001803000000")
+        sendRawResponse(hex"2c4b001805000000")
+        sendRawResponse(hex"2c4b001806000000")
+        sendRawResponse(hex"2c4b001807000000")
+        sendRawResponse(hex"2c4b001808000000")
+        sendRawResponse(hex"2c4b001809000000")
+        sendRawResponse(hex"2c4b00180b000000")
+        sendRawResponse(hex"2c4b00180c000000")
+        sendRawResponse(hex"2c4b00180d000000")
+        sendRawResponse(hex"2c4b00180e000000")
+        sendRawResponse(hex"2c4b00180f000000")
+        sendRawResponse(hex"2c4b001800000000")
+        sendRawResponse(hex"2c4b001810000000")
+        sendRawResponse(hex"2c4b001811000000")
+        sendRawResponse(hex"2c4b001812000000")
+        sendRawResponse(hex"2c4b001813000000")
+        sendRawResponse(hex"2c4b001814000000")
+        sendRawResponse(hex"2c4b001815000000")
+        sendRawResponse(hex"2c4b001816000000")
+        sendRawResponse(hex"2c4b001817000000")
+        sendRawResponse(hex"2c4b001818000000")
+        sendRawResponse(hex"2c4b001819000000")
+        sendRawResponse(hex"45e4003000")
+      }
 
     case msg @ WeaponDelayFireMessage(seq_time, weapon_guid) =>
       log.info("WeaponDelayFire: " + msg)
@@ -465,7 +495,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ AvatarFirstTimeEventMessage(avatar_guid, object_guid, unk1, event_name) =>
       toto += 1
-      val tata = toto * 100000
+      val tata = toto * 10000000
       sendResponse(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(avatar_guid,tata,0)))
       log.info("AvatarFirstTimeEvent: " + msg)
 
