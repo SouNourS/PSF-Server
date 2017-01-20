@@ -989,10 +989,10 @@ class GamePacketTest extends Specification {
 
       "decode" in {
         PacketCoding.DecodePacket(string).require match {
-          case MountVehicleMsg(player_guid, vehicle_guid, seat) =>
+          case MountVehicleMsg(player_guid, vehicle_guid, entry) =>
             player_guid mustEqual PlanetSideGUID(1249)
             vehicle_guid mustEqual PlanetSideGUID(1127)
-            seat mustEqual 6
+            entry mustEqual 6
           case default =>
             ko
         }
@@ -2756,15 +2756,17 @@ class GamePacketTest extends Specification {
                                          hack_time_remaining : Long,
                                          empire_own : PlanetSideEmpire.Value,
                                          unk1 : Long,
+                                         unk1x : Option[Additional1],
                                          generator_state : PlanetSideGeneratorState.Value,
                                          spawn_tubes_normal : Boolean,
                                          force_dome_active : Boolean,
                                          lattice_benefit : Int,
                                          unk3 : Int,
-                                         unk4 : Int,
+                                         unk4 : List[Additional2],
                                          unk5 : Long,
                                          unk6 : Boolean,
                                          unk7 : Int,
+                                         unk7x : Option[Additional3],
                                          boost_spawn_pain : Boolean,
                                          boost_generator_pain : Boolean) =>
             continent_guid mustEqual PlanetSideGUID(4)
@@ -2775,15 +2777,18 @@ class GamePacketTest extends Specification {
             hack_time_remaining mustEqual 0
             empire_own mustEqual PlanetSideEmpire.NC
             unk1 mustEqual 0
+            unk1x mustEqual None
             generator_state mustEqual PlanetSideGeneratorState.Normal
             spawn_tubes_normal mustEqual true
             force_dome_active mustEqual false
             lattice_benefit mustEqual 28
             unk3 mustEqual 0
-            unk4 mustEqual 0
+            unk4.size mustEqual 0
+            unk4.isEmpty mustEqual true
             unk5 mustEqual 0
             unk6 mustEqual false
             unk7 mustEqual 8
+            unk7x mustEqual None
             boost_spawn_pain mustEqual false
             boost_generator_pain mustEqual false
           case default =>
@@ -2800,15 +2805,17 @@ class GamePacketTest extends Specification {
                                             0,
                                             PlanetSideEmpire.NC,
                                             0,
+                                            None,
                                             PlanetSideGeneratorState.Normal,
                                             true,
                                             false,
                                             28,
                                             0,
-                                            0,
+                                            Nil,
                                             0,
                                             false,
                                             8,
+                                            None,
                                             false,
                                             false)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
