@@ -2,14 +2,14 @@
 package net.psforever.packet.game
 
 import net.psforever.packet.{GamePacketOpcode, Marshallable, PlanetSideGamePacket}
+import net.psforever.types.TransactionType
 import scodec.Codec
 import scodec.codecs._
 
-
 final case class ItemTransactionResultMessage(terminal_guid : PlanetSideGUID,
-                                        Unk1 : Int,
-                                        Unk2 : Boolean,
-                                        Unk3 : Int)
+                                              transaction_type : TransactionType.Value,
+                                              success : Boolean,
+                                              error_code : Int)
   extends PlanetSideGamePacket {
   type Packet = ItemTransactionResultMessage
   def opcode = GamePacketOpcode.ItemTransactionResultMessage
@@ -19,8 +19,8 @@ final case class ItemTransactionResultMessage(terminal_guid : PlanetSideGUID,
 object ItemTransactionResultMessage extends Marshallable[ItemTransactionResultMessage] {
   implicit val codec : Codec[ItemTransactionResultMessage] = (
       ("terminal_guid" | PlanetSideGUID.codec) ::
-        ("Unk1" | uintL(1)) ::
-        ("Unk2" | bool) ::
-        ("Unk3" | uint8L)
+        ("transaction_type" | TransactionType.codec) ::
+        ("success" | bool) ::
+        ("error_code" | uint8L)
     ).as[ItemTransactionResultMessage]
 }

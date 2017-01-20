@@ -325,13 +325,13 @@ class WorldSessionActor extends Actor with MDCContextAware {
         log.info("Chat: " + msg)
       }
 
-      if(messagetype == ChatMessageType.CMT_OPEN) {
-        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(4717), 0)))
-        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(5398), 0)))
-        val msg = ObjectCreateMessage(0,contents.toInt,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(75),1)),Some(WeaponData(0,InternalSlot(417,PlanetSideGUID(5398),0,AmmoBoxData(500)))))
-        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
-        sendRawResponse(pkt)
-      }
+//      if(messagetype == ChatMessageType.CMT_OPEN) {
+//        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(4717), 0)))
+//        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(5398), 0)))
+//        val msg = ObjectCreateMessage(0,contents.toInt,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(75),1)),Some(WeaponData(0,InternalSlot(681,PlanetSideGUID(5398),0,AmmoBoxData(500)))))
+//        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+//        sendRawResponse(pkt)
+//      }
 
 //      if(messagetype == ChatMessageType.CMT_TELL) {
 //        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_223,true,"","@CTF_Failed_SourceResecured^@TerranRepublic~^@Hanish~",None)))
