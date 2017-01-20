@@ -325,13 +325,13 @@ class WorldSessionActor extends Actor with MDCContextAware {
         log.info("Chat: " + msg)
       }
 
-//      if(messagetype == ChatMessageType.CMT_OPEN) {
-//        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(4717), 0)))
-//        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(5398), 0)))
-//        val msg = ObjectCreateMessage(0,contents.toInt,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(75),1)),Some(WeaponData(0,InternalSlot(417,PlanetSideGUID(5398),0,AmmoBoxData(500)))))
-//        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
-//        sendRawResponse(pkt)
-//      }
+      if(messagetype == ChatMessageType.CMT_OPEN) {
+        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(4717), 0)))
+        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(5398), 0)))
+        val msg = ObjectCreateMessage(0,contents.toInt,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(75),1)),Some(WeaponData(0,InternalSlot(417,PlanetSideGUID(5398),0,AmmoBoxData(500)))))
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+        sendRawResponse(pkt)
+      }
 
 //      if(messagetype == ChatMessageType.CMT_TELL) {
 //        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_223,true,"","@CTF_Failed_SourceResecured^@TerranRepublic~^@Hanish~",None)))
@@ -494,7 +494,13 @@ class WorldSessionActor extends Actor with MDCContextAware {
     case msg @ GenericCollisionMsg(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) =>
       log.info("GenericCollision: "+msg)
 
-    case default => log.debug(s"Unhandled GamePacket ${pkt}")
+    case msg @ PlanetsideAttributeMessage(avatar_guid, unk2, unk3) =>
+      log.info("PlanetsideAttributeMessage: "+msg)
+      sendResponse(PacketCoding.CreateGamePacket(0,PlanetsideAttributeMessage(avatar_guid, unk2, unk3)))
+
+    case default =>
+      log.debug(s"Unhandled GamePacket ${pkt}")
+      log.info(s"unk: ${pkt}")
   }
 
   def failWithError(error : String) = {
