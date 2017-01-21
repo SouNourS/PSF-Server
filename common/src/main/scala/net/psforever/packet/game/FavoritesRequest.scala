@@ -17,7 +17,7 @@ final case class FavoritesRequest(player_guid : PlanetSideGUID,
                                   unk1 : Int,
                                   unk2 : Int,
                                   unk3 : Int,
-                                  unk4 : Option[List[Int]] = None)
+                                  unk4 : Option[String] = None)
   extends PlanetSideGamePacket {
   type Packet = FavoritesRequest
   def opcode = GamePacketOpcode.FavoritesRequest
@@ -30,7 +30,7 @@ object FavoritesRequest extends Marshallable[FavoritesRequest] {
       ("unk1" | uint2L) ::
       (("unk2" | uint2L) >>:~ { unk2 =>
         ("unk3" | uint4L) ::
-          conditional(unk2 == 1, "unk4" | listOfN(PacketHelpers.encodedStringSize, uint16L))
+          conditional(unk2 == 1, "unk4" | PacketHelpers.encodedWideString)
         })
     ).as[FavoritesRequest]
 }
