@@ -24,8 +24,6 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
   private case class PokeClient()
 
-  var toto : Int = 0
-
   var sessionId : Long = 0
   var leftRef : ActorRef = ActorRef.noSender
   var rightRef : ActorRef = ActorRef.noSender
@@ -214,6 +212,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
               val home2 = Zone.get("home2").get
               Transfer.loadMap(traveler, home2)
               Transfer.loadSelf(traveler, Zone.selectRandom(home2))
+              sendResponse(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(guid,100000000,0)))
               sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Welcome! The commands '/zone' and '/warp' are available for use.", None)))
               sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Change cont will reset your inventory !", None)))
               sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_EXPANSIONS,true,"", "1 on", None)))
@@ -470,9 +469,6 @@ class WorldSessionActor extends Actor with MDCContextAware {
       log.info("Hit: " + msg)
 
     case msg @ AvatarFirstTimeEventMessage(avatar_guid, object_guid, unk1, event_name) =>
-      toto += 1
-      val tata = toto * 10000000
-      sendResponse(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(avatar_guid,tata,0)))
       log.info("AvatarFirstTimeEvent: " + msg)
 
     case msg @ AvatarGrenadeStateMessage(player_guid, state) =>
@@ -938,43 +934,43 @@ object Transfer {
     //send
     traveler.sendToSelf(temp.toByteVector)
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(PlanetSideGUID(75),0,0)))
-    traveler.sendToSelf(hex"2c4b001801000000")
-    traveler.sendToSelf(hex"2c4b001802000000")
-    traveler.sendToSelf(hex"2c4b001803000000")
-//    traveler.sendToSelf(hex"2c4b001804000000")
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,4)))
-    traveler.sendToSelf(hex"2c4b001805000000")
-    traveler.sendToSelf(hex"2c4b001806000000")
-    traveler.sendToSelf(hex"2c4b001807000000")
-    traveler.sendToSelf(hex"2c4b001808000000")
-    traveler.sendToSelf(hex"2c4b001809000000")
-    traveler.sendToSelf(hex"2c4b00180a000000")
-    traveler.sendToSelf(hex"2c4b00180b000000")
-    traveler.sendToSelf(hex"2c4b00180c000000")
-    traveler.sendToSelf(hex"2c4b00180d000000")
-    traveler.sendToSelf(hex"2c4b00180e000000")
-    traveler.sendToSelf(hex"2c4b00180f000000")
-    traveler.sendToSelf(hex"2c4b001810000000")
-    traveler.sendToSelf(hex"2c4b001811000000")
-    traveler.sendToSelf(hex"2c4b001812000000")
-    traveler.sendToSelf(hex"2c4b001813000000")
-    traveler.sendToSelf(hex"2c4b001814000000")
-    traveler.sendToSelf(hex"2c4b001815000000")
-    traveler.sendToSelf(hex"2c4b001816000000")
-    traveler.sendToSelf(hex"2c4b001817000000")
-    traveler.sendToSelf(hex"2c4b001818000000")
-    traveler.sendToSelf(hex"2c4b001819000000")
-    traveler.sendToSelf(hex"2c4b00181c000000")
-    traveler.sendToSelf(hex"2c4b00181d000000")
-    traveler.sendToSelf(hex"2c4b001821000000")
-    traveler.sendToSelf(hex"2c4b001822000000")
-    traveler.sendToSelf(hex"2c4b001823000000")
-    traveler.sendToSelf(hex"2c4b001824000000")
-    traveler.sendToSelf(hex"2c4b001825000000")
-    traveler.sendToSelf(hex"2c4b001828000000")
-    traveler.sendToSelf(hex"2c4b001829000000")
-    traveler.sendToSelf(hex"2c4b00182a000000")
-    traveler.sendToSelf(hex"2c4b00182d000000")
+
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,1))) // Medium Assault
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,2))) // Heavy Assault
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,3))) // Special Assault
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,4))) // Anti-Vehicular
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,5))) // Sniping
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,6))) // Elite Assault
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,7))) // Air Cavalry, Scout
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,8))) // Air Cavalry, Interceptor
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,9))) // Air Cavalry, Assault
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,10))) // Air Support
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,11))) // ATV
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,12))) // Light Scout
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,13))) // Assault Buggy
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,14))) // Armored Assault 1
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,15))) // Armored Assault 2
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,16))) // Ground Transport
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,17))) // Ground Support
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,18))) // BattleFrame Robotics
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,19))) // Flail
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,20))) // Switchblade
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,21))) // Harasser
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,22))) // Phantasm
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,23))) // Galaxy Gunship
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,24))) // BFR Anti Aircraft
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,25))) // BFR Anti Infantry
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,28))) // Reinforced ExoSuit
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,29))) // Infiltration Suit
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,33))) // Uni-MAX
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,34))) // Medical
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,35))) // Advanced Medical
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,36))) // Hacking
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,37))) // Advanced Hacking
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,40))) // Electronics Expert
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,41))) // Engineering
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,42))) // Combat Engineering
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,45))) // Advanced Engineering
   }
 
   /**
