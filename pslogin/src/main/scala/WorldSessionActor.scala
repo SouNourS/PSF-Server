@@ -212,7 +212,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
               val home2 = Zone.get("home2").get
               Transfer.loadMap(traveler, home2)
               Transfer.loadSelf(traveler, Zone.selectRandom(home2))
-              sendResponse(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(guid,100000000,0)))
+//              sendResponse(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(guid,100000000,0)))
               sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Welcome! The commands '/zone' and '/warp' are available for use.", None)))
               sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Change cont will reset your inventory !", None)))
               sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_EXPANSIONS,true,"", "1 on", None)))
@@ -934,6 +934,8 @@ object Transfer {
     //send
     traveler.sendToSelf(temp.toByteVector)
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(PlanetSideGUID(75),0,0)))
+
+    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(PlanetSideGUID(75),100000000,0)))
 
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,1))) // Medium Assault
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, PlanetsideAttributeMessage(PlanetSideGUID(75),24,2))) // Heavy Assault
