@@ -144,8 +144,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
     RibbonBars(6,7,8,220)
   )
   val inv =
-    InventoryItem(ObjectClass.SCATTER_PISTOL, PlanetSideGUID(76), 0, WeaponData(8, ObjectClass.BUCKSHOT, PlanetSideGUID(77), 0, AmmoBoxData(8))) ::
-    InventoryItem(ObjectClass.SUPPRESSOR, PlanetSideGUID(78), 2, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(79), 0, AmmoBoxData(25))) ::
+    InventoryItem(ObjectClass.TEMP730, PlanetSideGUID(76), 0, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(77), 0, AmmoBoxData(20))) ::
+//    InventoryItem(673, PlanetSideGUID(78), 2, WeaponData(8, 674, PlanetSideGUID(79), 0, AmmoBoxData(3))) ::
+    InventoryItem(ObjectClass.TEMP556, PlanetSideGUID(78), 2, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(79), 0, AmmoBoxData(100))) ::
     InventoryItem(ObjectClass.CHAIN_BLADE, PlanetSideGUID(80), 4, WeaponData(8, ObjectClass.FORCE_BLADE_AMMO, PlanetSideGUID(81), 0, AmmoBoxData(1))) ::
     InventoryItem(ObjectClass.SLOT_BLOCKER, PlanetSideGUID(82), 5, AmmoBoxData(1)) ::
     InventoryItem(ObjectClass.BUCKSHOT, PlanetSideGUID(83), 6, AmmoBoxData(25)) ::
