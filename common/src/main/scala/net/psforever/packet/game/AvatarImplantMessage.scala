@@ -5,9 +5,34 @@ import net.psforever.packet.{GamePacketOpcode, Marshallable, PlanetSideGamePacke
 import scodec.Codec
 import scodec.codecs._
 
+/**
+  * na
+  * <br>
+  * Unk3:<br>
+  * `
+  * 00 - Regeneration (advanced_regen)<br>
+  * 01 - Enhanced Targeting (targeting)<br>
+  * 02 - Audio Amplifier (audio_amplifier)<br>
+  * 03 - Darklight Vision (darklight_vision)<br>
+  * 04 - Melee Booster (melee_booster)<br>
+  * 05 - Personal Shield (personal_shield)<br>
+  * 06 - Range Magnifier (range_magnifier)<br>
+  * 07 - None<br>
+  * 08 - Sensor Shield (silent_run)<br>
+  * 09 - Surge (surge)<br>
+  * `
+  * <br>
+  * Exploration<br>
+  * Where is Second Wind (second_wind)?
+  * @param player_guid the player
+  * @param unk1 na
+  * @param unk2 na
+  * @param implant the implant
+  */
 final case class AvatarImplantMessage(player_guid : PlanetSideGUID,
                                       unk1 : Int,
-                                      unk2 : Int)
+                                      unk2 : Int,
+                                      implant : Int)
   extends PlanetSideGamePacket {
   type Packet = AvatarImplantMessage
   def opcode = GamePacketOpcode.AvatarImplantMessage
@@ -16,8 +41,9 @@ final case class AvatarImplantMessage(player_guid : PlanetSideGUID,
 
 object AvatarImplantMessage extends Marshallable[AvatarImplantMessage] {
   implicit val codec : Codec[AvatarImplantMessage] = (
-    ("plyaer_guid" | PlanetSideGUID.codec) ::
-      ("unk1" | uint8L) ::
-      ("unk2" | uint8L)
+    ("player_guid" | PlanetSideGUID.codec) ::
+      ("unk1" | uintL(3)) ::
+      ("unk2" | uint2L) ::
+      ("implant" | uint4L)
     ).as[AvatarImplantMessage]
 }
