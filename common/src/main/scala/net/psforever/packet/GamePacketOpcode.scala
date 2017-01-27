@@ -7,6 +7,7 @@ import scodec.codecs._
 
 import scala.annotation.switch
 
+
 /**
   * The master list of Game packet opcodes that have been discovered in the PlanetSide client.
   *
