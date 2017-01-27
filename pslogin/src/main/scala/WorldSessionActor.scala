@@ -31,6 +31,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
   var serviceManager = Actor.noSender
   var chatService = Actor.noSender
 
+  var useProximityTerminal = false
+  var useProximityTerminalID = PlanetSideGUID(0)
+
   var clientKeepAlive : Cancellable = null
 
   override def postStop() = {
@@ -314,8 +317,14 @@ class WorldSessionActor extends Actor with MDCContextAware {
       sendResponse(PacketCoding.CreateGamePacket(0, KeepAliveMessage(0)))
 
     case msg @ PlayerStateMessageUpstream(avatar_guid, pos, vel, unk1, aim_pitch, unk2, seq_time, unk3, is_crouching, unk4, unk5, is_cloaking, unk6, unk7) =>
-      //log.info("PlayerState: " + msg)
-      //hard coded for dev
+//      log.info("PlayerState: " + msg)
+      if(useProximityTerminal == true && vel == None){
+        sendResponse(PacketCoding.CreateGamePacket(0,ProximityTerminalUseMessage(avatar_guid, useProximityTerminalID, true)))
+      }
+      if(useProximityTerminal == true && vel != None) {
+        useProximityTerminal = false
+        sendResponse(PacketCoding.CreateGamePacket(0,ProximityTerminalUseMessage(PlanetSideGUID(0), useProximityTerminalID, false)))
+      }
 
     case msg @ ChatMsg(messagetype, has_wide_contents, recipient, contents, note_contents) =>
       // TODO: Prevents log spam, but should be handled correctly
@@ -492,6 +501,13 @@ class WorldSessionActor extends Actor with MDCContextAware {
     case msg @ PlanetsideAttributeMessage(avatar_guid, unk2, unk3) =>
       log.info("PlanetsideAttributeMessage: "+msg)
       sendResponse(PacketCoding.CreateGamePacket(0,PlanetsideAttributeMessage(avatar_guid, unk2, unk3)))
+
+    case msg @ ProximityTerminalUseMessage(player_guid, object_guid, unk) =>
+      log.info("ProximityTerminalUseMessage: "+msg)
+      if(unk == false){
+        useProximityTerminal = true
+        useProximityTerminalID = object_guid
+      }
 
     case default =>
       log.debug(s"Unhandled GamePacket ${pkt}")
