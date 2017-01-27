@@ -1602,14 +1602,14 @@ class GamePacketTest extends Specification {
         PacketCoding.DecodePacket(string).require match {
           case AvatarGrenadeStateMessage(player_guid, state) =>
             player_guid mustEqual PlanetSideGUID(4570)
-            state mustEqual 1
+            state mustEqual GrenadeState.PRIMED
           case default =>
             ko
         }
       }
 
       "encode" in {
-        val msg = AvatarGrenadeStateMessage(PlanetSideGUID(4570), 1)
+        val msg = AvatarGrenadeStateMessage(PlanetSideGUID(4570), GrenadeState.PRIMED)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string
@@ -2355,6 +2355,47 @@ class GamePacketTest extends Specification {
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string
+      }
+    }
+
+    "OrbitalStrikeWaypointMessage" should {
+      val string_on = hex"B9 46 0C AA E3 D2 2A 92 00"
+      val string_off = hex"B9 46 0C 00"
+
+      "decode (on)" in {
+        PacketCoding.DecodePacket(string_on).require match {
+          case OrbitalStrikeWaypointMessage(guid, coords) =>
+            guid mustEqual PlanetSideGUID(3142)
+            coords.isDefined mustEqual true
+            coords.get.x mustEqual 5518.664f
+            coords.get.y mustEqual 2212.539f
+          case default =>
+            ko
+        }
+      }
+
+      "decode (off)" in {
+        PacketCoding.DecodePacket(string_off).require match {
+          case OrbitalStrikeWaypointMessage(guid, coords) =>
+            guid mustEqual PlanetSideGUID(3142)
+            coords.isDefined mustEqual false
+          case default =>
+            ko
+        }
+      }
+
+      "encode (on)" in {
+        val msg = OrbitalStrikeWaypointMessage(PlanetSideGUID(3142), 5518.664f, 2212.539f)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string_on
+      }
+
+      "encode (off)" in {
+        val msg = OrbitalStrikeWaypointMessage(PlanetSideGUID(3142))
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string_off
       }
     }
 
