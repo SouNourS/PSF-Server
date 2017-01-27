@@ -982,6 +982,31 @@ class GamePacketTest extends Specification {
       }
     }
 
+    "DestroyMessage" should {
+      val string = hex"0C 2113 4915 410E 8D0F5 BFB28 740B"
+
+      "decode" in {
+        PacketCoding.DecodePacket(string).require match {
+          case DestroyMessage(unk1, unk2, unk3, pos) =>
+            unk1 mustEqual 4897
+            unk2 mustEqual 5449
+            unk3 mustEqual 3649
+            pos.x mustEqual 2591.1016f
+            pos.y mustEqual 4453.492f
+            pos.z mustEqual 45.8125f
+          case default =>
+            ko
+        }
+      }
+
+      "encode" in {
+        val msg = DestroyMessage(4897, 5449, 3649, Vector3(2591.1016f, 4453.492f, 45.8125f))
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string
+      }
+    }
+
     "ReloadMessage" should {
       val string = hex"0D 4C00 7B000000 FFFFFFFF"
 
