@@ -1574,6 +1574,27 @@ class GamePacketTest extends Specification {
       }
     }
 
+    "PlayerStasisMessage" should {
+      val string = hex"8A 4B 00 80"
+
+      "decode" in {
+        PacketCoding.DecodePacket(string).require match {
+          case PlayerStasisMessage(player_guid, stasis) =>
+            player_guid mustEqual PlanetSideGUID(75)
+            stasis mustEqual true
+          case default =>
+            ko
+        }
+      }
+
+      "encode" in {
+        val msg = PlayerStasisMessage(PlanetSideGUID(75))
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string
+      }
+    }
+
     "ContinentalLockUpdateMessage" should {
       val string = hex"A8 16 00 40"
 
@@ -2358,6 +2379,28 @@ class GamePacketTest extends Specification {
       }
     }
 
+    "DisconnectMessage" should {
+      val string = hex"B7 85 46 69 72 73 74 86 53 65 63 6F 6E 64 8E 46 69 72 73 74 20 26 20 73 65 63 6F 6E 64"
+
+      "decode" in {
+        PacketCoding.DecodePacket(string).require match {
+          case DisconnectMessage(unk1, unk2, unk3) =>
+            unk1 mustEqual "First"
+            unk2 mustEqual "Second"
+            unk3 mustEqual "First & second"
+          case default =>
+            ko
+        }
+      }
+
+      "encode" in {
+        val msg = DisconnectMessage("First", "Second", "First & second")
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string
+      }
+    }
+
     "OrbitalStrikeWaypointMessage" should {
       val string_on = hex"B9 46 0C AA E3 D2 2A 92 00"
       val string_off = hex"B9 46 0C 00"
@@ -2396,6 +2439,27 @@ class GamePacketTest extends Specification {
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string_off
+      }
+    }
+
+    "ExperienceAddedMessage" should {
+      val string = hex"B8 04 03"
+
+      "decode" in {
+        PacketCoding.DecodePacket(string).require match {
+          case ExperienceAddedMessage(exp, unk) =>
+            exp mustEqual 260 //0x104
+            unk mustEqual true
+          case default =>
+            ko
+        }
+      }
+
+      "encode" in {
+        val msg = ExperienceAddedMessage(260)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string
       }
     }
 
