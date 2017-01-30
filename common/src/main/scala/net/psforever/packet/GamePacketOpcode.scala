@@ -346,7 +346,8 @@ object GamePacketOpcode extends Enumeration {
     case 0x14 => game.CharacterInfoMessage.decode
     case 0x15 => noDecoder(UnknownMessage21)
     case 0x16 => game.BindPlayerMessage.decode
-    case 0x17 => noDecoder(ObjectCreateMessage_Duplicate)
+//    case 0x17 => noDecoder(ObjectCreateMessage_Duplicate)
+    case 0x17 => game.ObjectCreateMessage.decode
     // 0x18
     case 0x18 => game.ObjectCreateMessage.decode
     case 0x19 => game.ObjectDeleteMessage.decode
@@ -359,7 +360,7 @@ object GamePacketOpcode extends Enumeration {
 
     // OPCODES 0x20-2f
     case 0x20 => noDecoder(UnknownMessage32)
-    case 0x21 => noDecoder(ActionProgressMessage)
+    case 0x21 => game.ActionProgressMessage.decode
     case 0x22 => noDecoder(ActionCancelMessage)
     case 0x23 => noDecoder(ActionCancelAcknowledgeMessage)
     case 0x24 => game.SetEmpireMessage.decode
@@ -447,7 +448,7 @@ object GamePacketOpcode extends Enumeration {
     case 0x69 => game.AvatarFirstTimeEventMessage.decode
     case 0x6a => noDecoder(AggravatedDamageMessage)
     case 0x6b => noDecoder(TriggerSoundMessage)
-    case 0x6c => noDecoder(LootItemMessage)
+    case 0x6c => game.LootItemMessage.decode
     case 0x6d => noDecoder(VehicleSubStateMessage)
     case 0x6e => noDecoder(SquadMembershipRequest)
     case 0x6f => noDecoder(SquadMembershipResponse)
