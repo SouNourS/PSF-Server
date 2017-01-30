@@ -1659,6 +1659,28 @@ class GamePacketTest extends Specification {
       }
     }
 
+    "ZoneLockInfoMesage" should {
+      val string = hex"DF 1B 00 40"
+
+      "decode" in {
+        PacketCoding.DecodePacket(string).require match {
+          case ZoneLockInfoMessage(zone, locked, unk) =>
+            zone mustEqual PlanetSideGUID(27)
+            locked mustEqual false
+            unk mustEqual true
+          case default =>
+            ko
+        }
+      }
+
+      "encode" in {
+        val msg = ZoneLockInfoMessage(PlanetSideGUID(27), false, true)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string
+      }
+    }
+
     "BattleExperienceMessage" should {
       val string = hex"B4 8A0A E7030000 00"
 
@@ -3110,6 +3132,47 @@ class GamePacketTest extends Specification {
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 
         pkt mustEqual string
+      }
+    }
+
+    "ZoneInfoMessage" should {
+      val string = hex"C6 0C 00 80 00 00 00 00"
+      val string_cavern = hex"C6 1B 00 1D F9 F3 00 00"
+
+      "decode (normal)" in {
+        PacketCoding.DecodePacket(string).require match {
+          case ZoneInfoMessage(zone, empire_status, unk) =>
+            zone mustEqual 12
+            empire_status mustEqual true
+            unk mustEqual 0
+          case default =>
+            ko
+        }
+      }
+
+      "decode (cavern)" in {
+        PacketCoding.DecodePacket(string_cavern).require match {
+          case ZoneInfoMessage(zone, empire_status, unk) =>
+            zone mustEqual 27
+            empire_status mustEqual false
+            unk mustEqual 15135547
+          case default =>
+            ko
+        }
+      }
+
+      "encode (normal)" in {
+        val msg = ZoneInfoMessage(12, true, 0)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string
+      }
+
+      "encode (cavern)" in {
+        val msg = ZoneInfoMessage(27, false, 15135547)
+        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
+
+        pkt mustEqual string_cavern
       }
     }
 
