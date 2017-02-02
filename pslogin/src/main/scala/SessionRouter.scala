@@ -44,8 +44,8 @@ class SessionRouter(role : String, pipeline : List[SessionPipeline]) extends Act
   val sessionReaper = context.system.scheduler.schedule(10 seconds, 5 seconds, self, SessionReaper())
 
   var xActiveSession = 0
-  val FileToWrite = "xActiveSession"
-//  val FileToWrite = "/www/status.htm"
+//  val FileToWrite = "xActiveSession"
+  val FileToWrite = "/www/status.htm"
 
   val idBySocket = mutable.Map[InetSocketAddress, Long]()
   val sessionById = mutable.Map[Long, Session]()
@@ -161,7 +161,8 @@ class SessionRouter(role : String, pipeline : List[SessionPipeline]) extends Act
       xActiveSession += 1
 //      log.info("SessionRouter _ xActiveSession : " + xActiveSession)
       val fw = new FileWriter(FileToWrite, false)
-      fw.write("<html><head></head><body><div class=\"servername\"><p>PSForever Test Server</p></div><div class=\"playercount\"><p>" + xActiveSession.toString + "</p></div><div class=\"status\"><p>ON</p></div></body></html>")
+      fw.write("<html><head></head><body><div class=\"servername\"><p>PSForever Test Server</p></div><div class=\"location\"><p>EU-France</p></div>" +
+        "<div class=\"playercount\"><p>" + xActiveSession.toString + "</p></div><div class=\"status\"><p>ON</p></div></body></html>")
       fw.close()
     }
     session
@@ -189,7 +190,8 @@ class SessionRouter(role : String, pipeline : List[SessionPipeline]) extends Act
       xActiveSession -= 1
 //      log.info("SessionRouter _ xActiveSession : " + xActiveSession)
       val fw = new FileWriter(FileToWrite, false)
-      fw.write("<html><head></head><body><div class=\"servername\"><p>PSForever Test Server</p></div><div class=\"playercount\"><p>" + xActiveSession.toString + "</p></div><div class=\"status\"><p>ON</p></div></body></html>")
+      fw.write("<html><head></head><body><div class=\"servername\"><p>PSForever Test Server</p></div><div class=\"location\"><p>EU-France</p></div>" +
+        "<div class=\"playercount\"><p>" + xActiveSession.toString + "</p></div><div class=\"status\"><p>ON</p></div></body></html>")
       fw.close()
     }
   }
