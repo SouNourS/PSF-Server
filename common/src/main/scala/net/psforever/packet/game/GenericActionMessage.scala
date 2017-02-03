@@ -33,6 +33,8 @@ import scodec.codecs._
   * 43 - `0xAC` - prompt: friendly fire in virtual reality zone<br>
   * <br>
   * Actions (when sent from client):<br>
+  * 29 - ` ` - Client to server : AFK<br>
+  * 30 - ` ` - Client to server : back in game<br>
   * 36 - `0x90` - turn on "Looking for Squad"<br>
   * 37 - `0x94` - turn off "Looking for Squad"<br>
   * <br>

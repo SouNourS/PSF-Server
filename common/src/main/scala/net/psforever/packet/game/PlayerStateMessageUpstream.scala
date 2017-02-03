@@ -21,7 +21,7 @@ import scodec.codecs._
   * @param seq_time na
   * @param unk3 na
   * @param is_crouching whether the player is crouched
-  * @param unk4 na
+  * @param is_jumping na
   * @param unk5 na
   * @param is_cloaking whether the player is cloaked by virtue of an Infiltration Suit
   * @param unk6 na
@@ -36,7 +36,7 @@ final case class PlayerStateMessageUpstream(avatar_guid : PlanetSideGUID,
                                             seq_time : Int,
                                             unk3 : Int,
                                             is_crouching : Boolean,
-                                            unk4 : Boolean,
+                                            is_jumping : Boolean,
                                             unk5 : Boolean,
                                             is_cloaking : Boolean,
                                             unk6 : Int,
@@ -58,7 +58,7 @@ object PlayerStateMessageUpstream extends Marshallable[PlayerStateMessageUpstrea
       ("seq_time" | uintL(10)) ::
       ("unk3" | uintL(3)) ::
       ("is_crouching" | bool) ::
-      ("unk4" | bool) ::
+      ("is_jumping" | bool) ::
       ("unk5" | bool) ::
       ("is_cloaking" | bool) ::
       ("unk6" | uint8L) ::
