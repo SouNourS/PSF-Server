@@ -226,8 +226,10 @@ class WorldSessionActor extends Actor with MDCContextAware {
               Transfer.loadMap(traveler, home2)
               Transfer.loadSelf(traveler, Zone.selectRandom(home2))
 //              sendResponse(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(guid,100000000,0)))
-              sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Welcome! The commands '/zone' and '/warp' are available for use.", None)))
-              sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_OPEN,true,"", "Change cont will reset your inventory !", None)))
+              sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_BROADCAST,true,"", "Welcome! The commands '/zone' and '/warp' are available for use.", None)))
+              sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_BROADCAST,true,"", "You can use /fly on (or off) to fly, or /speed X (x from 1 to 5) to run !", None)))
+              sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_BROADCAST,true,"", "You can use local or squad chat (both are sync) !", None)))
+              sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_BROADCAST,true,"", "Change continent will reset your inventory and unstuck you if you are on a zipline/wallturret !", None)))
               sendResponse(PacketCoding.CreateGamePacket(0,ChatMsg(ChatMessageType.CMT_EXPANSIONS,true,"", "1 on", None)))
 
 
@@ -346,18 +348,16 @@ class WorldSessionActor extends Actor with MDCContextAware {
         useProximityTerminal = false
         sendResponse(PacketCoding.CreateGamePacket(0,ProximityTerminalUseMessage(PlanetSideGUID(0), useProximityTerminalID, false)))
       }
-//      sendResponse(PacketCoding.CreateGamePacket(0, PlayerStateMessage(PlanetSideGUID(10000), Vector3(pos.x + 1,pos.y + 1,pos.z), None,
-//        unk1, aim_pitch, unk2, unk3, is_crouching, unk4, unk5, is_cloaking)))
       sendResponse(PacketCoding.CreateGamePacket(0, PlayerStateMessage(PlanetSideGUID(14000), Vector3(pos.x + 2.5f,pos.y + 2.5f,pos.z), vel,
         unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, true, is_cloaking)))
       sendResponse(PacketCoding.CreateGamePacket(0, PlayerStateMessage(PlanetSideGUID(14010), Vector3(pos.x - 2.5f,pos.y - 2.5f,pos.z), vel,
-        unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, true, is_cloaking)))
+        unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, unk5, is_cloaking)))
       sendResponse(PacketCoding.CreateGamePacket(0, PlayerStateMessage(PlanetSideGUID(14020), Vector3(pos.x - 2.5f,pos.y + 2.5f,pos.z), vel,
-        unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, true, is_cloaking)))
+        unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, unk5, is_cloaking)))
       sendResponse(PacketCoding.CreateGamePacket(0, PlayerStateMessage(PlanetSideGUID(14030), Vector3(pos.x + 2.5f,pos.y - 2.5f,pos.z), vel,
-        unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, true, is_cloaking)))
+        unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, unk5, is_cloaking)))
       sendResponse(PacketCoding.CreateGamePacket(0, PlayerStateMessage(PlanetSideGUID(14040), Vector3(pos.x + 0.0f,pos.y - 2.5f,pos.z), vel,
-        unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, true, is_cloaking)))
+        unk1, aim_pitch, unk2, seq_time, is_crouching, is_jumping, unk5, is_cloaking)))
       sendResponse(PacketCoding.CreateGamePacket(0, PlayerStateMessage(PlanetSideGUID(14050), Vector3(3127.0f, 2882.0f, 35.0f), None,
         64, aim_pitch, unk2, seq_time, is_crouching, is_jumping, unk5, is_cloaking)))
       sendResponse(PacketCoding.CreateGamePacket(0, PlayerStateMessage(PlanetSideGUID(14060), Vector3(3127.0f, 2880.0f, 35.0f), None,
