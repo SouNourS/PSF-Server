@@ -44,7 +44,7 @@ class SessionRouter(role : String, pipeline : List[SessionPipeline]) extends Act
   val sessionReaper = context.system.scheduler.schedule(10 seconds, 5 seconds, self, SessionReaper())
 
   var xActiveSession = 0
- // val FileToWrite = "xActiveSession"
+//  val FileToWrite = "xActiveSession"
   val FileToWrite = "/www/status.htm"
 
   val idBySocket = mutable.Map[InetSocketAddress, Long]()

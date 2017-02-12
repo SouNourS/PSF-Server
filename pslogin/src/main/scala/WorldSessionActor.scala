@@ -36,6 +36,8 @@ class WorldSessionActor extends Actor with MDCContextAware {
   var useProximityTerminal = false
   var useProximityTerminalID = PlanetSideGUID(0)
 
+  var xheld_holsters = 0
+
   var clientKeepAlive : Cancellable = null
 
   override def postStop() = {
@@ -156,7 +158,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
   val inv =
     InventoryItem(ObjectClass.TEMP730, PlanetSideGUID((xGUID+1)), 0,
       WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID((xGUID+2)), 0, AmmoBoxData(20))) ::
-//    InventoryItem(673, PlanetSideGUID(78), 2, WeaponData(8, 674, PlanetSideGUID(79), 0, AmmoBoxData(3))) ::
+    //    InventoryItem(673, PlanetSideGUID(78), 2, WeaponData(8, 674, PlanetSideGUID(79), 0, AmmoBoxData(3))) ::
     InventoryItem(ObjectClass.TEMP556, PlanetSideGUID((xGUID+3)), 2,
       WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID((xGUID+4)), 0, AmmoBoxData(100))) ::
     InventoryItem(ObjectClass.CHAIN_BLADE, PlanetSideGUID((xGUID+5)), 4,
@@ -189,8 +191,6 @@ class WorldSessionActor extends Actor with MDCContextAware {
   )
   var objectHex = ObjectCreateMessage(0, ObjectClass.AVATAR, PlanetSideGUID((xGUID)), obj)
   var objectHex2 = PacketCoding.EncodePacket(objectHex).require.toByteVector
-
-
 
   var traveler = Traveler(this)
 
@@ -415,6 +415,11 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
       if (messagetype == ChatMessageType.CMT_VOICE) {
         sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_VOICE, false, "TestChar", contents,None)))
+        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_VOICE, false, "TR", contents,None)))
+        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_VOICE, false, "VS", contents,None)))
+        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_VOICE, false, "NC", contents,None)))
+        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_VOICE, false, "NC - BO", contents,None)))
+        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_VOICE, false, "VS 2", contents,None)))
 //        sendResponse(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(PlanetSideGUID((xGUID)),1500,0)))
       }
       if (messagetype == ChatMessageType.CMT_WHO || messagetype == ChatMessageType.CMT_WHO_CSR || messagetype == ChatMessageType.CMT_WHO_CR ||
@@ -449,9 +454,51 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ ChangeFireStateMessage_Start(item_guid) =>
       log.info("ChangeFireState_Start: " + msg)
+      if(xheld_holsters == 0){
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14001))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14011))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14021))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14031))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14041))))
+      }
+      if(xheld_holsters == 2){
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14003))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14013))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14023))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14033))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14043))))
+      }
+      if(xheld_holsters == 4){
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14005))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14015))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14025))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14035))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Start(PlanetSideGUID(14045))))
+      }
 
     case msg @ ChangeFireStateMessage_Stop(item_guid) =>
       log.info("ChangeFireState_Stop: " + msg)
+      if(xheld_holsters == 0){
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14001))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14011))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14021))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14031))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14041))))
+      }
+      if(xheld_holsters == 2){
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14003))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14013))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14023))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14033))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14043))))
+      }
+      if(xheld_holsters == 4){
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14005))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14015))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14025))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14035))))
+        sendResponse(PacketCoding.CreateGamePacket(0,ChangeFireStateMessage_Stop(PlanetSideGUID(14045))))
+      }
 
     case msg @ EmoteMsg(avatar_guid, emote) =>
       log.info("Emote: " + msg)
@@ -467,6 +514,12 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ ObjectHeldMessage(avatar_guid, held_holsters, unk1) =>
       log.info("ObjectHeld: " + msg)
+      xheld_holsters = held_holsters
+      sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14000), held_holsters, unk1)))
+      sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14010), held_holsters, unk1)))
+      sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14020), held_holsters, unk1)))
+      sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14030), held_holsters, unk1)))
+      sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14040), held_holsters, unk1)))
 
     case msg @ AvatarJumpMessage(state) =>
       log.info("AvatarJump: " + msg)
@@ -1014,7 +1067,7 @@ object Transfer {
     traveler.sendToSelf(temp.toByteVector)
     traveler.sendToSelf(PacketCoding.CreateGamePacket(0, SetCurrentAvatarMessage(PlanetSideGUID(traveler.xxGUID),0,0)))
 
-    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(PlanetSideGUID(traveler.xxGUID),100000000,0)))
+//    traveler.sendToSelf(PacketCoding.CreateGamePacket(0, BattleExperienceMessage(PlanetSideGUID(traveler.xxGUID),100000000,0)))
 
 
 //    val app1 = CharacterAppearanceData(
@@ -1045,7 +1098,7 @@ object Transfer {
 
     val app2 = CharacterAppearanceData(
       Vector3(3675.8438f, 2727.789f, 91.15625f), 32,1,true,4,"NC - BO",1,2,1,1,2,3, 118, 30, 0x8080, 0xFFFF, 2, 0, 0, 7, RibbonBars(6,7,8,220))
-    val inv2 = InventoryItem(ObjectClass.TEMP730, PlanetSideGUID(14011), 0, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(14012), 0, AmmoBoxData(20))) ::
+    val inv2 = InventoryItem(ObjectClass.STINGER, PlanetSideGUID(14011), 0, WeaponData(8, ObjectClass.MULTI_PHASE_10mm, PlanetSideGUID(14012), 0, AmmoBoxData(20))) ::
       InventoryItem(ObjectClass.SUPPRESSOR, PlanetSideGUID(14013), 2, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(14014), 0, AmmoBoxData(100))) ::
       InventoryItem(ObjectClass.CHAIN_BLADE, PlanetSideGUID(14015), 4, WeaponData(8, ObjectClass.FORCE_BLADE_AMMO, PlanetSideGUID(14016), 0, AmmoBoxData(1))) ::
       InventoryItem(ObjectClass.SLOT_BLOCKER, PlanetSideGUID(14017), 5, AmmoBoxData(1)) ::
@@ -1057,7 +1110,7 @@ object Transfer {
 
     val app3 = CharacterAppearanceData(
       Vector3(3675.8438f, 2727.789f, 91.15625f), 32,1,false,4,"NC",4,1,1,1,2,3, 118, 30, 0x8080, 0xFFFF, 2, 0, 0, 7, RibbonBars(6,7,8,220))
-    val inv3 = InventoryItem(ObjectClass.TEMP730, PlanetSideGUID(14021), 0, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(14022), 0, AmmoBoxData(20))) ::
+    val inv3 = InventoryItem(ObjectClass.SCATTER_PISTOL, PlanetSideGUID(14021), 0, WeaponData(8, ObjectClass.BUCKSHOT, PlanetSideGUID(14022), 0, AmmoBoxData(20))) ::
       InventoryItem(ObjectClass.TEMP714, PlanetSideGUID(14023), 2, WeaponData(8, ObjectClass.BUCKSHOT, PlanetSideGUID(14024), 0, AmmoBoxData(100))) ::
       InventoryItem(ObjectClass.CHAIN_BLADE, PlanetSideGUID(14025), 4, WeaponData(8, ObjectClass.FORCE_BLADE_AMMO, PlanetSideGUID(14026), 0, AmmoBoxData(1))) ::
       InventoryItem(ObjectClass.SLOT_BLOCKER, PlanetSideGUID(14027), 5, AmmoBoxData(1)) ::
@@ -1069,7 +1122,7 @@ object Transfer {
 
     val app4 = CharacterAppearanceData(
       Vector3(3675.8438f, 2727.789f, 91.15625f), 32,2,false,4,"VS",3,1,1,1,2,3, 118, 30, 0x8080, 0xFFFF, 2, 0, 0, 7, RibbonBars(6,7,8,220))
-    val inv4 = InventoryItem(ObjectClass.TEMP730, PlanetSideGUID(14031), 0, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(14032), 0, AmmoBoxData(20))) ::
+    val inv4 = InventoryItem(ObjectClass.BEAMER, PlanetSideGUID(14031), 0, WeaponData(8, ObjectClass.ENERGY_CELL, PlanetSideGUID(14032), 0, AmmoBoxData(20))) ::
       InventoryItem(ObjectClass.CHAIN_BLADE, PlanetSideGUID(14035), 4, WeaponData(8, ObjectClass.FORCE_BLADE_AMMO, PlanetSideGUID(14036), 0, AmmoBoxData(1))) ::
       InventoryItem(ObjectClass.SLOT_BLOCKER, PlanetSideGUID(14037), 5, AmmoBoxData(1)) ::
       Nil
@@ -1080,7 +1133,7 @@ object Transfer {
 
     val app5 = CharacterAppearanceData(
       Vector3(3675.8438f, 2727.789f, 91.15625f), 32,2,false,4,"VS 2",1,2,1,1,2,3, 118, 30, 0x8080, 0xFFFF, 2, 0, 0, 7, RibbonBars(6,7,8,220))
-    val inv5 = InventoryItem(ObjectClass.TEMP730, PlanetSideGUID(14041), 0, WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID(14042), 0, AmmoBoxData(20))) ::
+    val inv5 = InventoryItem(ObjectClass.SPEAR, PlanetSideGUID(14041), 0, WeaponData(8, ObjectClass.MULTI_PHASE_10mm, PlanetSideGUID(14042), 0, AmmoBoxData(20))) ::
       InventoryItem(ObjectClass.TEMP429, PlanetSideGUID(14043), 2, WeaponData(8, ObjectClass.BUCKSHOT, PlanetSideGUID(14044), 0, AmmoBoxData(100))) ::
       InventoryItem(ObjectClass.CHAIN_BLADE, PlanetSideGUID(14045), 4, WeaponData(8, ObjectClass.FORCE_BLADE_AMMO, PlanetSideGUID(14046), 0, AmmoBoxData(1))) ::
       InventoryItem(ObjectClass.SLOT_BLOCKER, PlanetSideGUID(14047), 5, AmmoBoxData(1)) ::
