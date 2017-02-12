@@ -518,7 +518,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
       sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14000), held_holsters, unk1)))
       sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14010), held_holsters, unk1)))
       sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14020), held_holsters, unk1)))
-      sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14030), held_holsters, unk1)))
+      if(held_holsters != 2) sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14030), held_holsters, unk1)))
       sendResponse(PacketCoding.CreateGamePacket(0,ObjectHeldMessage(PlanetSideGUID(14040), held_holsters, unk1)))
 
     case msg @ AvatarJumpMessage(state) =>
