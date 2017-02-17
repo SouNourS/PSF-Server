@@ -625,6 +625,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
         useProximityTerminalID = object_guid
       }
 
+    case msg @ SquadDefinitionActionMessage(a, b, c, d, e, f, g, h, i) =>
+      log.info("SquadDefinitionAction: " + msg)
+
     case default =>
       log.debug(s"Unhandled GamePacket ${pkt}")
       log.info(s"unk: ${pkt}")

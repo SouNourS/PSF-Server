@@ -77,7 +77,7 @@ import shapeless.{::, HNil}
   *             defaults to `0xFFFF`;
   *             may be `0x0`
   * @param unk7 na;
-  *             defaults to 2
+  *             defaults to 2 (1 = no outfit, 3 = LD)
   * @param viewPitch the angle with respect to the sky and the ground towards which the avatar is looking;
   *                  only supports downwards view angles;
   *                  `0x0` is forwards-facing;
