@@ -67,6 +67,7 @@ object ObjectClass {
   final val ERASER = 0x39 // 57
   //tools
   final val MEDKIT = 0x218 // 536
+  final val SUPER_MEDKIT = 0x34b // 843
   final val REK = 0x2D8 // 728
   final val MEDICAL_APPLICATOR = 0x213 // 531
   final val BANK = 0x84 // 132
@@ -937,7 +938,7 @@ object ObjectClass {
   final val TEMP840 = 840 //
   final val TEMP841 = 841 //
   final val TEMP842 = 842 //
-  final val TEMP843 = 843 //
+//  final val TEMP843 = 843 //
   final val TEMP844 = 844 //
   final val TEMP845 = 845 //
   final val TEMP846 = 846 //
@@ -2171,6 +2172,7 @@ object ObjectClass {
       case ObjectClass.JAMMER_GRENADE_AMMO => AmmoBoxData.genericCodec
       case ObjectClass.JAMMER_GRENADE_PACK => AmmoBoxData.genericCodec
       case ObjectClass.MEDKIT => AmmoBoxData.genericCodec
+      case ObjectClass.SUPER_MEDKIT => AmmoBoxData.genericCodec
       case ObjectClass.PLASMA_GRENADE => WeaponData.genericCodec
       case ObjectClass.PLASMA_GRENADE_AMMO => AmmoBoxData.genericCodec
       case ObjectClass.PUNISHER => ConcurrentFeedWeaponData.genericCodec
@@ -3058,7 +3060,7 @@ object ObjectClass {
       case ObjectClass.TEMP840 => WeaponData.genericCodec // TODO remove temp
       case ObjectClass.TEMP841 => WeaponData.genericCodec // TODO remove temp
       case ObjectClass.TEMP842 => WeaponData.genericCodec // TODO remove temp
-      case ObjectClass.TEMP843 => WeaponData.genericCodec // TODO remove temp
+//      case ObjectClass.TEMP843 => WeaponData.genericCodec // TODO remove temp
       case ObjectClass.TEMP844 => WeaponData.genericCodec // TODO remove temp
       case ObjectClass.TEMP845 => WeaponData.genericCodec // TODO remove temp
       case ObjectClass.TEMP846 => WeaponData.genericCodec // TODO remove temp
