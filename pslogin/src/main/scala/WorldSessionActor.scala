@@ -159,25 +159,24 @@ class WorldSessionActor extends Actor with MDCContextAware {
   )
   //xGUID+15000+(xGUID*10-(10+xGUID))+
   val inv =
-    InventoryItem(ObjectClass.TEMP730, PlanetSideGUID((xGUID+1)), 0,
-      WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID((xGUID+2)), 0, AmmoBoxData(20))) ::
-    //    InventoryItem(673, PlanetSideGUID(78), 2, WeaponData(8, 674, PlanetSideGUID(79), 0, AmmoBoxData(3))) ::
-    InventoryItem(ObjectClass.TEMP556, PlanetSideGUID((xGUID+3)), 2,
-      WeaponData(8, ObjectClass.BULLETS_9MM, PlanetSideGUID((xGUID+4)), 0, AmmoBoxData(100))) ::
-    InventoryItem(ObjectClass.CHAIN_BLADE, PlanetSideGUID((xGUID+5)), 4,
-      WeaponData(8, ObjectClass.FORCE_BLADE_AMMO, PlanetSideGUID((xGUID+6)), 0, AmmoBoxData(1))) ::
-    InventoryItem(ObjectClass.SLOT_BLOCKER, PlanetSideGUID((xGUID+7)), 5, AmmoBoxData(1)) ::
-    InventoryItem(ObjectClass.BUCKSHOT, PlanetSideGUID((xGUID+8)), 6, AmmoBoxData(25)) ::
-    InventoryItem(ObjectClass.BULLETS_9MM, PlanetSideGUID((xGUID+9)), 9, AmmoBoxData(50)) ::
-    InventoryItem(ObjectClass.BULLETS_9MM, PlanetSideGUID(xGUID+10), 12, AmmoBoxData(50)) ::
-    InventoryItem(ObjectClass.MEDKIT, PlanetSideGUID((xGUID+11)), 33, AmmoBoxData(1)) ::
-    InventoryItem(ObjectClass.REK, PlanetSideGUID(xGUID+12), 37, REKData(8)) ::
-    InventoryItem(ObjectClass.SUPER_MEDKIT, PlanetSideGUID(xGUID+13), 51, AmmoBoxData(1)) :: // super medkit
-    InventoryItem(ObjectClass.MEDKIT, PlanetSideGUID(xGUID+14), 69, AmmoBoxData(1)) ::
-    InventoryItem(ObjectClass.BULLETS_9MM_AP, PlanetSideGUID(xGUID+15), 64, AmmoBoxData(50)) ::
-    InventoryItem(ObjectClass.PLASMA_GRENADE, PlanetSideGUID(xGUID+16), 40, WeaponData(8, ObjectClass.PLASMA_GRENADE_AMMO, PlanetSideGUID(xGUID+17), 0, AmmoBoxData(3))) ::
-    InventoryItem(ObjectClass.PLASMA_GRENADE, PlanetSideGUID(xGUID+18), 58, WeaponData(8, ObjectClass.PLASMA_GRENADE_AMMO, PlanetSideGUID(xGUID+19), 0, AmmoBoxData(3))) ::
-    InventoryItem(ObjectClass.PLASMA_GRENADE, PlanetSideGUID(xGUID+20), 76, WeaponData(8, ObjectClass.PLASMA_GRENADE_AMMO, PlanetSideGUID(xGUID+21), 0, AmmoBoxData(3))) ::
+    InventoryItem(ObjectClass.repeater, PlanetSideGUID((xGUID+1)), 0,
+      WeaponData(0, ObjectClass.bullet_9mm, PlanetSideGUID((xGUID+2)), 0, AmmoBoxData(20))) ::
+    InventoryItem(ObjectClass.mini_chaingun, PlanetSideGUID((xGUID+3)), 2,
+      WeaponData(0, ObjectClass.bullet_9mm, PlanetSideGUID((xGUID+4)), 0, AmmoBoxData(100))) ::
+    InventoryItem(ObjectClass.chainblade, PlanetSideGUID((xGUID+5)), 4,
+      WeaponData(0, ObjectClass.melee_ammo, PlanetSideGUID((xGUID+6)), 0, AmmoBoxData(1))) ::
+    InventoryItem(ObjectClass.locker_container, PlanetSideGUID((xGUID+7)), 5, AmmoBoxData(1)) ::
+    InventoryItem(ObjectClass.shotgun_shell, PlanetSideGUID((xGUID+8)), 6, AmmoBoxData(25)) ::
+    InventoryItem(ObjectClass.bullet_9mm, PlanetSideGUID((xGUID+9)), 9, AmmoBoxData(50)) ::
+    InventoryItem(ObjectClass.bullet_9mm_AP, PlanetSideGUID(xGUID+10), 12, AmmoBoxData(50)) ::
+    InventoryItem(ObjectClass.medkit, PlanetSideGUID((xGUID+11)), 33, AmmoBoxData(1)) ::
+    InventoryItem(ObjectClass.remote_electronics_kit, PlanetSideGUID(xGUID+12), 37, REKData(8)) ::
+    InventoryItem(ObjectClass.medkit, PlanetSideGUID(xGUID+13), 51, AmmoBoxData(1)) ::
+    InventoryItem(ObjectClass.super_medkit, PlanetSideGUID(xGUID+14), 69, AmmoBoxData(1)) ::
+    InventoryItem(ObjectClass.bullet_9mm_AP, PlanetSideGUID(xGUID+15), 64, AmmoBoxData(50)) ::
+    InventoryItem(ObjectClass.plasma_grenade, PlanetSideGUID(xGUID+16), 40, WeaponData(8, ObjectClass.plasma_grenade_ammo, PlanetSideGUID(xGUID+17), 0, AmmoBoxData(3))) ::
+    InventoryItem(ObjectClass.jammer_grenade, PlanetSideGUID(xGUID+18), 58, WeaponData(8, ObjectClass.jammer_grenade_ammo, PlanetSideGUID(xGUID+19), 0, AmmoBoxData(3))) ::
+    InventoryItem(ObjectClass.frag_grenade, PlanetSideGUID(xGUID+20), 76, WeaponData(8, ObjectClass.frag_grenade_ammo, PlanetSideGUID(xGUID+21), 0, AmmoBoxData(3))) ::
     Nil
   val obj = CharacterData(
     app,
@@ -192,7 +191,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
       true, false, false, inv
     )
   )
-  var objectHex = ObjectCreateMessage(0, ObjectClass.AVATAR, PlanetSideGUID((xGUID)), obj)
+  var objectHex = ObjectCreateMessage(0, ObjectClass.avatar, PlanetSideGUID((xGUID)), obj)
   var objectHex2 = PacketCoding.EncodePacket(objectHex).require.toByteVector
 
   var traveler = Traveler(this)
@@ -376,15 +375,27 @@ class WorldSessionActor extends Actor with MDCContextAware {
         log.info("Chat: " + msg)
       }
 
+      if(messagetype == ChatMessageType.CMT_TOGGLESPECTATORMODE) sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(messagetype, has_wide_contents, "TestChar", contents, note_contents)))
+
 //      if(messagetype == ChatMessageType.CMT_OPEN) {
 //        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(4717), 0)))
 //        sendResponse(PacketCoding.CreateGamePacket(0, ObjectDeleteMessage(PlanetSideGUID(5398), 0)))
-//        val msg = ObjectCreateMessage(0,contents.toInt,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(15000),1)),Some(WeaponData(0,InternalSlot(681,PlanetSideGUID(5398),0,AmmoBoxData(500)))))
+////        val msg = ObjectCreateMessage(0,contents.toInt,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(15000),1)),Some(WeaponData(7,InternalSlot(540,PlanetSideGUID(5398),0,AmmoBoxData(1)))))
+//        val msg = ObjectCreateMessage(0,ObjectClass.KATANA,PlanetSideGUID(4717),Some(ObjectCreateMessageParent(PlanetSideGUID(15000),1)),Some(WeaponData(contents.toInt,InternalSlot(540,PlanetSideGUID(5398),0,AmmoBoxData(1)))))
 //        val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
 //        sendRawResponse(pkt)
+////        InventoryItem(ObjectClass.KATANA, PlanetSideGUID((xGUID+5)), 4,
+////          WeaponData(8, ObjectClass.MELEE_AMMO, PlanetSideGUID((xGUID+6)), 0, AmmoBoxData(1))) ::
 //      }
 
 //      if(messagetype == ChatMessageType.CMT_TELL) {
+//        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_229,true,"","@CTF_FlagSpawned^@amp_station~^@Pwyll~^@comm_station_dsp~^@Bel~^15~",None)))
+//        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_229,true,"","@CTF_FlagPickedUp^HenrysCat~^@TerranRepublic~^@Pwyll~",None)))
+//        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_229,true,"","@CTF_FlagDropped^HenrysCat~^@TerranRepublic~^@Pwyll~",None)))
+//        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_223,true,"","@CTF_Failed_SourceResecured^@NewConglomerate~^@Pwyll~",None)))
+//        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_INFO,true,"","switchboard",None)))
+//        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_227,false,"","@OptionsCullWatermarkUsage",None)))
+
 //        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_223,true,"","@CTF_Failed_SourceResecured^@TerranRepublic~^@Hanish~",None)))
 //        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_224,false,"","@TooFastToDismount",None)))
 //        sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.UNK_225,false,"","@DoorWillOpenWhenShuttleReturns",None)))
@@ -444,6 +455,8 @@ class WorldSessionActor extends Actor with MDCContextAware {
       // TODO: Depending on messagetype, may need to prepend sender's name to contents with proper spacing
       // TODO: Just replays the packet straight back to sender; actually needs to be routed to recipients!
       sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(messagetype, has_wide_contents, recipient, contents, note_contents)))
+
+      if(messagetype == ChatMessageType.CMT_TOGGLESPECTATORMODE) sendResponse(PacketCoding.CreateGamePacket(0, ChatMsg(ChatMessageType.CMT_TOGGLESPECTATORMODE, has_wide_contents, "TestChar", contents, note_contents)))
 
     case msg @ VoiceHostRequest(unk, PlanetSideGUID(player_guid), data) =>
       log.info("Player "+player_guid+" requested in-game voice chat.")
@@ -554,7 +567,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ ChangeAmmoMessage(item_guid, unk1) =>
       log.info("ChangeAmmo: " + msg)
-      sendResponse(PacketCoding.CreateGamePacket(0, ChangeAmmoMessage(item_guid, unk1)))
+//      sendResponse(PacketCoding.CreateGamePacket(0, ChangeAmmoMessage(item_guid, unk1)))
 
     case msg @ UseItemMessage(avatar_guid, unk1, object_guid, unk2, unk3, unk4, unk5, unk6, unk7, unk8, unk9) =>
       log.info("UseItem: " + msg)
@@ -578,7 +591,7 @@ class WorldSessionActor extends Actor with MDCContextAware {
       }
       if(transaction_type == TransactionType.Buy) {
         val obj = AmmoBoxData(50)
-        val msg = ObjectCreateMessage(0, 28, PlanetSideGUID(1280), ObjectCreateMessageParent(PlanetSideGUID((xGUID)), 33), obj)
+        val msg = ObjectCreateMessage(0, 28, PlanetSideGUID(1280), ObjectCreateMessageParent(PlanetSideGUID((xGUID)), 250), obj)
         val pkt = PacketCoding.EncodePacket(msg).require.toByteVector
         sendRawResponse(pkt)
       }
@@ -591,6 +604,9 @@ class WorldSessionActor extends Actor with MDCContextAware {
 
     case msg @ WeaponFireMessage(seq_time, weapon_guid, projectile_guid, shot_origin, unk1, unk2, unk3, unk4, unk5, unk6, unk7) =>
       log.info("WeaponFire: " + msg)
+
+    case msg @ WeaponDryFireMessage(weapon_guid) =>
+      log.info("WeaponDryFireMessage: " + msg)
 
     case msg @ HitMessage(seq_time, projectile_guid, unk1, hit_info, unk2, unk3, unk4) =>
       log.info("Hit: " + msg)
